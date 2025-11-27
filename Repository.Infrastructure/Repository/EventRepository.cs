@@ -1,17 +1,12 @@
-﻿using Contract.Interfaces.Model;
+﻿using Contract.Interfaces.IRepository;
 using Entity.Domain.Model;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Repository.Infrastructure.Data;
 
-namespace Repository.Infrastructure
+namespace Repository.Infrastructure.Repository
 {
     public class EventRepository : IEventRepository
     {
-
         private readonly RepositoryContext _context;
 
         public EventRepository(RepositoryContext context)
@@ -30,9 +25,5 @@ namespace Repository.Infrastructure
             return await _context.Events
                 .FirstOrDefaultAsync(e => e.EventId == id);
         }
-
-
-
     }
 }
-

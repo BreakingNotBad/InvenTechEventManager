@@ -1,7 +1,7 @@
-using Contract.Interfaces;
-using Contract.Interfaces.Model;
+using Contract.Interfaces.IRepository;
 using Microsoft.EntityFrameworkCore;
-using Repository.Infrastructure;
+using Repository.Infrastructure.Data;
+using Repository.Infrastructure.Repository;
 
 var builder = WebApplication.CreateBuilder(args);
 

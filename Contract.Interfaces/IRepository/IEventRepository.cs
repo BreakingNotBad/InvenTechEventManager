@@ -1,11 +1,6 @@
 ﻿using Entity.Domain.Model;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Contract.Interfaces.Model;
+namespace Contract.Interfaces.IRepository;
 
 public interface IEventRepository
 {

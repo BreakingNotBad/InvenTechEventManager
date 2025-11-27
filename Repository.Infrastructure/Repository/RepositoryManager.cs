@@ -1,14 +1,9 @@
-﻿using Contract.Interfaces;
-using Contract.Interfaces.Model;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Contract.Interfaces.IRepository;
+using Repository.Infrastructure.Data;
 
-namespace Repository.Infrastructure
+namespace Repository.Infrastructure.Repository
 {
-    public class RepositoryManager :IRepositoryManager
+    public class RepositoryManager : IRepositoryManager
     {
         private readonly RepositoryContext _context;
 

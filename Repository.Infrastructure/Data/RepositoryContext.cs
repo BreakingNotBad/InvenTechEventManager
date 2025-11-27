@@ -1,7 +1,7 @@
 ﻿using Entity.Domain.Model;
 using Microsoft.EntityFrameworkCore;
 
-namespace Repository.Infrastructure
+namespace Repository.Infrastructure.Data
 {
     public class RepositoryContext : DbContext
     {
