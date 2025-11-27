@@ -20,10 +20,9 @@ namespace Repository.Infrastructure.Data
         public DbSet<Role> Roles { get; set; } = null!;
         public DbSet<Equipment> Equipment { get; set; } = null!;
         public DbSet<UserPermission> UserPermissions { get; set; } = null!;
-        public DbSet<PackageRoleRequirement> PackageRoleRequirements { get; set; } = null!;
         public DbSet<EventEquipment> EventEquipment { get; set; } = null!;
         public DbSet<EquipmentSetContent> EquipmentSetContents { get; set; } = null!;
-        public DbSet<EventAssignment> EventAssignments { get; set; } = null!;
+        public DbSet<EventStaff> EventStaff { get; set; } = null!;
         public DbSet<Company> Companies { get; set; } = null!;
         public DbSet<CompanyContact> CompanyContacts { get; set; } = null!;
         public DbSet<GuestUser> GuestUsers { get; set; } = null!;
@@ -41,10 +40,9 @@ namespace Repository.Infrastructure.Data
             modelBuilder.Entity<Role>().ToTable("Roles").HasKey(r => r.RoleId);
             modelBuilder.Entity<Equipment>().ToTable("Equipment").HasKey(e => e.EquipmentId);
             modelBuilder.Entity<UserPermission>().ToTable("UserPermissions").HasKey(up => new { up.UserId, up.PermissionId });
-            modelBuilder.Entity<PackageRoleRequirement>().ToTable("PackageRoleRequirements").HasKey(pr => new { pr.PackageId, pr.RoleId });
             modelBuilder.Entity<EventEquipment>().ToTable("EventEquipment").HasKey(ee => new { ee.EventId, ee.EquipmentId });
             modelBuilder.Entity<EquipmentSetContent>().ToTable("EquipmentSetContents").HasKey(ec => new { ec.EquipmentSetId, ec.EquipmentId });
-            modelBuilder.Entity<EventAssignment>().ToTable("EventAssignments").HasKey(ea => ea.EventAssignmentId);
+            modelBuilder.Entity<EventStaff>().ToTable("EventStaff").HasKey(ea => ea.EventStaffId);
             modelBuilder.Entity<Company>().ToTable("Companies").HasKey(c => c.CompanyId);
             modelBuilder.Entity<CompanyContact>().ToTable("CompanyContacts").HasKey(c => c.CompanyContactId);
             modelBuilder.Entity<GuestUser>().ToTable("GuestUsers").HasKey(g => g.GuestUserId);
