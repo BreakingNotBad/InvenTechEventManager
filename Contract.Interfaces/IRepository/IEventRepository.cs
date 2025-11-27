@@ -1,6 +1,6 @@
 ﻿using Entity.Domain.Model;
 
-namespace Contract.Interfaces.IRepository;
+namespace Contact.Interfaces.IRepository;
 
 public interface IEventRepository
 {

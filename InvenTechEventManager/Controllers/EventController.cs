@@ -1,4 +1,4 @@
-﻿using Contract.Interfaces.IRepository;
+﻿using Contact.Interfaces.IRepository;
 using Microsoft.AspNetCore.Mvc;
 
 namespace InvenTechEventManager.Controllers

@@ -1,4 +1,4 @@
-using Contract.Interfaces.IRepository;
+using Contact.Interfaces.IRepository;
 using Microsoft.EntityFrameworkCore;
 using Repository.Infrastructure.Data;
 using Repository.Infrastructure.Repository;
