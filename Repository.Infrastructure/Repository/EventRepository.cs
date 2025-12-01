@@ -1,4 +1,4 @@
-﻿using Contact.Interfaces.IRepository;
+﻿using Contract.Interfaces.IRepository;
 using Entity.Domain.Model;
 using Microsoft.EntityFrameworkCore;
 using Repository.Infrastructure.Data;
@@ -12,14 +12,14 @@ namespace Repository.Infrastructure.Repository
         {
         }
 
-        public async Task<IEnumerable<Event>> GetAllAsync()
+        public async Task<IEnumerable<Event>> GetEventsAsync()
         {
             // ดึงทุก event จาก DB
             //return await _context.Events.ToListAsync();
             return await FindAll(trackChanges: false).ToListAsync();
         }
 
-        public async Task<Event?> GetByIdAsync(int id)
+        public async Task<Event?> GetEventByIdAsync(int id)
         {
             //return await _context.Events
             //    .FirstOrDefaultAsync(e => e.EventId == id);

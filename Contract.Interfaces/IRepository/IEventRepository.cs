@@ -1,9 +1,9 @@
 ﻿using Entity.Domain.Model;
 
-namespace Contact.Interfaces.IRepository;
+namespace Contract.Interfaces.IRepository;
 
 public interface IEventRepository
 {
-    Task<IEnumerable<Event>> GetAllAsync();
-    Task<Event?> GetByIdAsync(int id);
+    Task<IEnumerable<Event>> GetEventsAsync();
+    Task<Event?> GetEventByIdAsync(int id);
 }

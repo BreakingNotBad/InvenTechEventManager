@@ -1,13 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.14.36623.8
+# Visual Studio Version 18
+VisualStudioVersion = 18.3.11222.16 d18.3
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InvenTechEventManager", "InvenTechEventManager\InvenTechEventManager.csproj", "{166ED2B2-2D6D-48F7-A404-C38E90D7BB71}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Entity.Domain", "Entity.Domain\Entity.Domain.csproj", "{D6CF0DB0-7932-4D23-86AC-7EFB60D0A9A3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Contact.Interfaces", "Contract.Interfaces\Contact.Interfaces.csproj", "{37B29CB2-AFAB-4D35-AB50-CA6072C51FC1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Contract.Interfaces", "Contract.Interfaces\Contract.Interfaces.csproj", "{37B29CB2-AFAB-4D35-AB50-CA6072C51FC1}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Repository.Infrastructure", "Repository.Infrastructure\Repository.Infrastructure.csproj", "{7CDA7618-5046-421D-A325-57EB2CF169A0}"
 EndProject
@@ -15,6 +15,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Database", "Database", "{02
 	ProjectSection(SolutionItems) = preProject
 		InventTechDB.sql = InventTechDB.sql
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Service", "Services\Service.csproj", "{A660C89F-AE0E-4B00-A571-BBA51D1DF583}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Service.Contract", "Service.Contracts\Service.Contract.csproj", "{502DFAE6-B307-4205-AE21-9A1CD304C8F3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Presentation", "Presentation\Presentation.csproj", "{2975369E-BF64-45AE-8567-CEADB43BB9A9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -38,6 +44,18 @@ Global
 		{7CDA7618-5046-421D-A325-57EB2CF169A0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7CDA7618-5046-421D-A325-57EB2CF169A0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7CDA7618-5046-421D-A325-57EB2CF169A0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A660C89F-AE0E-4B00-A571-BBA51D1DF583}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A660C89F-AE0E-4B00-A571-BBA51D1DF583}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A660C89F-AE0E-4B00-A571-BBA51D1DF583}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A660C89F-AE0E-4B00-A571-BBA51D1DF583}.Release|Any CPU.Build.0 = Release|Any CPU
+		{502DFAE6-B307-4205-AE21-9A1CD304C8F3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{502DFAE6-B307-4205-AE21-9A1CD304C8F3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{502DFAE6-B307-4205-AE21-9A1CD304C8F3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{502DFAE6-B307-4205-AE21-9A1CD304C8F3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2975369E-BF64-45AE-8567-CEADB43BB9A9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2975369E-BF64-45AE-8567-CEADB43BB9A9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2975369E-BF64-45AE-8567-CEADB43BB9A9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2975369E-BF64-45AE-8567-CEADB43BB9A9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

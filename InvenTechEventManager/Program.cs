@@ -1,22 +1,22 @@
-using Contact.Interfaces.IRepository;
+using Contract.Interfaces.IRepository;
 using Microsoft.EntityFrameworkCore;
 using Repository.Infrastructure.Data;
 using Repository.Infrastructure.Repository;
+using Service;
+using Service.Contract;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-
-// ???? connection string ??? ConnectionStrings:DefaultConnection
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-
 builder.Services.AddDbContext<RepositoryContext>(options =>
     options.UseSqlServer(connectionString));
 
-// ????????? RepositoryManager
+// DI
 builder.Services.AddScoped<IRepositoryManager, RepositoryManager>();
+builder.Services.AddScoped<IServiceManager, ServiceManager>();
+
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 

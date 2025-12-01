@@ -1,4 +1,4 @@
-﻿namespace Contact.Interfaces.DTOs
+﻿namespace Contract.Interfaces.DTOs
 {
     public static class EventDTOs
     {

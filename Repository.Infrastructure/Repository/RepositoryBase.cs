@@ -1,4 +1,4 @@
-﻿using Contact.Interfaces.IRepository;
+﻿using Contract.Interfaces.IRepository;
 using Microsoft.EntityFrameworkCore;
 using Repository.Infrastructure.Data;
 using System.Linq.Expressions;
