@@ -1,13 +1,14 @@
 ﻿using Contract.Interfaces.IRepository;
 using Entity.Domain.Model;
 using Service.Contract;
+using Microsoft.EntityFrameworkCore;
 
 namespace Service
 {
     public class EventService : IEventService
     {
         private readonly IRepositoryManager _repo;
-        public EventService(IRepositoryManager repo)
+        public EventService(IRepositoryManager repo) 
         {
             _repo = repo;
         }
@@ -19,7 +20,14 @@ namespace Service
 
         public async Task<Event?> GetEventByIdAsync(int id)
         {
-            return await _repo.Event.GetEventByIdAsync(id);
+            // ดึง IQueryable จาก base repo
+            var query = _repo.Event.FindByCondition(
+                e => e.EventId == id,      // หรือ e.EventID ตามชื่อจริงใน model
+                trackChanges: false        // อ่านอย่างเดียว ไม่ต้อง track
+            );
+
+            // ใช้ EF Core extension ทำให้กลายเป็นตัวเดียว
+            return await query.FirstOrDefaultAsync();
         }
     }
 }
