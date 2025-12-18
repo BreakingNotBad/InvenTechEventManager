@@ -21,12 +21,7 @@ namespace Service
 
         public async Task<EventStaff?> GetEventStaffByIdAsync(int id)
         {
-            var query = _repo.EventStaff.FindByCondition(
-                e => e.EventStaffId == id,
-                trackChanges: false
-            );
-
-            return await query.FirstOrDefaultAsync();
+            return await _repo.EventStaff.GetEventStaffByIdAsync(id);
         }
 
     }

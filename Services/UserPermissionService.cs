@@ -21,10 +21,7 @@ namespace Service
 
         public async Task<IEnumerable<UserPermission>> GetByUserIdAsync(int userId)
         {
-            return await _repo.UserPermission.FindByCondition(
-                up => up.UserId == userId,
-                trackChanges: false
-            ).ToListAsync();
+            return await _repo.UserPermission.GetByUserIdAsync(userId);
         }
     }
 }

@@ -21,12 +21,7 @@ namespace Service
 
         public async Task<Equipment?> GetEquipmentByIdAsync(int id)
         {
-            var query = _repo.Equipment.FindByCondition(
-                e => e.EquipmentId == id,
-                trackChanges: false
-            );
-
-            return await query.FirstOrDefaultAsync();
+            return await _repo.Equipment.GetEquipmentByIdAsync(id);
         }
 
     }

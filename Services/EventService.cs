@@ -20,14 +20,7 @@ namespace Service
 
         public async Task<Event?> GetEventByIdAsync(int id)
         {
-            // ดึง IQueryable จาก base repo
-            var query = _repo.Event.FindByCondition(
-                e => e.EventId == id,      // หรือ e.EventID ตามชื่อจริงใน model
-                trackChanges: false        // อ่านอย่างเดียว ไม่ต้อง track
-            );
-
-            // ใช้ EF Core extension ทำให้กลายเป็นตัวเดียว
-            return await query.FirstOrDefaultAsync();
+            return await _repo.Event.GetEventByIdAsync(id);
         }
     }
 }

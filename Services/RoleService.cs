@@ -21,12 +21,7 @@ namespace Service
 
         public async Task<Role?> GetRoleByIdAsync(int id)
         {
-            var query = _repo.Role.FindByCondition(
-                e => e.RoleId == id,
-                trackChanges: false
-            );
-
-            return await query.FirstOrDefaultAsync();
+            return await _repo.Role.GetRoleByIdAsync(id);
         }
     }
 }

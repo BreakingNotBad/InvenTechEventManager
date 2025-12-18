@@ -21,12 +21,7 @@ namespace Service
 
         public async Task<Package?> GetPackageByIdAsync(int id)
         {
-            var query = _repo.Package.FindByCondition(
-                e => e.PackageId == id,
-                trackChanges: false
-            );
-
-            return await query.FirstOrDefaultAsync();
+            return await _repo.Package.GetPackageByIdAsync(id);
         }
     }
 }

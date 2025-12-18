@@ -21,10 +21,7 @@ namespace Service
 
         public async Task<IEnumerable<EquipmentSetContent>> GetContentsByEquipmentSetIdAsync(int equipmentSetId)
         {
-            return await _repo.EquipmentSetContent.FindByCondition(
-                c => c.EquipmentSetId == equipmentSetId,
-                trackChanges: false
-            ).ToListAsync();
+            return await _repo.EquipmentSetContent.GetContentsByEquipmentSetIdAsync(equipmentSetId);
         }
     }
 }

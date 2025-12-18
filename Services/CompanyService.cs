@@ -26,12 +26,7 @@ namespace Service
 
         public async Task<Company?> GetCompanyByIdAsync(int id)
         {
-            var query = _repo.Company.FindByCondition(
-                e => e.CompanyId == id,
-                trackChanges: false
-            );
-
-            return await query.FirstOrDefaultAsync();
+            return await _repo.Company.GetCompanyByIdAsync(id);
         }
     }
 }

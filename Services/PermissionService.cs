@@ -21,12 +21,7 @@ namespace Service
 
         public async Task<Permission?> GetPermissionByIdAsync(int id)
         {
-            var query = _repo.Permission.FindByCondition(
-                e => e.PermissionId == id,
-                trackChanges: false
-            );
-
-            return await query.FirstOrDefaultAsync();
+            return await _repo.Permission.GetPermissionByIdAsync(id);
         }
     }
 }

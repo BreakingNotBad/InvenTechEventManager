@@ -21,12 +21,7 @@ namespace Service
 
         public async Task<QuoteStatus?> GetQuoteStatusByIdAsync(int id)
         {
-            var query = _repo.QuoteStatus.FindByCondition(
-                e => e.QuoteStatusId == id,
-                trackChanges: false
-            );
-
-            return await query.FirstOrDefaultAsync();
+            return await _repo.QuoteStatus.GetQuoteStatusByIdAsync(id);
         }
     }
 }

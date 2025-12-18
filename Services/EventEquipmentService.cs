@@ -21,10 +21,7 @@ namespace Service
 
         public async Task<IEnumerable<EventEquipment>> GetByEventIdAsync(int eventId)
         {
-            return await _repo.EventEquipment.FindByCondition(
-                e => e.EventId == eventId,
-                trackChanges: false
-            ).ToListAsync();
+            return await _repo.EventEquipment.GetByEventIdAsync(eventId);
         }
     }
 }

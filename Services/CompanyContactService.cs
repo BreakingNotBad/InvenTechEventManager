@@ -20,11 +20,7 @@ namespace Service
         }
         public async Task<CompanyContact?> GetCompanyContactByIdAsync(int id)
         {
-            var query = _repo.CompanyContact.FindByCondition(
-                e => e.CompanyContactId == id,
-                trackChanges: false
-            );
-            return await query.FirstOrDefaultAsync();
+            return await _repo.CompanyContact.GetCompanyContactByIdAsync(id);
         }
     }
 }

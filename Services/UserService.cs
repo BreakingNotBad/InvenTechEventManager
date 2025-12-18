@@ -21,12 +21,7 @@ namespace Service
 
         public async Task<User?> GetUserByIdAsync(int id)
         {
-            var query = _repo.User.FindByCondition(
-                e => e.UserId == id,
-                trackChanges: false
-            );
-
-            return await query.FirstOrDefaultAsync();
+            return await _repo.User.GetUserByIdAsync(id);
         }
     }
 }

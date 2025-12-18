@@ -21,12 +21,7 @@ namespace Service
 
         public async Task<GuestUser?> GetGuestUserByIdAsync(int id)
         {
-            var query = _repo.GuestUser.FindByCondition(
-                e => e.GuestUserId == id,
-                trackChanges: false
-            );
-
-            return await query.FirstOrDefaultAsync();
+            return await _repo.GuestUser.GetGuestUserByIdAsync(id);
         }
     }
 }
