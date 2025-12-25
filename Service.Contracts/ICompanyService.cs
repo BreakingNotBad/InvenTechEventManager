@@ -11,6 +11,7 @@ namespace Service.Contract
     {
         Task<IEnumerable<Company>> GetCompaniesAsync();
         Task<Company?> GetCompanyByIdAsync(int id);
-        Task DeleteCompany(int id);
+        Task CreateCompanyAsync(Company company);
+        Task DeleteCompanyAsync(int id);
     }
 }

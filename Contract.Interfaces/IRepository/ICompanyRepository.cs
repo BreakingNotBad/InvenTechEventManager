@@ -7,7 +7,7 @@ namespace Contract.Interfaces.IRepository
     {
         Task<IEnumerable<Company>> GetCompaniesAsync();
         Task<Company?> GetCompanyByIdAsync(int id);
-        Task DeleteCompany(Company company);
-        Task UpdateCompany(Company company);
+        void CreateCompany(Company company);
+        void DeleteCompany(Company company);
     }
 }

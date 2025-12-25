@@ -28,14 +28,19 @@ namespace Service
         {
             return await _repo.Company.GetCompanyByIdAsync(id);
         }
-        public async Task DeleteCompany(int id)
+        public async Task CreateCompanyAsync(Company company)
         {
-            var company = await _repo.Company.GetCompanyByIdAsync(id);
-            if (company == null)
+            _repo.Company.CreateCompany(company);
+            await _repo.SaveAsync();
+        }
+        public async Task DeleteCompanyAsync(int id)
+        {
+            var exinstingCompany = await _repo.Company.GetCompanyByIdAsync(id);
+            if (exinstingCompany == null)
             {
                 throw new ArgumentException($"Outsource with id {id} not found.");
             }
-            _repo.Company.DeleteCompany(company);
+            _repo.Company.DeleteCompany(exinstingCompany);
             await _repo.SaveAsync();
         }
     }
