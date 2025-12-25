@@ -36,6 +36,12 @@ namespace Presentation.Controllers
             await _service.Outsource.CreateOutsourceAsync(outsource);
             return CreatedAtAction(nameof(GetOutsourceById), new { id = outsource.OutsourceId }, outsource);
         }
+        [HttpPut("{id:int}")]
+        public async Task<IActionResult> UpdateOutsource(int id, [FromBody] Outsource outsource)
+        {
+            await _service.Outsource.UpdateOutsourceAsync(id, outsource);
+            return NoContent();
+        }
         [HttpDelete("{id:int}")]
         public async Task<IActionResult> DeleteOutsource(int id)
         {

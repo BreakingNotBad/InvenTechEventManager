@@ -7,6 +7,7 @@ namespace Service.Contract
         Task<IEnumerable<Outsource>> GetOutsources();
         Task CreateOutsourceAsync(Outsource outsource);
         Task<Outsource?> GetOutsourcesByIdAsync(int id);
+        Task UpdateOutsourceAsync(int id, Outsource outsource);
         Task DeleteOutsource(int id);
     }
 }

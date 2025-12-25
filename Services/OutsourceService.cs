@@ -27,6 +27,18 @@ namespace Service
             _repo.Outsource.Createoutsource(outsource);
             await _repo.SaveAsync();
         }
+        public async Task UpdateOutsourceAsync(int id, Outsource outsource)
+        {
+            var exinstingOutsource = await _repo.Outsource.GetOutsourceByIdAsync(id);
+
+            if (exinstingOutsource == null)
+            {
+                throw new KeyNotFoundException($"Staff with id: {id} does not exist.");
+            }
+
+            _repo.Outsource.Updateoutsource(exinstingOutsource);
+            await _repo.SaveAsync();
+        }
         public async Task DeleteOutsource(int id)
         {
             var exinstingOutsource = await _repo.Outsource.GetOutsourceByIdAsync(id);

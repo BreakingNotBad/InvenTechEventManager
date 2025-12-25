@@ -26,6 +26,10 @@ namespace Repository.Infrastructure.Repository
         {
             Create(outsource);
         }
+        public void Updateoutsource(Outsource outsource)
+        {
+            Update(outsource);
+        }
         public async void Deleteoutsource(Outsource outsource)
         {
             Delete(outsource);
