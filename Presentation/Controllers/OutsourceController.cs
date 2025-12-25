@@ -1,3 +1,4 @@
+using Entity.Domain.Model;
 using Microsoft.AspNetCore.Mvc;
 using Service.Contract;
 
@@ -28,6 +29,12 @@ namespace Presentation.Controllers
             if (item == null) return NotFound();
 
             return Ok(item);
+        }
+        [HttpPost]
+        public async Task<IActionResult> CreateOutsource([FromBody] Outsource outsource)
+        {
+            await _service.Outsource.CreateOutsourceAsync(outsource);
+            return CreatedAtAction(nameof(GetOutsourceById), new { id = outsource.OutsourceId }, outsource);
         }
         [HttpDelete("{id:int}")]
         public async Task<IActionResult> DeleteOutsource(int id)

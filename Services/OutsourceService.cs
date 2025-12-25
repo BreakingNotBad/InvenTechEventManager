@@ -22,6 +22,11 @@ namespace Service
         {
             return await _repo.Outsource.GetOutsourceByIdAsync(id);
         }
+        public async Task CreateOutsourceAsync(Outsource outsource)
+        {
+            _repo.Outsource.Createoutsource(outsource);
+            await _repo.SaveAsync();
+        }
         public async Task DeleteOutsource(int id)
         {
             var exinstingOutsource = await _repo.Outsource.GetOutsourceByIdAsync(id);
@@ -33,6 +38,5 @@ namespace Service
             await _repo.SaveAsync();
         }
 
-       
     }
 }

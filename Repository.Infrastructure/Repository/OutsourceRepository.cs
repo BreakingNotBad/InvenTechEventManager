@@ -22,7 +22,11 @@ namespace Repository.Infrastructure.Repository
             return await FindByCondition(e => e.OutsourceId == id, trackChanges: false)
                 .FirstOrDefaultAsync();
         }
-        public async Task Deleteoutsource(Outsource outsource)
+        public void Createoutsource(Outsource outsource)
+        {
+            Create(outsource);
+        }
+        public async void Deleteoutsource(Outsource outsource)
         {
             Delete(outsource);
             await Task.CompletedTask;
