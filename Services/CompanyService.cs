@@ -43,5 +43,18 @@ namespace Service
             _repo.Company.DeleteCompany(exinstingCompany);
             await _repo.SaveAsync();
         }
+        public async Task UpdateCompanyAsync(Company company)
+        {
+            var existingCompany = await _repo.Company.GetCompanyByIdAsync(company.CompanyId);
+            if (existingCompany == null)
+            {
+                throw new ArgumentException($"Company with id {company.CompanyId} not found.");
+            }
+            // Update fields
+            existingCompany.CompanyName = company.CompanyName;
+            // Add other fields as necessary
+            _repo.Company.UpdateCompany(existingCompany);
+            await _repo.SaveAsync();
+        }
     }
 }

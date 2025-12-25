@@ -9,5 +9,6 @@ namespace Contract.Interfaces.IRepository
         Task<Company?> GetCompanyByIdAsync(int id);
         void CreateCompany(Company company);
         void DeleteCompany(Company company);
+        void UpdateCompany(Company company);
     }
 }

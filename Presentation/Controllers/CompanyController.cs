@@ -21,7 +21,7 @@ namespace Presentation.Controllers
             return Ok(companiesList);
         }
 
-        [HttpGet("{id:int}")]
+        [HttpGet("GetCompanyBy{id:int}")]
         public async Task<IActionResult> GetCompanyById(int id)
         {
             var company = await _service.Company.GetCompanyByIdAsync(id);
@@ -54,17 +54,39 @@ namespace Presentation.Controllers
             return Ok(items);
         }
 
-        [HttpDelete("{id:int}")]
+        [HttpDelete("DeleteCompanyBy{id:int}")]
         public async Task<IActionResult> DeleteCompany(int id)
         {
             await _service.Company.DeleteCompanyAsync(id);
             return NoContent();
         }
+
         [HttpPost]
         public async Task<IActionResult> CreateCompany([FromBody] Entity.Domain.Model.Company company)
         {
+            if (company == null) return BadRequest();
+
+            //ห้าม client กำหนด CompanyId ตอนสร้าง
+            company.CompanyId = 0;
+
             await _service.Company.CreateCompanyAsync(company);
-            return CreatedAtAction(nameof(GetCompanyById), new { id = company.CompanyId }, company);
+
+            return CreatedAtAction(
+                nameof(GetCompanyById),
+                new { id = company.CompanyId },
+                company
+            );
+        }
+
+        [HttpPut("UpdateCompanyBy{id:int}")]
+        public async Task<IActionResult> UpdateCompany(int id, [FromBody] Entity.Domain.Model.Company company)
+        {
+            if (id != company.CompanyId)
+            {
+                return BadRequest("ID in URL does not match ID in body.");
+            }
+            await _service.Company.UpdateCompanyAsync(company);
+            return NoContent();
         }
     }
 }
