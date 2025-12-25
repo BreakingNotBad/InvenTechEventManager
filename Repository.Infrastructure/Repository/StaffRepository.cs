@@ -6,23 +6,23 @@ using Repository.Repositories;
 
 namespace Repository.Infrastructure.Repository
 {
-    public class EventStaffRepository : RepositoryBase<EventStaff>, IEventStaffRepository
+    public class StaffRepository : RepositoryBase<Staff>, IStaffRepository
     {
-        public EventStaffRepository(RepositoryContext context) : base(context)
+        public StaffRepository(RepositoryContext context) : base(context)
         {
         }
 
-        public async Task<IEnumerable<EventStaff>> GetEventStaffMembersAsync()
+        public async Task<IEnumerable<Staff>> GetStaffMembersAsync()
         {
             return await FindAll(trackChanges: false).ToListAsync();
         }
 
-        public async Task<EventStaff?> GetEventStaffByIdAsync(int id)
+        public async Task<Staff?> GetStaffByIdAsync(int id)
         {
-            return await FindByCondition(e => e.EventStaffId == id, trackChanges: false)
+            return await FindByCondition(e => e.StaffId == id, trackChanges: false)
                 .FirstOrDefaultAsync();
         }
-        public async Task<IEnumerable<EventStaff>> GetEventStaffByEventIdAsync(int eventId)
+        public async Task<IEnumerable<Staff>> GetStaffByEventIdAsync(int eventId)
         {
             return await FindByCondition(es => es.EventId == eventId, trackChanges: false)
                 .ToListAsync();

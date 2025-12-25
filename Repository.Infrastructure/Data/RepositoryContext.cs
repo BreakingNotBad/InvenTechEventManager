@@ -22,10 +22,10 @@ namespace Repository.Infrastructure.Data
         public DbSet<UserPermission> UserPermissions { get; set; } = null!;
         public DbSet<EventEquipment> EventEquipment { get; set; } = null!;
         public DbSet<EquipmentSetContent> EquipmentSetContents { get; set; } = null!;
-        public DbSet<EventStaff> EventStaff { get; set; } = null!;
+        public DbSet<Staff> EventStaff { get; set; } = null!;
         public DbSet<Company> Companies { get; set; } = null!;
         public DbSet<CompanyContact> CompanyContacts { get; set; } = null!;
-        public DbSet<GuestUser> GuestUsers { get; set; } = null!;
+        public DbSet<Outsource> Outsource { get; set; } = null!;
         public DbSet<EventGuest> EventGuests { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -42,10 +42,10 @@ namespace Repository.Infrastructure.Data
             modelBuilder.Entity<UserPermission>().ToTable("UserPermissions").HasKey(up => new { up.UserId, up.PermissionId });
             modelBuilder.Entity<EventEquipment>().ToTable("EventEquipment").HasKey(ee => new { ee.EventId, ee.EquipmentId });
             modelBuilder.Entity<EquipmentSetContent>().ToTable("EquipmentSetContents").HasKey(ec => new { ec.EquipmentSetId, ec.EquipmentId });
-            modelBuilder.Entity<EventStaff>().ToTable("EventStaff").HasKey(ea => ea.EventStaffId);
+            modelBuilder.Entity<Staff>().ToTable("EventStaff").HasKey(ea => ea.StaffId);
             modelBuilder.Entity<Company>().ToTable("Companies").HasKey(c => c.CompanyId);
             modelBuilder.Entity<CompanyContact>().ToTable("CompanyContacts").HasKey(c => c.CompanyContactId);
-            modelBuilder.Entity<GuestUser>().ToTable("GuestUsers").HasKey(g => g.GuestUserId);
+            modelBuilder.Entity<Outsource>().ToTable("Outsource").HasKey(g => g.OutsourceId);
             modelBuilder.Entity<EventGuest>().ToTable("EventGuests").HasKey(eg => new { eg.EventId, eg.GuestUserId });
 
             base.OnModelCreating(modelBuilder);

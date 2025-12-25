@@ -6,20 +6,20 @@ using Repository.Repositories;
 
 namespace Repository.Infrastructure.Repository
 {
-    public class UserRepository : RepositoryBase<User>, IUserRepository
+    public class OutsourceRepository : RepositoryBase<Outsource>, IOutsourceRepository
     {
-        public UserRepository(RepositoryContext context) : base(context)
+        public OutsourceRepository(RepositoryContext context) : base(context)
         {
         }
 
-        public async Task<IEnumerable<User>> GetUsersAsync()
+        public async Task<IEnumerable<Outsource>> GetGuestUsersAsync()
         {
             return await FindAll(trackChanges: false).ToListAsync();
         }
 
-        public async Task<User?> GetUserByIdAsync(int id)
+        public async Task<Outsource?> GetGuestUserByIdAsync(int id)
         {
-            return await FindByCondition(e => e.UserId == id, trackChanges: false)
+            return await FindByCondition(e => e.OutsourceId == id, trackChanges: false)
                 .FirstOrDefaultAsync();
         }
     }

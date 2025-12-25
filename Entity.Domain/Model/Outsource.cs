@@ -1,8 +1,8 @@
 ﻿namespace Entity.Domain.Model
 {
-    public class GuestUser
+    public class Outsource
     {
-        public int GuestUserId { get; set; }
+        public int OutsourceId { get; set; }
         public string FirstName { get; set; } = string.Empty;
         public string LastName { get; set; } = string.Empty;
         public string? Email { get; set; }
