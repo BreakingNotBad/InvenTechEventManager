@@ -30,5 +30,17 @@ namespace Presentation.Controllers
 
             return Ok(item);
         }
+        [HttpPost]
+        public async Task<IActionResult> CreatePackage([FromBody] Package package)
+        {
+            await _service.Package.CreatePackageAsync(package);
+            return CreatedAtAction(nameof(GetPackageById), new { id = package.PackageId }, package);
+        }
+        [HttpDelete("{id:int}")]
+        public async Task<IActionResult> DeletePackage(int id)
+        {
+            await _service.Package.DeletePackage(id);
+            return NoContent();
+        }
     }
 }

@@ -30,5 +30,18 @@ namespace Presentation.Controllers
 
             return Ok(item);
         }
+        [HttpPost]
+        public async Task<IActionResult> CreateEquipment([FromBody] Equipment equipment)
+        {
+            await _service.Equipment.CreateEquipmentAsync(equipment);
+            return CreatedAtAction(nameof(GetEquipmentById), new { id = equipment.EquipmentId }, equipment);
+        }
+        [HttpDelete("{id:int}")]
+        public async Task<IActionResult> DeleteEquipment(int id)
+        {
+            await _service.Equipment.DeleteEquipment(id);
+            return NoContent();
+        }
+
     }
 }

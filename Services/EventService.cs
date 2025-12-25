@@ -22,5 +22,20 @@ namespace Service
         {
             return await _repo.Event.GetEventByIdAsync(id);
         }
+        public async Task CreateEventAsync(Event eventEntity)
+        {
+            _repo.Event.CreateEvent(eventEntity);
+            await _repo.SaveAsync();
+        }
+        public async Task DeleteEvent(int id)
+        {
+            var existingEvent = await _repo.Event.GetEventByIdAsync(id);
+            if (existingEvent == null)
+            {
+                throw new ArgumentException($"Event with id {id} not found.");
+            }
+            _repo.Event.DeleteEvent(existingEvent);
+            await _repo.SaveAsync();
+        }
     }
 }

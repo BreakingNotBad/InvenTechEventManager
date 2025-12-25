@@ -23,6 +23,20 @@ namespace Service
         {
             return await _repo.Equipment.GetEquipmentByIdAsync(id);
         }
-
+        public async Task CreateEquipmentAsync(Equipment equipment)
+        {
+            _repo.Equipment.CreateEquipment(equipment);
+            await _repo.SaveAsync();
+        }
+        public async Task DeleteEquipment(int id)
+        {
+            var existingEquipment = await _repo.Equipment.GetEquipmentByIdAsync(id);
+            if (existingEquipment == null)
+            {
+                throw new ArgumentException($"Equipment with id {id} not found.");
+            }
+            _repo.Equipment.DeleteEquipment(existingEquipment);
+            await _repo.SaveAsync();
+        }
     }
 }

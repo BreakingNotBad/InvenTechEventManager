@@ -6,5 +6,7 @@ namespace Contract.Interfaces.IRepository
     {
         Task<IEnumerable<Equipment>> GetEquipmentAsync();
         Task<Equipment?> GetEquipmentByIdAsync(int id);
+        void CreateEquipment (Equipment equipment);
+        void DeleteEquipment(Equipment equipment);
     }
 }

@@ -28,5 +28,19 @@ namespace Presentation.Controllers
 
             return Ok(ev);
         }
+        [HttpPost]
+        public async Task<IActionResult> CreateEvent([FromBody] Entity.Domain.Model.Event eventEntity)
+        {
+            await _service.Event.CreateEventAsync(eventEntity);
+            return CreatedAtAction(nameof(GetEventById), new { id = eventEntity.EventId }, eventEntity);
+        }
+        [HttpDelete("{id:int}")]
+        public async Task<IActionResult> DeleteEvent(int id)
+        {
+            await _service.Event.DeleteEvent(id);
+            return NoContent();
+        }
+
+
     }
 }

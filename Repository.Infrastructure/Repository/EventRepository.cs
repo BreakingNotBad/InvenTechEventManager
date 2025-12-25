@@ -26,5 +26,14 @@ namespace Repository.Infrastructure.Repository
             return await FindByCondition(e => e.EventId == id, trackChanges: false)
                 .FirstOrDefaultAsync();
         }
+        public void CreateEvent(Event eventEntity)
+        {
+            Create(eventEntity);
+        }
+        public async void DeleteEvent(Event eventEntity)
+        {
+            Delete(eventEntity);
+            await Task.CompletedTask;
+        }
     }
 }

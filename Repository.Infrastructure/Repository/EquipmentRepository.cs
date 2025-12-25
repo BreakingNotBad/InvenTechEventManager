@@ -22,5 +22,14 @@ namespace Repository.Infrastructure.Repository
             return await FindByCondition(e => e.EquipmentId == id, trackChanges: false)
                 .FirstOrDefaultAsync();
         }
+        public void CreateEquipment(Equipment equipment)
+        {
+            Create(equipment);
+        }
+        public async void DeleteEquipment(Equipment equipment)
+        {
+            Delete(equipment);
+            await Task.CompletedTask;
+        }
     }
 }

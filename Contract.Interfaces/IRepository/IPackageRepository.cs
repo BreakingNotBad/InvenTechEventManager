@@ -6,5 +6,8 @@ namespace Contract.Interfaces.IRepository
     {
         Task<IEnumerable<Package>> GetPackagesAsync();
         Task<Package?> GetPackageByIdAsync(int id);
+        void CreatePackage(Package package);
+        void DeletePackage(Package package);
     }
+
 }

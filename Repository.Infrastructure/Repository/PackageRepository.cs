@@ -22,5 +22,14 @@ namespace Repository.Infrastructure.Repository
             return await FindByCondition(e => e.PackageId == id, trackChanges: false)
                 .FirstOrDefaultAsync();
         }
+        public void CreatePackage(Package package)
+        {
+            Create(package);
+        }
+        public async void DeletePackage(Package package)
+        {
+            Delete(package);
+            await Task.CompletedTask;
+        }
     }
 }
