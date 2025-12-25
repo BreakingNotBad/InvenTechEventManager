@@ -13,14 +13,26 @@ namespace Service
             _repo = repo;
         }
 
-        public async Task<IEnumerable<Outsource>> GetGuestUsersAsync()
+        public async Task<IEnumerable<Outsource>> GetOutsources()
         {
-            return await _repo.Outsource.GetGuestUsersAsync();
+            return await _repo.Outsource.GetOutsourceAsyn();
         }
 
-        public async Task<Outsource?> GetGuestUserByIdAsync(int id)
+        public async Task<Outsource?> GetOutsourcesByIdAsync(int id)
         {
-            return await _repo.Outsource.GetGuestUserByIdAsync(id);
+            return await _repo.Outsource.GetOutsourceByIdAsync(id);
         }
+        public async Task DeleteOutsource(int id)
+        {
+            var exinstingOutsource = await _repo.Outsource.GetOutsourceByIdAsync(id);
+            if (exinstingOutsource == null)
+            {
+                throw new ArgumentException($"Outsource with id {id} not found.");
+            }
+            _repo.Outsource.Deleteoutsource(exinstingOutsource);
+            await _repo.SaveAsync();
+        }
+
+       
     }
 }

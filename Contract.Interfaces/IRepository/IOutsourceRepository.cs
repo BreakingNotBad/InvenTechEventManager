@@ -4,7 +4,8 @@ namespace Contract.Interfaces.IRepository
 {
     public interface IOutsourceRepository : IRepositoryBase<Outsource>
     {
-        Task<IEnumerable<Outsource>> GetGuestUsersAsync();
-        Task<Outsource?> GetGuestUserByIdAsync(int id);
+        Task<IEnumerable<Outsource>> GetOutsourceAsyn();
+        Task<Outsource?> GetOutsourceByIdAsync(int id);
+        Task Deleteoutsource(Outsource outsource);
     }
 }

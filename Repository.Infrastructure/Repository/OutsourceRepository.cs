@@ -12,15 +12,20 @@ namespace Repository.Infrastructure.Repository
         {
         }
 
-        public async Task<IEnumerable<Outsource>> GetGuestUsersAsync()
+        public async Task<IEnumerable<Outsource>> GetOutsourceAsyn()
         {
             return await FindAll(trackChanges: false).ToListAsync();
         }
 
-        public async Task<Outsource?> GetGuestUserByIdAsync(int id)
+        public async Task<Outsource?> GetOutsourceByIdAsync(int id)
         {
             return await FindByCondition(e => e.OutsourceId == id, trackChanges: false)
                 .FirstOrDefaultAsync();
+        }
+        public async Task Deleteoutsource(Outsource outsource)
+        {
+            Delete(outsource);
+            await Task.CompletedTask;
         }
     }
 }
