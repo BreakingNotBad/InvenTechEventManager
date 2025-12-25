@@ -23,5 +23,23 @@ namespace Service
             return await _repo.Staff.GetStaffByIdAsync(id);
         }
 
+        public async Task CreateStaffAsync(Staff staff)
+        {
+            _repo.Staff.CreateStaff(staff);
+            await _repo.SaveAsync();
+        }
+
+        public async Task DeleteStaffAsync(int id)
+        {
+            var exinstingStaff = await _repo.Staff.GetStaffByIdAsync(id);
+
+            if (exinstingStaff == null)
+            {
+                throw new KeyNotFoundException($"Staff with id: {id} does not exist.");
+            }
+
+            _repo.Staff.DeleteStaff(exinstingStaff);
+            await _repo.SaveAsync();
+        }
     }
 }
