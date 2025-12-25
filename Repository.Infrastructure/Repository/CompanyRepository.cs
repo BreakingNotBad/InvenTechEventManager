@@ -22,5 +22,15 @@ namespace Repository.Infrastructure.Repository
             return await FindByCondition(e => e.CompanyId == id, trackChanges: false)
                 .FirstOrDefaultAsync();
         }
+        public async Task DeleteCompany(Company company)
+        {
+            Delete(company);
+            await Task.CompletedTask;
+        }
+        public async Task UpdateCompany(Company company)
+        {
+            Update(company);
+            await Task.CompletedTask;
+        }
     }
 }

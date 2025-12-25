@@ -28,5 +28,15 @@ namespace Service
         {
             return await _repo.Company.GetCompanyByIdAsync(id);
         }
+        public async Task DeleteCompany(int id)
+        {
+            var company = await _repo.Company.GetCompanyByIdAsync(id);
+            if (company == null)
+            {
+                throw new ArgumentException($"Outsource with id {id} not found.");
+            }
+            _repo.Company.DeleteCompany(company);
+            await _repo.SaveAsync();
+        }
     }
 }

@@ -28,5 +28,11 @@ namespace Presentation.Controllers
             if (company == null) return NotFound();
             return Ok(company);
         }
+        [HttpDelete("{id:int}")]
+        public async Task<IActionResult> DeleteCompany(int id)
+        {
+            await _service.Company.DeleteCompany(id);
+            return NoContent();
+        }
     }
 }
