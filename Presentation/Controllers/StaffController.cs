@@ -9,6 +9,7 @@ namespace Presentation.Controllers
     public class StaffController : ControllerBase
     {
         private readonly IServiceManager _service;
+
         public StaffController(IServiceManager service)
         {
             _service = service;
@@ -28,12 +29,22 @@ namespace Presentation.Controllers
             return Ok(staff);
         }
 
-        [HttpGet("{GetStaffActive}")]
+        [HttpGet("{active}")]
         // รับ: query?, date?, time_period?, filter_available?
         // ส่งออก: staff_id, staff_name, role, avatar_url
-        public async Task<IActionResult> GetStaffActive()
+        public async Task<IActionResult> GetStaffActive(
+            [FromQuery] string? search,
+            [FromQuery] DateOnly? date,
+            [FromQuery] string? time_period,
+            [FromQuery] Boolean? filter_available
+        )
         {
-            var staffList = await _service.Staff.GetStaffActiveAsync();
+            var staffList = await _service.Staff.GetStaffActiveAsync(
+                search,
+                date,
+                time_period,
+                filter_available
+            );
             return Ok(staffList);
         }
 

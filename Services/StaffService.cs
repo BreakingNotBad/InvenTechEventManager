@@ -23,6 +23,21 @@ namespace Service
             return await _repo.Staff.GetStaffByIdAsync(id);
         }
 
+        public async Task<IEnumerable<Staff>> GetStaffActiveAsync(
+            string? search,
+            DateOnly? date,
+            string? time_period,
+            Boolean? filter_available
+        )
+        {
+            return await _repo.Staff.GetStaffActiveAsync(
+                search,
+                date,
+                time_period,
+                filter_available
+            );
+        }
+
         public async Task CreateStaffAsync(Staff staff)
         {
             _repo.Staff.CreateStaff(staff);
@@ -53,11 +68,6 @@ namespace Service
 
             _repo.Staff.DeleteStaff(exinstingStaff);
             await _repo.SaveAsync();
-        }
-
-        public async Task<IEnumerable<Staff>> GetStaffActiveAsync()
-        {
-            return await _repo.Staff.GetStaffActiveAsync();
         }
     }
 }
