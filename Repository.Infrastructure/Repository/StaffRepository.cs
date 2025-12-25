@@ -27,5 +27,15 @@ namespace Repository.Infrastructure.Repository
             return await FindByCondition(es => es.EventId == eventId, trackChanges: false)
                 .ToListAsync();
         }
+
+        public void CreateStaff(Staff staff)
+        {
+            Create(staff);
+        }
+
+        public void DeleteStaff(Staff staff)
+        {
+            Delete(staff);
+        }
     }
 }

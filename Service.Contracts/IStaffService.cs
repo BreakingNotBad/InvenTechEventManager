@@ -6,5 +6,7 @@ namespace Service.Contract
     {
         Task<IEnumerable<Staff>> GetStaffMembersAsync();
         Task<Staff?> GetStaffByIdAsync(int id);
+        Task CreateStaffAsync(Staff staff);
+        Task DeleteStaffAsync(int id);
     }
 }

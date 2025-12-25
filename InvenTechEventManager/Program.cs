@@ -1,7 +1,8 @@
-using Contract.Interfaces.IRepository;
+﻿using Contract.Interfaces.IRepository;
 using Microsoft.EntityFrameworkCore;
 using Repository.Infrastructure.Data;
 using Repository.Infrastructure.Repository;
+using Scalar.AspNetCore;
 using Service;
 using Service.Contract;
 
@@ -17,16 +18,30 @@ builder.Services.AddScoped<IServiceManager, ServiceManager>();
 
 builder.Services.AddControllers();
 
+// Swagger (Swashbuckle)
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new() { Title = "InventechEvent API", Version = "v1" });
+});
 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
+    // ส่วนของ Swagger UI เดิม (เก็บไว้หรือลบออกก็ได้)
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API v1");
+    });
+
+    // แก้ไขส่วน Scalar: ระบุ Path ของ Swagger JSON ให้ชัดเจน
+    app.MapScalarApiReference(options =>
+    {
+        options.WithOpenApiRoutePattern("/swagger/v1/swagger.json");
+    });
 }
 
 app.UseHttpsRedirection();

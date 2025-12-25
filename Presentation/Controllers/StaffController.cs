@@ -1,13 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Entity.Domain.Model;
+using Microsoft.AspNetCore.Mvc;
 using Service.Contract;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Presentation.Controllers
 {
+    [ApiController]
+    [Route("api/[controller]")]
     public class StaffController : ControllerBase
     {
         private readonly IServiceManager _service;
@@ -17,7 +15,7 @@ namespace Presentation.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetStaff()
+        public async Task<IActionResult> GetStaffMembers()
         {
             var staffList = await _service.Staff.GetStaffMembersAsync();
             return Ok(staffList);
@@ -29,6 +27,20 @@ namespace Presentation.Controllers
             var company = await _service.Company.GetCompanyByIdAsync(id);
             if (company == null) return NotFound();
             return Ok(company);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateStaff([FromBody] Staff staff)
+        {
+            await _service.Staff.CreateStaffAsync(staff);
+            return CreatedAtAction(nameof(GetStaffById), new { id = staff.StaffId }, staff);
+        }
+
+        [HttpDelete("{id:int}")]
+        public async Task<IActionResult> DeleteStaff(int id)
+        {
+            await _service.Staff.DeleteStaffAsync(id);
+            return NoContent();
         }
     }
 }
