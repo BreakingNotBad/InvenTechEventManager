@@ -29,6 +29,19 @@ namespace Service
             await _repo.SaveAsync();
         }
 
+        public async Task UpdateStaffAsync(int id, Staff staff)
+        {
+            var exinstingStaff = await _repo.Staff.GetStaffByIdAsync(id);
+
+            if (exinstingStaff == null)
+            {
+                throw new KeyNotFoundException($"Staff with id: {id} does not exist.");
+            }
+
+            _repo.Staff.UpdateStaff(exinstingStaff);
+            await _repo.SaveAsync();
+        }
+
         public async Task DeleteStaffAsync(int id)
         {
             var exinstingStaff = await _repo.Staff.GetStaffByIdAsync(id);
@@ -40,6 +53,11 @@ namespace Service
 
             _repo.Staff.DeleteStaff(exinstingStaff);
             await _repo.SaveAsync();
+        }
+
+        public async Task<IEnumerable<Staff>> GetStaffActiveAsync()
+        {
+            return await _repo.Staff.GetStaffActiveAsync();
         }
     }
 }

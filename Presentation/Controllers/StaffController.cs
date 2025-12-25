@@ -24,9 +24,17 @@ namespace Presentation.Controllers
         [HttpGet("{id:int}")]
         public async Task<IActionResult> GetStaffById(int id)
         {
-            var company = await _service.Company.GetCompanyByIdAsync(id);
-            if (company == null) return NotFound();
-            return Ok(company);
+            var staff = await _service.Staff.GetStaffByIdAsync(id);
+            return Ok(staff);
+        }
+
+        [HttpGet("{GetStaffActive}")]
+        // รับ: query?, date?, time_period?, filter_available?
+        // ส่งออก: staff_id, staff_name, role, avatar_url
+        public async Task<IActionResult> GetStaffActive()
+        {
+            var staffList = await _service.Staff.GetStaffActiveAsync();
+            return Ok(staffList);
         }
 
         [HttpPost]
@@ -34,6 +42,13 @@ namespace Presentation.Controllers
         {
             await _service.Staff.CreateStaffAsync(staff);
             return CreatedAtAction(nameof(GetStaffById), new { id = staff.StaffId }, staff);
+        }
+
+        [HttpPut("{id:int}")]
+        public async Task<IActionResult> UpdateStaff(int id, [FromBody] Staff staff)
+        {
+            await _service.Staff.UpdateStaffAsync(id, staff);
+            return Ok(staff);
         }
 
         [HttpDelete("{id:int}")]

@@ -33,9 +33,19 @@ namespace Repository.Infrastructure.Repository
             Create(staff);
         }
 
+        public void UpdateStaff(Staff staff)
+        {
+            Update(staff);
+        }
+
         public void DeleteStaff(Staff staff)
         {
             Delete(staff);
+        }
+
+        public async Task<IEnumerable<Staff>> GetStaffActiveAsync()
+        {
+            return await FindAll(trackChanges: false).ToListAsync();
         }
     }
 }
