@@ -10,6 +10,6 @@ namespace Entity.Domain.Model
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
         public ICollection<CompanyContacts> CompanyContacts { get; set; } = new List<CompanyContacts>();
-        public ICollection<Event> Events { get; set; } = new List<Event>();
+        public ICollection<Events> Events { get; set; } = new List<Events>();
     }
 }

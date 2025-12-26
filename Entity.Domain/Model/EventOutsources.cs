@@ -6,7 +6,7 @@ namespace Entity.Domain.Model
     {
         [ForeignKey(nameof(Event))]
         public int EventId { get; set; }
-        public Event Event { get; set; } = null!;
+        public Events Event { get; set; } = null!;
         [ForeignKey(nameof(Outsources))]
         public int OutsourcesId { get; set; }
         public Outsources Outsources { get; set; } = null!;

@@ -14,7 +14,7 @@ namespace Entity.Domain.Model
         public DateTime CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
         public ICollection<StaffPermissions> StaffPermissions { get; set; } = new List<StaffPermissions>();
-        public ICollection<Event> CreatedEvents{ get; set; } = new List<Event>();
+        public ICollection<Events> CreatedEvents{ get; set; } = new List<Events>();
         public ICollection<EventStaff> EventStaffs { get; set; } = new List<EventStaff>();
     }
 }

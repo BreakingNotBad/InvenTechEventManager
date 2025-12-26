@@ -4,9 +4,9 @@ namespace Service.Contract
 {
     public interface IEventService
     {
-        Task<IEnumerable<Event>> GetEventsAsync();
-        Task<Event?> GetEventByIdAsync(int id);
-        Task CreateEventAsync(Event eventEntity);
+        Task<IEnumerable<Events>> GetEventsAsync();
+        Task<Events?> GetEventByIdAsync(int id);
+        Task CreateEventAsync(Events eventEntity);
         Task DeleteEvent(int id);
     }
 }

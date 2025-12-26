@@ -3,7 +3,7 @@ using System.Reflection.Metadata;
 
 namespace Entity.Domain.Model
 {
-    public class Event
+    public class Events
     {
         [Key]
         public int EventId { get; set; }

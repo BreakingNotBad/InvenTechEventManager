@@ -1,5 +1,6 @@
 ﻿using Entity.Domain.Model;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace Repository.Infrastructure.Data
 {
@@ -11,7 +12,7 @@ namespace Repository.Infrastructure.Data
         }
 
         // DbSet แต่ละตาราง
-        public DbSet<Event> Events { get; set; } = null!;
+        public DbSet<Events> Events { get; set; } = null!;
         public DbSet<Packages> Packages { get; set; } = null!;
         public DbSet<EquipmentSets> EquipmentSets { get; set; } = null!;
         public DbSet<Permissions> Permissions { get; set; } = null!;
@@ -41,6 +42,27 @@ namespace Repository.Infrastructure.Data
             modelBuilder.Entity<StaffPermissions>()
                 .HasKey(es => new { es.StaffId, es.PermissionId });
 
+            modelBuilder.Entity<EventStaff>(entity =>
+            {
+                entity.HasKey(x => new { x.EventId, x.StaffId });
+
+                entity.HasOne(x => x.Event)
+                      .WithMany(e => e.EventStaff)     // ของคุณชื่อ EventStaff (singular) แต่เป็น ICollection
+                      .HasForeignKey(x => x.EventId)
+                      .OnDelete(DeleteBehavior.Cascade);   // ลบ Event -> ลบ rows ใน EventStaff ได้
+
+                entity.HasOne(x => x.Staff)
+                      .WithMany(s => s.EventStaffs)
+                      .HasForeignKey(x => x.StaffId)
+                      .OnDelete(DeleteBehavior.NoAction);  // สำคัญ: กัน cascade ซ้ำ
+            });
+
+
+            modelBuilder.Entity<Events>()
+    .HasOne(e => e.CreatedByStaff)
+    .WithMany(s => s.CreatedEvents)
+    .HasForeignKey(e => e.CreatedByStaffId)
+    .OnDelete(DeleteBehavior.NoAction);
         }
     }
 }

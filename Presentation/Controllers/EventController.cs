@@ -29,7 +29,7 @@ namespace Presentation.Controllers
             return Ok(ev);
         }
         [HttpPost]
-        public async Task<IActionResult> CreateEvent([FromBody] Entity.Domain.Model.Event eventEntity)
+        public async Task<IActionResult> CreateEvent([FromBody] Entity.Domain.Model.Events eventEntity)
         {
             await _service.Event.CreateEventAsync(eventEntity);
             return CreatedAtAction(nameof(GetEventById), new { id = eventEntity.EventId }, eventEntity);
