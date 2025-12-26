@@ -13,21 +13,21 @@ namespace Service
             _repo = repo;
         }
 
-        public async Task<IEnumerable<Outsources>> GetOutsources()
+        public async Task<IEnumerable<Outsource>> GetOutsources()
         {
             return await _repo.Outsource.GetOutsourceAsyn();
         }
 
-        public async Task<Outsources?> GetOutsourcesByIdAsync(int id)
+        public async Task<Outsource?> GetOutsourcesByIdAsync(int id)
         {
             return await _repo.Outsource.GetOutsourceByIdAsync(id);
         }
-        public async Task CreateOutsourceAsync(Outsources outsource)
+        public async Task CreateOutsourceAsync(Outsource outsource)
         {
             _repo.Outsource.Createoutsource(outsource);
             await _repo.SaveAsync();
         }
-        public async Task<IEnumerable<Outsources>> GetOutsourceActiveAsync(
+        public async Task<IEnumerable<Outsource>> GetOutsourceActiveAsync(
             string? search,
             DateOnly? date,
             string? time_period,
@@ -41,7 +41,7 @@ namespace Service
                 filter_available
             );
         }
-        public async Task UpdateOutsourceAsync(int id, Outsources outsource)
+        public async Task UpdateOutsourceAsync(int id, Outsource outsource)
         {
             var exinstingOutsource = await _repo.Outsource.GetOutsourceByIdAsync(id);
 

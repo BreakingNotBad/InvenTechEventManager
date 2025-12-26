@@ -13,16 +13,16 @@ namespace Service
             _repo = repo;
         }
 
-        public async Task<IEnumerable<Events>> GetEventsAsync()
+        public async Task<IEnumerable<Event>> GetEventsAsync()
         {
             return await _repo.Event.GetEventsAsync();
         }
 
-        public async Task<Events?> GetEventByIdAsync(int id)
+        public async Task<Event?> GetEventByIdAsync(int id)
         {
             return await _repo.Event.GetEventByIdAsync(id);
         }
-        public async Task CreateEventAsync(Events eventEntity)
+        public async Task CreateEventAsync(Event eventEntity)
         {
             _repo.Event.CreateEvent(eventEntity);
             await _repo.SaveAsync();

@@ -4,9 +4,9 @@ namespace Service.Contract
 {
     public interface IEquipmentService
     {
-        Task<IEnumerable<Equipments>> GetEquipmentAsync();
-        Task<Equipments?> GetEquipmentByIdAsync(int id);
-        Task CreateEquipmentAsync(Equipments equipment);
+        Task<IEnumerable<Equipment>> GetEquipmentAsync();
+        Task<Equipment?> GetEquipmentByIdAsync(int id);
+        Task CreateEquipmentAsync(Equipment equipment);
         Task DeleteEquipment(int id);
 
     }

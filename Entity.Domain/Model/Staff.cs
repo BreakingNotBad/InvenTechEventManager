@@ -7,14 +7,16 @@ namespace Entity.Domain.Model
         [Key]
         public int StaffId { get; set; }
         public required string FullName { get; set; }
-        public string Email { get; set; } = string.Empty;
-        public string PhoneNumber { get; set; } = string.Empty;
+        public string? Email { get; set; } 
+        public string? PhoneNumber { get; set; }
         public required string[] Roles { get; set; }
-        public byte[] Avatar { get; set; } = Array.Empty<byte>();
+        public byte[]? Avatar { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
-        public ICollection<StaffPermissions> StaffPermissions { get; set; } = new List<StaffPermissions>();
-        public ICollection<Events> CreatedEvents{ get; set; } = new List<Events>();
-        public ICollection<EventStaff> EventStaffs { get; set; } = new List<EventStaff>();
+
+        public ICollection<StaffPermission> StaffPermissions { get; set; } = new List<StaffPermission>();
+        public ICollection<Event> CreatedEvents { get; set; } = new List<Event>();
+        public ICollection<EventStaff> EventStaff { get; set; } = new List<EventStaff>();
+        public ICollection<StaffRole> StaffRoles { get; set; } = new List<StaffRole>();
     }
 }

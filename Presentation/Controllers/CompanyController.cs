@@ -62,7 +62,7 @@ namespace Presentation.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateCompany([FromBody] Entity.Domain.Model.Companies company)
+        public async Task<IActionResult> CreateCompany([FromBody] Entity.Domain.Model.Company company)
         {
             if (company == null) return BadRequest();
 
@@ -79,7 +79,7 @@ namespace Presentation.Controllers
         }
 
         [HttpPut("UpdateCompanyBy{id:int}")]
-        public async Task<IActionResult> UpdateCompany(int id, [FromBody] Entity.Domain.Model.Companies company)
+        public async Task<IActionResult> UpdateCompany(int id, [FromBody] Entity.Domain.Model.Company company)
         {
             if (id != company.CompanyId)
             {
@@ -95,9 +95,7 @@ namespace Presentation.Controllers
         public async Task<IActionResult> GetCompanyContactByCompanyId(int id)
         {
             var companycontact = await _service.Company.GetCompanyContactByCompanyIdAsync(id);
-            if (companycontact == null) return NotFound();
             return Ok(companycontact);
         }
-
     }
 }

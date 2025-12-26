@@ -2,12 +2,13 @@
 
 namespace Entity.Domain.Model
 {
-    public class Permissions
+    public class Permission
     {
         [Key]
         public int PermissionId { get; set; }
-        public string PermissionName { get; set; } = string.Empty;
+        public required string PermissionName { get; set; }
         public string? Description { get; set; }
-        public ICollection<StaffPermissions> StaffPermissions { get; set; } = new List<StaffPermissions>();
+
+        public ICollection<StaffPermission> StaffPermissions { get; set; } = new List<StaffPermission>();
     }
 }

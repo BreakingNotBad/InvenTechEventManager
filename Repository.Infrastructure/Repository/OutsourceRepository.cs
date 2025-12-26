@@ -6,23 +6,23 @@ using Repository.Repositories;
 
 namespace Repository.Infrastructure.Repository
 {
-    public class OutsourceRepository : RepositoryBase<Outsources>, IOutsourceRepository
+    public class OutsourceRepository : RepositoryBase<Outsource>, IOutsourceRepository
     {
         public OutsourceRepository(RepositoryContext context) : base(context)
         {
         }
 
-        public async Task<IEnumerable<Outsources>> GetOutsourceAsyn()
+        public async Task<IEnumerable<Outsource>> GetOutsourceAsyn()
         {
             return await FindAll(trackChanges: false).ToListAsync();
         }
 
-        public async Task<Outsources?> GetOutsourceByIdAsync(int id)
+        public async Task<Outsource?> GetOutsourceByIdAsync(int id)
         {
             return await FindByCondition(e => e.OutsourceId == id, trackChanges: false)
                 .FirstOrDefaultAsync();
         }
-        public async Task<IEnumerable<Outsources>> GetOutsourceActiveAsync(
+        public async Task<IEnumerable<Outsource>> GetOutsourceActiveAsync(
             string? search,
             DateOnly? date,
             string? time_period,
@@ -40,15 +40,15 @@ namespace Repository.Infrastructure.Repository
             // ???? Query ?????????????
             return await query.OrderBy(s => s.FullName).ToListAsync();
         }
-        public void Createoutsource(Outsources outsource)
+        public void Createoutsource(Outsource outsource)
         {
             Create(outsource);
         }
-        public void Updateoutsource(Outsources outsource)
+        public void Updateoutsource(Outsource outsource)
         {
             Update(outsource);
         }
-        public async void Deleteoutsource(Outsources outsource)
+        public async void Deleteoutsource(Outsource outsource)
         {
             Delete(outsource);
             await Task.CompletedTask;

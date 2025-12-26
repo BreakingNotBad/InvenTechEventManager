@@ -2,10 +2,10 @@
 
 namespace Contract.Interfaces.IRepository;
 
-public interface IEventRepository : IRepositoryBase<Events>
+public interface IEventRepository : IRepositoryBase<Event>
 {
-    Task<IEnumerable<Events>> GetEventsAsync();
-    Task<Events?> GetEventByIdAsync(int id);
-    void CreateEvent(Events eventEntity);
-    void DeleteEvent(Events eventEntity);
+    Task<IEnumerable<Event>> GetEventsAsync();
+    Task<Event?> GetEventByIdAsync(int id);
+    void CreateEvent(Event eventEntity);
+    void DeleteEvent(Event eventEntity);
 }

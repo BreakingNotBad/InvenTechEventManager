@@ -31,7 +31,7 @@ namespace Presentation.Controllers
             return Ok(item);
         }
         [HttpPost]
-        public async Task<IActionResult> CreatePackage([FromBody] Packages package)
+        public async Task<IActionResult> CreatePackage([FromBody] Package package)
         {
             await _service.Package.CreatePackageAsync(package);
             return CreatedAtAction(nameof(GetPackageById), new { id = package.PackageId }, package);

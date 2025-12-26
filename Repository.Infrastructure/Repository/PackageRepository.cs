@@ -6,27 +6,27 @@ using Repository.Repositories;
 
 namespace Repository.Infrastructure.Repository
 {
-    public class PackageRepository : RepositoryBase<Packages>, IPackageRepository
+    public class PackageRepository : RepositoryBase<Package>, IPackageRepository
     {
         public PackageRepository(RepositoryContext context) : base(context)
         {
         }
 
-        public async Task<IEnumerable<Packages>> GetPackagesAsync()
+        public async Task<IEnumerable<Package>> GetPackagesAsync()
         {
             return await FindAll(trackChanges: false).ToListAsync();
         }
 
-        public async Task<Packages?> GetPackageByIdAsync(int id)
+        public async Task<Package?> GetPackageByIdAsync(int id)
         {
             return await FindByCondition(e => e.PackageId == id, trackChanges: false)
                 .FirstOrDefaultAsync();
         }
-        public void CreatePackage(Packages package)
+        public void CreatePackage(Package package)
         {
             Create(package);
         }
-        public async void DeletePackage(Packages package)
+        public async void DeletePackage(Package package)
         {
             Delete(package);
             await Task.CompletedTask;

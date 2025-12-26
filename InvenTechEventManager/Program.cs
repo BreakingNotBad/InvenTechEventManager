@@ -5,6 +5,7 @@ using Repository.Infrastructure.Repository;
 using Scalar.AspNetCore;
 using Service;
 using Service.Contract;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,6 +25,14 @@ builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new() { Title = "InventechEvent API", Version = "v1" });
 });
+
+// แก้บรรทัดนี้ครับ (เดิมอาจจะมีแค่ AddControllers()) มาลบด้วยถ้าทำ DTO แล้ว
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        // สั่งให้ Ignore วงจรที่ซ้ำกัน
+        options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+    });
 
 var app = builder.Build();
 

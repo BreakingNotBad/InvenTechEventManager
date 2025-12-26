@@ -3,14 +3,14 @@
 
 namespace Contract.Interfaces.IRepository
 {
-    public interface ICompanyRepository : IRepositoryBase<Companies>
+    public interface ICompanyRepository : IRepositoryBase<Company>
     {
-        Task<IEnumerable<Companies>> GetCompaniesAsync();
-        Task<Companies?> GetCompanyByIdAsync(int id);
-        void CreateCompany(Companies company);
-        void DeleteCompany(Companies company);
-        void UpdateCompany(Companies company);
+        Task<IEnumerable<Company>> GetCompaniesAsync();
+        Task<Company?> GetCompanyByIdAsync(int id);
+        void CreateCompany(Company company);
+        void DeleteCompany(Company company);
+        void UpdateCompany(Company company);
 
-        Task <Companies?> GetCompanyContactsAsync(int id);
+        Task <Company?> GetCompanyContactsAsync(int id);
     }
 }

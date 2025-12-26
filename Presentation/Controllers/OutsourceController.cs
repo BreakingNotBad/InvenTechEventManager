@@ -47,13 +47,13 @@ namespace Presentation.Controllers
             return Ok(outsourceList);
         }
         [HttpPost]
-        public async Task<IActionResult> CreateOutsource([FromBody] Outsources outsource)
+        public async Task<IActionResult> CreateOutsource([FromBody] Outsource outsource)
         {
             await _service.Outsource.CreateOutsourceAsync(outsource);
             return CreatedAtAction(nameof(GetOutsourceById), new { id = outsource.OutsourceId }, outsource);
         }
         [HttpPut("{id:int}")]
-        public async Task<IActionResult> UpdateOutsource(int id, [FromBody] Outsources outsource)
+        public async Task<IActionResult> UpdateOutsource(int id, [FromBody] Outsource outsource)
         {
             await _service.Outsource.UpdateOutsourceAsync(id, outsource);
             return NoContent();
