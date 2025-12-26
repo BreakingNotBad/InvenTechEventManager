@@ -35,5 +35,12 @@ namespace Repository.Infrastructure.Repository
         {
             Update(company);
         }
+
+        public async Task<Companies?> GetCompanyContactsAsync(int id)
+        {
+            return await FindByCondition(e => e.CompanyId == id, trackChanges: false)
+                .Include(e=>e.CompanyContacts)
+                .FirstOrDefaultAsync();
+        }
     }
 }

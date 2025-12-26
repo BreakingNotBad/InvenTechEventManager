@@ -56,5 +56,10 @@ namespace Service
             _repo.Company.UpdateCompany(existingCompany);
             await _repo.SaveAsync();
         }
+
+        public async Task<Companies> GetCompanyContactByCompanyIdAsync(int id)
+        {
+            return await _repo.Company.GetCompanyByIdAsync(id);
+        }
     }
 }

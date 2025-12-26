@@ -10,5 +10,7 @@ namespace Contract.Interfaces.IRepository
         void CreateCompany(Companies company);
         void DeleteCompany(Companies company);
         void UpdateCompany(Companies company);
+
+        Task <Companies?> GetCompanyContactsAsync(int id);
     }
 }

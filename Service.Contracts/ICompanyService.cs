@@ -14,5 +14,7 @@ namespace Service.Contract
         Task CreateCompanyAsync(Companies company);
         Task DeleteCompanyAsync(int id);
         Task UpdateCompanyAsync(Companies company);
+
+        Task<Companies?> GetCompanyContactByCompanyIdAsync (int id);
     }
 }

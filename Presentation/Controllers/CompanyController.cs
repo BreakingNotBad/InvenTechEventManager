@@ -88,5 +88,16 @@ namespace Presentation.Controllers
             await _service.Company.UpdateCompanyAsync(company);
             return NoContent();
         }
+
+
+        //GetCompanyContacts
+        [HttpGet("{id:int}")]
+        public async Task<IActionResult> GetCompanyContactByCompanyId(int id)
+        {
+            var companycontact = await _service.Company.GetCompanyContactByCompanyIdAsync(id);
+            if (companycontact == null) return NotFound();
+            return Ok(companycontact);
+        }
+
     }
 }
