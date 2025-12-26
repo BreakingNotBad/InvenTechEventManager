@@ -14,16 +14,16 @@ namespace Service
             _repo = repo;
         }
 
-        public async Task<IEnumerable<Equipment>> GetEquipmentAsync()
+        public async Task<IEnumerable<Equipments>> GetEquipmentAsync()
         {
             return await _repo.Equipment.GetEquipmentAsync();
         }
 
-        public async Task<Equipment?> GetEquipmentByIdAsync(int id)
+        public async Task<Equipments?> GetEquipmentByIdAsync(int id)
         {
             return await _repo.Equipment.GetEquipmentByIdAsync(id);
         }
-        public async Task CreateEquipmentAsync(Equipment equipment)
+        public async Task CreateEquipmentAsync(Equipments equipment)
         {
             _repo.Equipment.CreateEquipment(equipment);
             await _repo.SaveAsync();

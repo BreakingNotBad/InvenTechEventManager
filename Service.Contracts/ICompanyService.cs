@@ -9,10 +9,10 @@ namespace Service.Contract
 {
     public interface ICompanyService
     {
-        Task<IEnumerable<Company>> GetCompaniesAsync();
-        Task<Company?> GetCompanyByIdAsync(int id);
-        Task CreateCompanyAsync(Company company);
+        Task<IEnumerable<Companies>> GetCompaniesAsync();
+        Task<Companies?> GetCompanyByIdAsync(int id);
+        Task CreateCompanyAsync(Companies company);
         Task DeleteCompanyAsync(int id);
-        Task UpdateCompanyAsync(Company company);
+        Task UpdateCompanyAsync(Companies company);
     }
 }

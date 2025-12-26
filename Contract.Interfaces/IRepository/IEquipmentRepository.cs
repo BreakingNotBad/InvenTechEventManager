@@ -2,11 +2,11 @@ using Entity.Domain.Model;
 
 namespace Contract.Interfaces.IRepository
 {
-    public interface IEquipmentRepository : IRepositoryBase<Equipment>
+    public interface IEquipmentRepository : IRepositoryBase<Equipments>
     {
-        Task<IEnumerable<Equipment>> GetEquipmentAsync();
-        Task<Equipment?> GetEquipmentByIdAsync(int id);
-        void CreateEquipment (Equipment equipment);
-        void DeleteEquipment(Equipment equipment);
+        Task<IEnumerable<Equipments>> GetEquipmentAsync();
+        Task<Equipments?> GetEquipmentByIdAsync(int id);
+        void CreateEquipment (Equipments equipment);
+        void DeleteEquipment(Equipments equipment);
     }
 }

@@ -1,6 +1,6 @@
 ﻿namespace Entity.Domain.Model
 {
-    public class EventEquipment
+    public class EventExtraEquipments
     {
         public int EventId { get; set; }
         public int EquipmentId { get; set; }

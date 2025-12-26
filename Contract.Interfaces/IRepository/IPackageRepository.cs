@@ -2,12 +2,12 @@ using Entity.Domain.Model;
 
 namespace Contract.Interfaces.IRepository
 {
-    public interface IPackageRepository : IRepositoryBase<Package>
+    public interface IPackageRepository : IRepositoryBase<Packages>
     {
-        Task<IEnumerable<Package>> GetPackagesAsync();
-        Task<Package?> GetPackageByIdAsync(int id);
-        void CreatePackage(Package package);
-        void DeletePackage(Package package);
+        Task<IEnumerable<Packages>> GetPackagesAsync();
+        Task<Packages?> GetPackageByIdAsync(int id);
+        void CreatePackage(Packages package);
+        void DeletePackage(Packages package);
     }
 
 }

@@ -7,6 +7,11 @@
         public string Email { get; set; } = string.Empty;
         public string PhoneNumber { get; set; } = string.Empty;
         public required string[] Roles { get; set; }
+        public byte[] Avatar { get; set; } = Array.Empty<byte>();
         public DateTime CreatedAt { get; set; }
+        public DateTime? UpdatedAt { get; set; }
+        public ICollection<StaffPermissions> StaffPermissions { get; set; } = new List<StaffPermissions>();
+        public ICollection<Event> CreatedEvents{ get; set; } = new List<Event>();
+        public ICollection<EventStaff> EventStaffs { get; set; } = new List<EventStaff>();
     }
 }

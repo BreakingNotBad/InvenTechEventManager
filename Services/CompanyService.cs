@@ -19,16 +19,16 @@ namespace Service
             _repo = repo;
         }
 
-        public async Task<IEnumerable<Company>> GetCompaniesAsync()
+        public async Task<IEnumerable<Companies>> GetCompaniesAsync()
         {
             return await _repo.Company.GetCompaniesAsync();
         }
 
-        public async Task<Company?> GetCompanyByIdAsync(int id)
+        public async Task<Companies?> GetCompanyByIdAsync(int id)
         {
             return await _repo.Company.GetCompanyByIdAsync(id);
         }
-        public async Task CreateCompanyAsync(Company company)
+        public async Task CreateCompanyAsync(Companies company)
         {
             _repo.Company.CreateCompany(company);
             await _repo.SaveAsync();
@@ -43,7 +43,7 @@ namespace Service
             _repo.Company.DeleteCompany(exinstingCompany);
             await _repo.SaveAsync();
         }
-        public async Task UpdateCompanyAsync(Company company)
+        public async Task UpdateCompanyAsync(Companies company)
         {
             var existingCompany = await _repo.Company.GetCompanyByIdAsync(company.CompanyId);
             if (existingCompany == null)

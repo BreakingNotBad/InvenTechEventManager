@@ -30,7 +30,7 @@ namespace Presentation.Controllers
         }
 
         [HttpGet("Dropdown")]
-        public async Task<IActionResult> GetCompanyOptions([FromQuery] string? query)
+        public async Task<IActionResult> GetCompanyDropdown([FromQuery] string? query)
         {
             var companies = (await _service.Company.GetCompaniesAsync()).AsQueryable();
 
@@ -62,7 +62,7 @@ namespace Presentation.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateCompany([FromBody] Entity.Domain.Model.Company company)
+        public async Task<IActionResult> CreateCompany([FromBody] Entity.Domain.Model.Companies company)
         {
             if (company == null) return BadRequest();
 
@@ -79,7 +79,7 @@ namespace Presentation.Controllers
         }
 
         [HttpPut("UpdateCompanyBy{id:int}")]
-        public async Task<IActionResult> UpdateCompany(int id, [FromBody] Entity.Domain.Model.Company company)
+        public async Task<IActionResult> UpdateCompany(int id, [FromBody] Entity.Domain.Model.Companies company)
         {
             if (id != company.CompanyId)
             {

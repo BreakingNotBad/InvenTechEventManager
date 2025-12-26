@@ -14,16 +14,16 @@ namespace Service
             _repo = repo;
         }
 
-        public async Task<IEnumerable<Package>> GetPackagesAsync()
+        public async Task<IEnumerable<Packages>> GetPackagesAsync()
         {
             return await _repo.Package.GetPackagesAsync();
         }
 
-        public async Task<Package?> GetPackageByIdAsync(int id)
+        public async Task<Packages?> GetPackageByIdAsync(int id)
         {
             return await _repo.Package.GetPackageByIdAsync(id);
         }
-        public async Task CreatePackageAsync(Package package)
+        public async Task CreatePackageAsync(Packages package)
         {
             _repo.Package.CreatePackage(package);
             await _repo.SaveAsync();

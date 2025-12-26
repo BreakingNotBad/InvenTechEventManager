@@ -6,27 +6,27 @@ using Repository.Repositories;
 
 namespace Repository.Infrastructure.Repository
 {
-    public class EquipmentRepository : RepositoryBase<Equipment>, IEquipmentRepository
+    public class EquipmentRepository : RepositoryBase<Equipments>, IEquipmentRepository
     {
         public EquipmentRepository(RepositoryContext context) : base(context)
         {
         }
 
-        public async Task<IEnumerable<Equipment>> GetEquipmentAsync()
+        public async Task<IEnumerable<Equipments>> GetEquipmentAsync()
         {
             return await FindAll(trackChanges: false).ToListAsync();
         }
 
-        public async Task<Equipment?> GetEquipmentByIdAsync(int id)
+        public async Task<Equipments?> GetEquipmentByIdAsync(int id)
         {
             return await FindByCondition(e => e.EquipmentId == id, trackChanges: false)
                 .FirstOrDefaultAsync();
         }
-        public void CreateEquipment(Equipment equipment)
+        public void CreateEquipment(Equipments equipment)
         {
             Create(equipment);
         }
-        public async void DeleteEquipment(Equipment equipment)
+        public async void DeleteEquipment(Equipments equipment)
         {
             Delete(equipment);
             await Task.CompletedTask;

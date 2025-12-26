@@ -4,9 +4,9 @@ namespace Service.Contract
 {
     public interface IPackageService
     {
-        Task<IEnumerable<Package>> GetPackagesAsync();
-        Task<Package?> GetPackageByIdAsync(int id);
-        Task CreatePackageAsync(Package package);
+        Task<IEnumerable<Packages>> GetPackagesAsync();
+        Task<Packages?> GetPackageByIdAsync(int id);
+        Task CreatePackageAsync(Packages package);
         Task DeletePackage(int id);
     }
 }
