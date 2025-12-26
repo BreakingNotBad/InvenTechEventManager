@@ -30,6 +30,22 @@ namespace Presentation.Controllers
 
             return Ok(item);
         }
+        [HttpGet("{active}")]
+        public async Task<IActionResult> GetOutsourceActive(
+            [FromQuery] string? search,
+            [FromQuery] DateOnly? date,
+            [FromQuery] string? time_period,
+            [FromQuery] Boolean? filter_available
+            )
+        {
+            var outsourceList = await _service.Outsource.GetOutsourceActiveAsync(
+                search,
+                date,
+                time_period,
+                filter_available
+            );
+            return Ok(outsourceList);
+        }
         [HttpPost]
         public async Task<IActionResult> CreateOutsource([FromBody] Outsource outsource)
         {

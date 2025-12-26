@@ -22,6 +22,24 @@ namespace Repository.Infrastructure.Repository
             return await FindByCondition(e => e.OutsourceId == id, trackChanges: false)
                 .FirstOrDefaultAsync();
         }
+        public async Task<IEnumerable<Outsource>> GetOutsourceActiveAsync(
+            string? search,
+            DateOnly? date,
+            string? time_period,
+            Boolean? filter_available
+        )
+        {
+            // ???????? Query Outsource ???????
+            var query = FindAll(trackChanges: false);
+            // ???? Search
+            if (!string.IsNullOrWhiteSpace(search))
+            {
+                var lowerName = search.Trim().ToLower();
+                query = query.Where(s => s.Fullname.ToLower().Contains(lowerName));
+            }
+            // ???? Query ?????????????
+            return await query.OrderBy(s => s.Fullname).ToListAsync();
+        }
         public void Createoutsource(Outsource outsource)
         {
             Create(outsource);

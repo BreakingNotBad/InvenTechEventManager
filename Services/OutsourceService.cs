@@ -27,6 +27,20 @@ namespace Service
             _repo.Outsource.Createoutsource(outsource);
             await _repo.SaveAsync();
         }
+        public async Task<IEnumerable<Outsource>> GetOutsourceActiveAsync(
+            string? search,
+            DateOnly? date,
+            string? time_period,
+            Boolean? filter_available
+        )
+        {
+            return await _repo.Outsource.GetOutsourceActiveAsync(
+                search,
+                date,
+                time_period,
+                filter_available
+            );
+        }
         public async Task UpdateOutsourceAsync(int id, Outsource outsource)
         {
             var exinstingOutsource = await _repo.Outsource.GetOutsourceByIdAsync(id);

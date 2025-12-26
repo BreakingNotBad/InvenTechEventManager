@@ -25,7 +25,7 @@ namespace Repository.Infrastructure.Repository
 
         public async Task<IEnumerable<Staff>> GetStaffByEventIdAsync(int eventId)
         {
-            return await FindByCondition(es => es.EventId == eventId, trackChanges: false)
+            return await FindByCondition(es => es.Event == eventId, trackChanges: false)
                 .ToListAsync();
         }
 
