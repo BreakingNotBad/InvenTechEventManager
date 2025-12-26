@@ -1,10 +1,14 @@
-﻿namespace Entity.Domain.Model
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace Entity.Domain.Model
 {
     public class EquipmentSets
     {
-        public int EquipmentSetId { get; set; }
-        public string PackegeId { get; set; }
-        public ICollection<Equipments> Equipments { get; set; } = new List<Equipments>();
-        public ICollection<Packages> Packages { get; set; } = new List<Packages>();
+        [ForeignKey(nameof(Equipments))]
+        public int EquipmentId { get; set; }
+        public Equipments Equipments { get; set; }
+        [ForeignKey(nameof(Packages))]
+        public int PackegeId { get; set; }
+        public Packages Packages { get; set; }
     }
 }

@@ -1,7 +1,10 @@
-﻿namespace Entity.Domain.Model
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Entity.Domain.Model
 {
     public class Equipments
     {
+        [Key]
         public int EquipmentId { get; set; }
         public string EquipmentName { get; set; } = string.Empty;
         public string Categeory { get; set; }

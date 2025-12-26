@@ -1,9 +1,11 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Entity.Domain.Model
 {
     public class Packages
     {
+        [Key]
         public int PackageId { get; set; }
         public string PackageName { get; set; } = string.Empty;
         public DateTime CreatedAt { get; set; }

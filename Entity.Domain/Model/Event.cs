@@ -1,9 +1,11 @@
-﻿using System.Reflection.Metadata;
+﻿using System.ComponentModel.DataAnnotations;
+using System.Reflection.Metadata;
 
 namespace Entity.Domain.Model
 {
     public class Event
     {
+        [Key]
         public int EventId { get; set; }
         public string EventName { get; set; } = string.Empty;
         public string EventType { get; set; }
@@ -21,7 +23,7 @@ namespace Entity.Domain.Model
             Morning,
             Afternoon,
         }
-        public Blob Document { get; set; } 
+        public byte[] Document { get; set; } 
 
         public int CreatedByStaffId { get; set; }          // FK
         public Staff CreatedByStaff { get; set; } = null!; // Navigation ไป Staff

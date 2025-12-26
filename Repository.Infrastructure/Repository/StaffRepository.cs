@@ -25,7 +25,7 @@ namespace Repository.Infrastructure.Repository
 
         public async Task<IEnumerable<Staff>> GetStaffByEventIdAsync(int eventId)
         {
-            return await FindByCondition(es => es.Event == eventId, trackChanges: false)
+            return await FindByCondition(es => es.StaffId == eventId, trackChanges: false)
                 .ToListAsync();
         }
 
@@ -43,11 +43,11 @@ namespace Repository.Infrastructure.Repository
             if (!string.IsNullOrWhiteSpace(search))
             {
                 var lowerName = search.Trim().ToLower();
-                query = query.Where(s => s.Fullname.ToLower().Contains(lowerName));
+                query = query.Where(s => s.FullName.ToLower().Contains(lowerName));
             }
 
             // สั่ง Query และเรียงลำดับ
-            return await query.OrderBy(s => s.Fullname).ToListAsync();
+            return await query.OrderBy(s => s.FullName).ToListAsync();
         }
 
         public void CreateStaff(Staff staff)

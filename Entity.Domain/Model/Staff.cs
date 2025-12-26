@@ -1,7 +1,10 @@
-﻿namespace Entity.Domain.Model
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Entity.Domain.Model
 {
     public class Staff
     {
+        [Key]
         public int StaffId { get; set; }
         public required string FullName { get; set; }
         public string Email { get; set; } = string.Empty;

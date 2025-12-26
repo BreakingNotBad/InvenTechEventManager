@@ -35,10 +35,10 @@ namespace Repository.Infrastructure.Repository
             if (!string.IsNullOrWhiteSpace(search))
             {
                 var lowerName = search.Trim().ToLower();
-                query = query.Where(s => s.Fullname.ToLower().Contains(lowerName));
+                query = query.Where(s => s.FullName.ToLower().Contains(lowerName));
             }
             // ???? Query ?????????????
-            return await query.OrderBy(s => s.Fullname).ToListAsync();
+            return await query.OrderBy(s => s.FullName).ToListAsync();
         }
         public void Createoutsource(Outsources outsource)
         {
