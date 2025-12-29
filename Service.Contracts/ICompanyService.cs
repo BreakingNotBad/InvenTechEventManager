@@ -1,9 +1,4 @@
 ﻿using Entity.Domain.Model;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Service.Contract
 {
@@ -13,7 +8,7 @@ namespace Service.Contract
         Task<Company?> GetCompanyByIdAsync(int id);
         Task CreateCompanyAsync(Company company);
         Task DeleteCompanyAsync(int id);
-        Task UpdateCompanyAsync(Company company);
+        Task UpdateCompanyAsync(int id, Company company);
 
         Task<Company?> GetCompanyContactByCompanyIdAsync (int id);
     }

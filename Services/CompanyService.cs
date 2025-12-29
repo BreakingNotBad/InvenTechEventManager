@@ -1,12 +1,12 @@
-﻿using Contract.Interfaces.IRepository;
-using Entity.Domain.Model;
-using Microsoft.EntityFrameworkCore;
-using Service.Contract;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Contract.Interfaces.IRepository;
+using Entity.Domain.Model;
+using Microsoft.EntityFrameworkCore;
+using Service.Contract;
 
 namespace Service
 {
@@ -28,31 +28,35 @@ namespace Service
         {
             return await _repo.Company.GetCompanyByIdAsync(id);
         }
+
         public async Task CreateCompanyAsync(Company company)
         {
             _repo.Company.CreateCompany(company);
             await _repo.SaveAsync();
         }
+
         public async Task DeleteCompanyAsync(int id)
         {
             var exinstingCompany = await _repo.Company.GetCompanyByIdAsync(id);
             if (exinstingCompany == null)
             {
-                throw new ArgumentException($"Outsource with id {id} not found.");
+                throw new KeyNotFoundException($"Outsource with id {id} not found.");
             }
             _repo.Company.DeleteCompany(exinstingCompany);
             await _repo.SaveAsync();
         }
-        public async Task UpdateCompanyAsync(Company company)
+
+        public async Task UpdateCompanyAsync(int id, Company company)
         {
-            var existingCompany = await _repo.Company.GetCompanyByIdAsync(company.CompanyId);
+            var existingCompany = await _repo.Company.GetCompanyByIdAsync(id);
             if (existingCompany == null)
             {
-                throw new ArgumentException($"Company with id {company.CompanyId} not found.");
+                throw new KeyNotFoundException($"Company with id {id} not found.");
             }
+
             // Update fields
             existingCompany.CompanyName = company.CompanyName;
-            // Add other fields as necessary
+
             _repo.Company.UpdateCompany(existingCompany);
             await _repo.SaveAsync();
         }
