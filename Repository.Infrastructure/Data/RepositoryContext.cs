@@ -17,12 +17,13 @@ namespace Repository.Infrastructure.Data
         public DbSet<EventStaff> EventStaff { get; set; } = null!;
         public DbSet<Outsource> Outsources { get; set; } = null!;
         public DbSet<EventOutsource> EventOutsources { get; set; } = null!;
-        public DbSet<Package> Packages { get; set; } = null!;
-        public DbSet<EquipmentSet> EquipmentSets { get; set; } = null!;
-        public DbSet<Equipment> Equipments { get; set; } = null!;
-        public DbSet<EventExtraEquipment> EventExtraEquipments { get; set; } = null!;
         public DbSet<Role> Roles { get; set; } = null!;
         public DbSet<StaffRole> StaffRoles { get; set; } = null!;
+        public DbSet<Equipment> Equipments { get; set; } = null!;
+        public DbSet<EquipmentSet> EquipmentSets { get; set; } = null!;
+        public DbSet<EventExtraEquipment> EventExtraEquipments { get; set; } = null!;
+        public DbSet<Category> Categories { get; set; } = null!;
+        public DbSet<Package> Packages { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -91,7 +92,7 @@ namespace Repository.Infrastructure.Data
                 .Entity<Event>()
                 .HasOne(e => e.CreatedByStaff)
                 .WithMany(s => s.CreatedEvents)
-                .HasForeignKey(e => e.CreatedByStaffId)
+                .HasForeignKey(e => e.CreatedByStaffId) 
                 .OnDelete(DeleteBehavior.NoAction);
         }
     }

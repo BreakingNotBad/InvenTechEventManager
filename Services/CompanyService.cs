@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Contract.Interfaces.IRepository;
+using Contract.Interfaces.IRepository.BaseManager;
 using Entity.Domain.Model;
 using Microsoft.EntityFrameworkCore;
 using Service.Contract;

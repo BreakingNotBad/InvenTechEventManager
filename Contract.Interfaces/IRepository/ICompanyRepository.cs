@@ -1,4 +1,5 @@
-﻿using Entity.Domain.Model;
+﻿using Contract.Interfaces.IRepository.BaseManager;
+using Entity.Domain.Model;
 
 
 namespace Contract.Interfaces.IRepository

@@ -1,6 +1,6 @@
 ﻿using Entity.Domain.Model;
 using Microsoft.AspNetCore.Mvc;
-using Service.Contract;
+using Service.Contract.Manager;
 
 namespace Presentation.Controllers
 {

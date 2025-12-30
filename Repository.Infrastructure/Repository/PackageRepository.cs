@@ -2,15 +2,14 @@ using Contract.Interfaces.IRepository;
 using Entity.Domain.Model;
 using Microsoft.EntityFrameworkCore;
 using Repository.Infrastructure.Data;
-using Repository.Repositories;
+using Repository.Infrastructure.Repository.BaseManager;
 
 namespace Repository.Infrastructure.Repository
 {
     public class PackageRepository : RepositoryBase<Package>, IPackageRepository
     {
-        public PackageRepository(RepositoryContext context) : base(context)
-        {
-        }
+        public PackageRepository(RepositoryContext context)
+            : base(context) { }
 
         public async Task<IEnumerable<Package>> GetPackagesAsync()
         {
@@ -22,14 +21,20 @@ namespace Repository.Infrastructure.Repository
             return await FindByCondition(e => e.PackageId == id, trackChanges: false)
                 .FirstOrDefaultAsync();
         }
+
         public void CreatePackage(Package package)
         {
             Create(package);
         }
-        public async void DeletePackage(Package package)
+
+        public void UpdatePackage(Package package)
+        {
+            Update(package);
+        }
+
+        public void DeletePackage(Package package)
         {
             Delete(package);
-            await Task.CompletedTask;
         }
     }
 }

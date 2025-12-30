@@ -1,6 +1,6 @@
 using Entity.Domain.Model;
 using Microsoft.AspNetCore.Mvc;
-using Service.Contract;
+using Service.Contract.Manager;
 
 namespace Presentation.Controllers
 {
@@ -26,22 +26,35 @@ namespace Presentation.Controllers
         public async Task<IActionResult> GetEquipmentById(int id)
         {
             var item = await _service.Equipment.GetEquipmentByIdAsync(id);
-            if (item == null) return NotFound();
+            if (item == null)
+                return NotFound();
 
             return Ok(item);
         }
+
         [HttpPost]
         public async Task<IActionResult> CreateEquipment([FromBody] Equipment equipment)
         {
             await _service.Equipment.CreateEquipmentAsync(equipment);
-            return CreatedAtAction(nameof(GetEquipmentById), new { id = equipment.EquipmentId }, equipment);
+            return CreatedAtAction(
+                nameof(GetEquipmentById),
+                new { id = equipment.EquipmentId },
+                equipment
+            );
         }
+
+        [HttpPut("{id:int}")]
+        public async Task<IActionResult> UpdateEquipment(int id, [FromBody] Equipment equipment)
+        {
+            await _service.Equipment.UpdateEquipmentAsync(id, equipment);
+            return NoContent();
+        }
+
         [HttpDelete("{id:int}")]
         public async Task<IActionResult> DeleteEquipment(int id)
         {
             await _service.Equipment.DeleteEquipment(id);
             return NoContent();
         }
-
     }
 }

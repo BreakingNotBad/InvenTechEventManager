@@ -1,4 +1,4 @@
-using Contract.Interfaces.IRepository;
+using Contract.Interfaces.IRepository.BaseManager;
 using Entity.Domain.Model;
 using Service.Contract;
 
@@ -22,25 +22,13 @@ namespace Service
         {
             return await _repo.Outsource.GetOutsourceByIdAsync(id);
         }
+
         public async Task CreateOutsourceAsync(Outsource outsource)
         {
-            _repo.Outsource.Createoutsource(outsource);
+            _repo.Outsource.CreateOutsource(outsource);
             await _repo.SaveAsync();
         }
-        public async Task<IEnumerable<Outsource>> GetOutsourceActiveAsync(
-            string? search,
-            DateOnly? date,
-            string? time_period,
-            Boolean? filter_available
-        )
-        {
-            return await _repo.Outsource.GetOutsourceActiveAsync(
-                search,
-                date,
-                time_period,
-                filter_available
-            );
-        }
+
         public async Task UpdateOutsourceAsync(int id, Outsource outsource)
         {
             var exinstingOutsource = await _repo.Outsource.GetOutsourceByIdAsync(id);
@@ -50,19 +38,21 @@ namespace Service
                 throw new KeyNotFoundException($"Staff with id: {id} does not exist.");
             }
 
-            _repo.Outsource.Updateoutsource(exinstingOutsource);
+            exinstingOutsource.FullName = outsource.FullName;
+
+            _repo.Outsource.UpdateOutsource(exinstingOutsource);
             await _repo.SaveAsync();
         }
-        public async Task DeleteOutsource(int id)
+
+        public async Task DeleteOutsourceAsync(int id)
         {
             var exinstingOutsource = await _repo.Outsource.GetOutsourceByIdAsync(id);
             if (exinstingOutsource == null)
             {
                 throw new ArgumentException($"Outsource with id {id} not found.");
             }
-            _repo.Outsource.Deleteoutsource(exinstingOutsource);
+            _repo.Outsource.DeleteOutsource(exinstingOutsource);
             await _repo.SaveAsync();
         }
-
     }
 }

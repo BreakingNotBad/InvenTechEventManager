@@ -1,16 +1,16 @@
 using Entity.Domain.Model;
 using Microsoft.AspNetCore.Mvc;
-using Service.Contract;
+using Service.Contract.Manager;
 
 namespace Presentation.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class PackagesController : ControllerBase
+    public class PackageController : ControllerBase
     {
         private readonly IServiceManager _service;
 
-        public PackagesController(IServiceManager service)
+        public PackageController(IServiceManager service)
         {
             _service = service;
         }
@@ -26,16 +26,26 @@ namespace Presentation.Controllers
         public async Task<IActionResult> GetPackageById(int id)
         {
             var item = await _service.Package.GetPackageByIdAsync(id);
-            if (item == null) return NotFound();
+            if (item == null)
+                return NotFound();
 
             return Ok(item);
         }
+
         [HttpPost]
         public async Task<IActionResult> CreatePackage([FromBody] Package package)
         {
             await _service.Package.CreatePackageAsync(package);
             return CreatedAtAction(nameof(GetPackageById), new { id = package.PackageId }, package);
         }
+
+        [HttpPut("{id:int}")]
+        public async Task<IActionResult> UpdatePackage(int id, [FromBody] Package package)
+        {
+            await _service.Package.UpdatePackageAsync(id, package);
+            return Ok(package);
+        }
+
         [HttpDelete("{id:int}")]
         public async Task<IActionResult> DeletePackage(int id)
         {

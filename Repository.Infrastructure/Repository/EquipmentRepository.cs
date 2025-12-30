@@ -2,15 +2,14 @@ using Contract.Interfaces.IRepository;
 using Entity.Domain.Model;
 using Microsoft.EntityFrameworkCore;
 using Repository.Infrastructure.Data;
-using Repository.Repositories;
+using Repository.Infrastructure.Repository.BaseManager;
 
 namespace Repository.Infrastructure.Repository
 {
     public class EquipmentRepository : RepositoryBase<Equipment>, IEquipmentRepository
     {
-        public EquipmentRepository(RepositoryContext context) : base(context)
-        {
-        }
+        public EquipmentRepository(RepositoryContext context)
+            : base(context) { }
 
         public async Task<IEnumerable<Equipment>> GetEquipmentAsync()
         {
@@ -22,14 +21,20 @@ namespace Repository.Infrastructure.Repository
             return await FindByCondition(e => e.EquipmentId == id, trackChanges: false)
                 .FirstOrDefaultAsync();
         }
+
         public void CreateEquipment(Equipment equipment)
         {
             Create(equipment);
         }
+
+        public void UpdateEquipment(Equipment equipment)
+        {
+            Update(equipment);
+        }
+
         public async void DeleteEquipment(Equipment equipment)
         {
             Delete(equipment);
-            await Task.CompletedTask;
         }
     }
 }

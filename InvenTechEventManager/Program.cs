@@ -1,10 +1,10 @@
-﻿using Contract.Interfaces.IRepository;
+﻿using Contract.Interfaces.IRepository.BaseManager;
 using Microsoft.EntityFrameworkCore;
 using Repository.Infrastructure.Data;
-using Repository.Infrastructure.Repository;
+using Repository.Infrastructure.Repository.BaseManager;
 using Scalar.AspNetCore;
-using Service;
-using Service.Contract;
+using Service.Contract.Manager;
+using Service.Manager;
 using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);

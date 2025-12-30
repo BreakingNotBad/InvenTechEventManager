@@ -7,7 +7,7 @@ namespace Service.Contract
         Task<IEnumerable<Equipment>> GetEquipmentAsync();
         Task<Equipment?> GetEquipmentByIdAsync(int id);
         Task CreateEquipmentAsync(Equipment equipment);
+        Task UpdateEquipmentAsync(int id, Equipment equipment);
         Task DeleteEquipment(int id);
-
     }
 }

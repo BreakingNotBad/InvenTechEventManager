@@ -1,4 +1,4 @@
-using Contract.Interfaces.IRepository;
+using Contract.Interfaces.IRepository.BaseManager;
 using Entity.Domain.Model;
 using Service.Contract;
 
@@ -23,21 +23,6 @@ namespace Service
             return await _repo.Staff.GetStaffByIdAsync(id);
         }
 
-        public async Task<IEnumerable<Staff>> GetStaffActiveAsync(
-            string? search,
-            DateOnly? date,
-            string? time_period,
-            Boolean? filter_available
-        )
-        {
-            return await _repo.Staff.GetStaffActiveAsync(
-                search,
-                date,
-                time_period,
-                filter_available
-            );
-        }
-
         public async Task CreateStaffAsync(Staff staff)
         {
             _repo.Staff.CreateStaff(staff);
@@ -52,6 +37,12 @@ namespace Service
             {
                 throw new KeyNotFoundException($"Staff with id: {id} does not exist.");
             }
+
+            exinstingStaff.FullName = staff.FullName;
+            exinstingStaff.Email = staff.Email;
+            exinstingStaff.PhoneNumber = staff.PhoneNumber;
+            exinstingStaff.Avatar = staff.Avatar;
+            exinstingStaff.UpdatedAt = DateTime.UtcNow;
 
             _repo.Staff.UpdateStaff(exinstingStaff);
             await _repo.SaveAsync();

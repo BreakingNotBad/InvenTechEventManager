@@ -1,6 +1,6 @@
 ﻿using Entity.Domain.Model;
 using Microsoft.AspNetCore.Mvc;
-using Service.Contract;
+using Service.Contract.Manager;
 
 namespace Presentation.Controllers
 {
@@ -27,25 +27,6 @@ namespace Presentation.Controllers
         {
             var staff = await _service.Staff.GetStaffByIdAsync(id);
             return Ok(staff);
-        }
-
-        [HttpGet("{active}")]
-        // รับ: query?, date?, time_period?, filter_available?
-        // ส่งออก: staff_id, staff_name, role, avatar_url
-        public async Task<IActionResult> GetStaffActive(
-            [FromQuery] string? search,
-            [FromQuery] DateOnly? date,
-            [FromQuery] string? time_period,
-            [FromQuery] Boolean? filter_available
-        )
-        {
-            var staffList = await _service.Staff.GetStaffActiveAsync(
-                search,
-                date,
-                time_period,
-                filter_available
-            );
-            return Ok(staffList);
         }
 
         [HttpPost]

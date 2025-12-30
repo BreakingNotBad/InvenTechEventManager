@@ -1,7 +1,8 @@
 ﻿using Contract.Interfaces.IRepository;
+using Contract.Interfaces.IRepository.BaseManager;
 using Repository.Infrastructure.Data;
 
-namespace Repository.Infrastructure.Repository
+namespace Repository.Infrastructure.Repository.BaseManager
 {
     public class RepositoryManager : IRepositoryManager
     {

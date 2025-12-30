@@ -1,7 +1,8 @@
-﻿using Contract.Interfaces.IRepository;
+﻿using Contract.Interfaces.IRepository.BaseManager;
 using Service.Contract;
+using Service.Contract.Manager;
 
-namespace Service
+namespace Service.Manager
 {
     public class ServiceManager : IServiceManager
     {

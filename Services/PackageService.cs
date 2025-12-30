@@ -1,6 +1,5 @@
-using Contract.Interfaces.IRepository;
+using Contract.Interfaces.IRepository.BaseManager;
 using Entity.Domain.Model;
-using Microsoft.EntityFrameworkCore;
 using Service.Contract;
 
 namespace Service
@@ -23,17 +22,34 @@ namespace Service
         {
             return await _repo.Package.GetPackageByIdAsync(id);
         }
+
         public async Task CreatePackageAsync(Package package)
         {
             _repo.Package.CreatePackage(package);
             await _repo.SaveAsync();
         }
+
+        public async Task UpdatePackageAsync(int id, Package package)
+        {
+            var existingPackage = await _repo.Package.GetPackageByIdAsync(id);
+            if (existingPackage == null)
+            {
+                throw new KeyNotFoundException($"Package with id {id} not found.");
+            }
+
+            existingPackage.PackageName = package.PackageName;
+            existingPackage.UpdatedAt = DateTime.UtcNow;
+
+            _repo.Package.UpdatePackage(existingPackage);
+            await _repo.SaveAsync();
+        }
+
         public async Task DeletePackage(int id)
         {
             var existingPackage = await _repo.Package.GetPackageByIdAsync(id);
             if (existingPackage == null)
             {
-                throw new ArgumentException($"Package with id {id} not found.");
+                throw new KeyNotFoundException($"Package with id {id} not found.");
             }
             _repo.Package.DeletePackage(existingPackage);
             await _repo.SaveAsync();

@@ -1,7 +1,7 @@
-﻿using Contract.Interfaces.IRepository;
-using Entity.Domain.Model;
+﻿using Entity.Domain.Model;
 using Service.Contract;
 using Microsoft.EntityFrameworkCore;
+using Contract.Interfaces.IRepository.BaseManager;
 
 namespace Service
 {

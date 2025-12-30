@@ -8,8 +8,8 @@ namespace Entity.Domain.Model
         public int StaffId { get; set; }
         public Staff Staff { get; set; } = null!;
 
-        [ForeignKey(nameof(RoleName))]
+        [ForeignKey(nameof(Role))]
         public int RoleId { get; set; }
-        public Role RoleName { get; set; } = null!;
+        public Role Role { get; set; } = null!;
     }
 }

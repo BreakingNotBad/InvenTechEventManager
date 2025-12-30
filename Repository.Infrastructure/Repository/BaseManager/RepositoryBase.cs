@@ -1,9 +1,9 @@
-﻿using Contract.Interfaces.IRepository;
+﻿using Contract.Interfaces.IRepository.BaseManager;
 using Microsoft.EntityFrameworkCore;
 using Repository.Infrastructure.Data;
 using System.Linq.Expressions;
 
-namespace Repository.Repositories
+namespace Repository.Infrastructure.Repository.BaseManager
 {
     public abstract class RepositoryBase<T> : IRepositoryBase<T> where T : class
     {

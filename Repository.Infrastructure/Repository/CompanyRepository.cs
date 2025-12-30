@@ -2,7 +2,7 @@
 using Entity.Domain.Model;
 using Microsoft.EntityFrameworkCore;
 using Repository.Infrastructure.Data;
-using Repository.Repositories;
+using Repository.Infrastructure.Repository.BaseManager;
 
 namespace Repository.Infrastructure.Repository
 {

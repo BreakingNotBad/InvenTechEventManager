@@ -3,7 +3,7 @@ using Entity.Domain.Model;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Repository.Infrastructure.Data;
-using Repository.Repositories;
+using Repository.Infrastructure.Repository.BaseManager;
 
 namespace Repository.Infrastructure.Repository
 {
@@ -27,27 +27,6 @@ namespace Repository.Infrastructure.Repository
         {
             return await FindByCondition(es => es.StaffId == eventId, trackChanges: false)
                 .ToListAsync();
-        }
-
-        public async Task<IEnumerable<Staff>> GetStaffActiveAsync(
-            string? search,
-            DateOnly? date,
-            string? time_period,
-            bool? filter_available
-        )
-        {
-            // เริ่มต้น Query Staff ทั้งหมด
-            var query = FindAll(trackChanges: false);
-
-            // กรอง Search
-            if (!string.IsNullOrWhiteSpace(search))
-            {
-                var lowerName = search.Trim().ToLower();
-                query = query.Where(s => s.FullName.ToLower().Contains(lowerName));
-            }
-
-            // สั่ง Query และเรียงลำดับ
-            return await query.OrderBy(s => s.FullName).ToListAsync();
         }
 
         public void CreateStaff(Staff staff)

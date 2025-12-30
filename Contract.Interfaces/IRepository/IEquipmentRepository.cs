@@ -1,3 +1,4 @@
+using Contract.Interfaces.IRepository.BaseManager;
 using Entity.Domain.Model;
 
 namespace Contract.Interfaces.IRepository
@@ -7,6 +8,7 @@ namespace Contract.Interfaces.IRepository
         Task<IEnumerable<Equipment>> GetEquipmentAsync();
         Task<Equipment?> GetEquipmentByIdAsync(int id);
         void CreateEquipment (Equipment equipment);
+        void UpdateEquipment(Equipment equipment);
         void DeleteEquipment(Equipment equipment);
     }
 }
