@@ -8,5 +8,7 @@
         IOutsourceService Outsource { get; }
         IEquipmentService Equipment { get; }
         IPackageService Package { get; }
+        IRoleService Role { get; }
+        ICategoryService Category { get; }
     }
 }

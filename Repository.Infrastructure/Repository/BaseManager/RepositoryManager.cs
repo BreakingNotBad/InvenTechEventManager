@@ -13,6 +13,8 @@ namespace Repository.Infrastructure.Repository.BaseManager
         private readonly Lazy<IOutsourceRepository> _outsourceRepo;
         private readonly Lazy<IEquipmentRepository> _equipmentRepo;
         private readonly Lazy<IPackageRepository> _packageRepo;
+        private readonly Lazy<IRoleRepository> _roleRepo;
+        private readonly Lazy<ICategoryRepository> _categoryRepo;
         //private readonly Lazy<ICompanyContactRepository> _companyContactRepo;
         //private readonly Lazy<IEquipmentSetContentRepository> _equipmentSetContentRepo;
         //private readonly Lazy<IEquipmentSetRepository> _equipmentSetRepo;
@@ -33,6 +35,8 @@ namespace Repository.Infrastructure.Repository.BaseManager
             _outsourceRepo = new Lazy<IOutsourceRepository>(() => new OutsourceRepository(context));
             _equipmentRepo = new Lazy<IEquipmentRepository>(() => new EquipmentRepository(context));
             _packageRepo = new Lazy<IPackageRepository>(() => new PackageRepository(context));
+            _roleRepo = new Lazy<IRoleRepository>(() => new RoleRepository(context));
+            _categoryRepo = new Lazy<ICategoryRepository>(() => new CategoryRepository(context));
             //_companyContactRepo = new Lazy<ICompanyContactRepository>(() => new CompanyContactRepository(context));
             //_equipmentSetContentRepo = new Lazy<IEquipmentSetContentRepository>(() => new EquipmentSetContentRepository(context));
             //_equipmentSetRepo = new Lazy<IEquipmentSetRepository>(() => new EquipmentSetRepository(context));
@@ -51,6 +55,8 @@ namespace Repository.Infrastructure.Repository.BaseManager
         public IOutsourceRepository Outsource => _outsourceRepo.Value;
         public IEquipmentRepository Equipment => _equipmentRepo.Value;
         public IPackageRepository Package => _packageRepo.Value;
+        public IRoleRepository Role => _roleRepo.Value;
+        public ICategoryRepository Category => _categoryRepo.Value;
         //public ICompanyContactRepository CompanyContact => _companyContactRepo.Value;
         //public IEquipmentSetContentRepository EquipmentSetContent => _equipmentSetContentRepo.Value;
         //public IEquipmentSetRepository EquipmentSet => _equipmentSetRepo.Value;

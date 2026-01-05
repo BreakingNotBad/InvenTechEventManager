@@ -12,6 +12,8 @@ namespace Service.Manager
         private readonly Lazy<IOutsourceService> _outsourceService;
         private readonly Lazy<IEquipmentService> _equipmentService;
         private readonly Lazy<IPackageService> _packageService;
+        private readonly Lazy<IRoleService> _roleService;
+        private readonly Lazy<ICategoryService> _categoryService;
 
         public ServiceManager(IRepositoryManager repo)
         {
@@ -21,6 +23,8 @@ namespace Service.Manager
             _outsourceService = new Lazy<IOutsourceService>(() => new OutsourceService(repo));
             _equipmentService = new Lazy<IEquipmentService>(() => new EquipmentService(repo));
             _packageService = new Lazy<IPackageService>(() => new PackageService(repo));
+            _roleService = new Lazy<IRoleService>(() => new RoleService(repo));
+            _categoryService = new Lazy<ICategoryService>(() => new CategoryService(repo));
         }
 
         public IEventService Event => _eventService.Value;
@@ -29,5 +33,7 @@ namespace Service.Manager
         public IOutsourceService Outsource => _outsourceService.Value;
         public IEquipmentService Equipment => _equipmentService.Value;
         public IPackageService Package => _packageService.Value;
+        public IRoleService Role => _roleService.Value;
+        public ICategoryService Category => _categoryService.Value;
     }
 }

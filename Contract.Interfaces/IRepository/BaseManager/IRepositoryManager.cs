@@ -8,6 +8,8 @@
         IOutsourceRepository Outsource { get; }
         IEquipmentRepository Equipment { get; }
         IPackageRepository Package { get; }
+        IRoleRepository Role { get; }
+        ICategoryRepository Category { get; }
         Task SaveAsync();
     }
 }
