@@ -14,12 +14,13 @@ namespace Repository.Infrastructure.Repository
 
         public async Task<IEnumerable<Company>> GetCompaniesAsync()
         {
-            return await FindAll(trackChanges: false).ToListAsync();
+            return await FindAll(trackChanges: false).Include(e => e.CompanyContacts).ToListAsync();
         }
 
         public async Task<Company?> GetCompanyByIdAsync(int id)
         {
             return await FindByCondition(e => e.CompanyId == id, trackChanges: false)
+                .Include(e => e.CompanyContacts)
                 .FirstOrDefaultAsync();
         }
         public void CreateCompany(Company company)
