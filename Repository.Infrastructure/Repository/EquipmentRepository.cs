@@ -13,7 +13,7 @@ namespace Repository.Infrastructure.Repository
 
         public async Task<IEnumerable<Equipment>> GetEquipmentAsync()
         {
-            return await FindAll(trackChanges: false).ToListAsync();
+            return await FindAll(trackChanges: false).Include(e => e.Category).ToListAsync();
         }
 
         public async Task<Equipment?> GetEquipmentByIdAsync(int id)
