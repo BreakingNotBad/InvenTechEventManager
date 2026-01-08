@@ -19,9 +19,23 @@ namespace Service
             _repo = repo;
         }
 
-        public async Task<IEnumerable<Company>> GetCompaniesAsync()
+        public async Task<IEnumerable<Company>> GetCompaniesAsync(string? query)
         {
-            return await _repo.Company.GetCompaniesAsync();
+            var companiesList = await _repo.Company.GetCompaniesAsync();
+
+            // 🔍 search (case-insensitive)
+            if (!string.IsNullOrWhiteSpace(query))
+            {
+                companiesList = companiesList.Where(c =>
+                    c.CompanyName.Contains(query, StringComparison.OrdinalIgnoreCase) ||
+                    c.CompanyContacts.Any(cc =>
+                        cc.FullName.Contains(query, StringComparison.OrdinalIgnoreCase) ||
+                        cc.Email.Contains(query, StringComparison.OrdinalIgnoreCase)
+                    )
+                );
+            }
+
+            return companiesList;
         }
 
         public async Task<Company?> GetCompanyByIdAsync(int id)

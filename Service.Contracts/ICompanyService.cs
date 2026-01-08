@@ -4,7 +4,8 @@ namespace Service.Contract
 {
     public interface ICompanyService
     {
-        Task<IEnumerable<Company>> GetCompaniesAsync();
+        Task<IEnumerable<Company>> GetCompaniesAsync(
+            string? query);
         Task<Company?> GetCompanyByIdAsync(int id);
         Task CreateCompanyAsync(Company company);
         Task DeleteCompanyAsync(int id);

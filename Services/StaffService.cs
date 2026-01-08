@@ -21,24 +21,27 @@ namespace Service
             DateTime? date,
             string? period)
         {
-            var staffs = _repo.Staff.GetStaffMembersAsync();
+            var staffs = await _repo.Staff.GetStaffMembersAsync();
 
-            var staffList = await staffs;
-
-            //  search (q)
+            //  search (case-insensitive)
             if (!string.IsNullOrWhiteSpace(query))
             {
-                staffList = staffList.Where(s =>
-                    s.FullName.Contains(query) ||
-                    (s.Email != null && s.Email.Contains(query)) ||
-                    (s.PhoneNumber != null && s.PhoneNumber.Contains(query)));
+                staffs = staffs.Where(s =>
+                    s.FullName.Contains(query, StringComparison.OrdinalIgnoreCase) ||
+                    (!string.IsNullOrEmpty(s.Email) &&
+                        s.Email.Contains(query, StringComparison.OrdinalIgnoreCase)) ||
+                    (!string.IsNullOrEmpty(s.PhoneNumber) &&
+                        s.PhoneNumber.Contains(query, StringComparison.OrdinalIgnoreCase))
+                );
             }
 
-            //  filter role
+            //  filter role (case-insensitive ด้วย)
             if (!string.IsNullOrWhiteSpace(role))
             {
-                staffList = staffList.Where(s =>
-                    s.StaffRoles.Any(r => r.Role.RoleName == role));
+                staffs = staffs.Where(s =>
+                    s.StaffRoles.Any(r =>
+                        r.Role.RoleName.Equals(role, StringComparison.OrdinalIgnoreCase))
+                );
             }
 
             //// 📌 filter status (ถ้ามี field Status)
@@ -65,11 +68,11 @@ namespace Service
                     _ => start.AddDays(1)
                 };
 
-                staffList = staffList.Where(s =>
+                staffs = staffs.Where(s =>
                     s.CreatedAt >= start && s.CreatedAt < end);
             }
 
-            return staffList.ToList();
+            return staffs.ToList();
         }
 
         public async Task<Staff?> GetStaffByIdAsync(int id)
