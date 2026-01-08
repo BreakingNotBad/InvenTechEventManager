@@ -1,4 +1,4 @@
-using Contract.Interfaces.IRepository.BaseManager;
+﻿using Contract.Interfaces.IRepository.BaseManager;
 using Entity.Domain.Model;
 using Service.Contract;
 
@@ -13,9 +13,17 @@ namespace Service
             _repo = repo;
         }
 
-        public async Task<IEnumerable<Outsource>> GetOutsources()
+        public async Task<IEnumerable<Outsource>> GetOutsources(string? query)
         {
-            return await _repo.Outsource.GetOutsourceAsyn();
+            var outsourcesList = await _repo.Outsource.GetOutsourceAsyn();
+            //  search (case-insensitive)
+            if (!string.IsNullOrWhiteSpace(query))
+            {
+                outsourcesList = outsourcesList.Where(o =>
+                    o.FullName.Contains(query, StringComparison.OrdinalIgnoreCase)
+                );
+            }
+            return outsourcesList;
         }
 
         public async Task<Outsource?> GetOutsourcesByIdAsync(int id)

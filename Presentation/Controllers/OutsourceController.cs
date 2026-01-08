@@ -16,9 +16,10 @@ namespace Presentation.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetOutsources()
+        public async Task<IActionResult> GetOutsources(
+            [FromQuery(Name = "q")] string? query)
         {
-            var items = await _service.Outsource.GetOutsources();
+            var items = await _service.Outsource.GetOutsources(query);
             return Ok(items);
         }
 
