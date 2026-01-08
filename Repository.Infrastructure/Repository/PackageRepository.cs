@@ -13,7 +13,7 @@ namespace Repository.Infrastructure.Repository
 
         public async Task<IEnumerable<Package>> GetPackagesAsync()
         {
-            return await FindAll(trackChanges: false).ToListAsync();
+            return await FindAll(trackChanges: false).Include(e=>e.EquipmentSets).ThenInclude(es=>es.Equipment).ToListAsync();
         }
 
         public async Task<Package?> GetPackageByIdAsync(int id)

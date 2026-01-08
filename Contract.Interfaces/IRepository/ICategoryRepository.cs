@@ -11,5 +11,5 @@ namespace Contract.Interfaces.IRepository
     {
         Task<IEnumerable<Category>> GetAllCategoryAsync();
 
-    }
+    } 
 }
