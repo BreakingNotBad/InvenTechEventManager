@@ -27,11 +27,7 @@ namespace Service
             if (!string.IsNullOrWhiteSpace(query))
             {
                 companiesList = companiesList.Where(c =>
-                    c.CompanyName.Contains(query, StringComparison.OrdinalIgnoreCase) ||
-                    c.CompanyContacts.Any(cc =>
-                        cc.FullName.Contains(query, StringComparison.OrdinalIgnoreCase) ||
-                        cc.Email.Contains(query, StringComparison.OrdinalIgnoreCase)
-                    )
+                    c.CompanyName.Contains(query, StringComparison.OrdinalIgnoreCase)
                 );
             }
 

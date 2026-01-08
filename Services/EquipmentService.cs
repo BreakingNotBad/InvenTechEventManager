@@ -1,4 +1,4 @@
-using Contract.Interfaces.IRepository.BaseManager;
+﻿using Contract.Interfaces.IRepository.BaseManager;
 using Entity.Domain.Model;
 using Microsoft.EntityFrameworkCore;
 using Service.Contract;
@@ -14,9 +14,28 @@ namespace Service
             _repo = repo;
         }
 
-        public async Task<IEnumerable<Equipment>> GetEquipmentAsync()
+        public async Task<IEnumerable<Equipment>> GetEquipmentAsync(
+            string? query,
+            string? category)
         {
-            return await _repo.Equipment.GetEquipmentAsync();
+            var equipment = await _repo.Equipment.GetEquipmentAsync();
+
+            //  search (q) - case-insensitive
+            if (!string.IsNullOrWhiteSpace(query))
+            {
+                equipment = equipment.Where(e =>
+                    e.EquipmentName.Contains(query, StringComparison.OrdinalIgnoreCase));
+            }
+
+            //  filter category 
+            if (!string.IsNullOrWhiteSpace(category))
+            {
+                equipment = equipment.Where(e =>
+                    e.Category != null &&
+                    e.Category.CategoryName.Contains(category, StringComparison.OrdinalIgnoreCase));
+            }
+
+            return equipment;
         }
 
         public async Task<Equipment?> GetEquipmentByIdAsync(int id)

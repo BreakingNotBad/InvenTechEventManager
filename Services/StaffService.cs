@@ -72,7 +72,7 @@ namespace Service
                     s.CreatedAt >= start && s.CreatedAt < end);
             }
 
-            return staffs.ToList();
+            return staffs;
         }
 
         public async Task<Staff?> GetStaffByIdAsync(int id)

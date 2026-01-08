@@ -16,9 +16,11 @@ namespace Presentation.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetEquipment()
+        public async Task<IActionResult> GetEquipment(
+            [FromQuery(Name = "q")] string? query,
+            [FromQuery] string? category)
         {
-            var items = await _service.Equipment.GetEquipmentAsync();
+            var items = await _service.Equipment.GetEquipmentAsync(query, category);
             return Ok(items);
         }
 
