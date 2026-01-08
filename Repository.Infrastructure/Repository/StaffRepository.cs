@@ -14,12 +14,17 @@ namespace Repository.Infrastructure.Repository
 
         public async Task<IEnumerable<Staff>> GetStaffMembersAsync()
         {
-            return await FindAll(trackChanges: false).ToListAsync();
+            return await FindAll(trackChanges: false)
+                .Include(s => s.StaffRoles)
+                .ThenInclude(sr => sr.Role)
+                .ToListAsync();
         }
 
         public async Task<Staff?> GetStaffByIdAsync(int id)
         {
-            return await FindByCondition(e => e.StaffId == id, trackChanges: false)
+            return await FindByCondition(s => s.StaffId == id, trackChanges: false)
+                .Include(s => s.StaffRoles)
+                .ThenInclude(sr => sr.Role)
                 .FirstOrDefaultAsync();
         }
 

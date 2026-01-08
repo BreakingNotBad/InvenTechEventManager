@@ -16,9 +16,24 @@ namespace Presentation.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetStaffMembers()
+        public async Task<IActionResult> GetStaffMembers(
+            [FromQuery(Name = "q")] string? query,
+            [FromQuery] string? status,
+            [FromQuery] string? role,
+            [FromQuery] bool? available,
+            [FromQuery] DateTime? date,
+            [FromQuery] string? period
+        )
         {
-            var staffList = await _service.Staff.GetStaffMembersAsync();
+            var staffList = await _service.Staff.GetStaffMembersAsync(
+                query,
+                status,
+                role,
+                available,
+                date,
+                period
+            );
+
             return Ok(staffList);
         }
 

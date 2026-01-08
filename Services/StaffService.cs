@@ -1,5 +1,6 @@
-using Contract.Interfaces.IRepository.BaseManager;
+﻿using Contract.Interfaces.IRepository.BaseManager;
 using Entity.Domain.Model;
+using Microsoft.EntityFrameworkCore;
 using Service.Contract;
 
 namespace Service
@@ -13,9 +14,62 @@ namespace Service
             _repo = repo;
         }
 
-        public async Task<IEnumerable<Staff>> GetStaffMembersAsync()
+        public async Task<IEnumerable<Staff>> GetStaffMembersAsync(string? query,
+            string? status,
+            string? role,
+            bool? available,
+            DateTime? date,
+            string? period)
         {
-            return await _repo.Staff.GetStaffMembersAsync();
+            var staffs = _repo.Staff.GetStaffMembersAsync();
+
+            var staffList = await staffs;
+
+            //  search (q)
+            if (!string.IsNullOrWhiteSpace(query))
+            {
+                staffList = staffList.Where(s =>
+                    s.FullName.Contains(query) ||
+                    (s.Email != null && s.Email.Contains(query)) ||
+                    (s.PhoneNumber != null && s.PhoneNumber.Contains(query)));
+            }
+
+            //  filter role
+            if (!string.IsNullOrWhiteSpace(role))
+            {
+                staffList = staffList.Where(s =>
+                    s.StaffRoles.Any(r => r.Role.RoleName == role));
+            }
+
+            //// 📌 filter status (ถ้ามี field Status)
+            //if (!string.IsNullOrWhiteSpace(status))
+            //{
+            //    staffList = staffList.Where(s => s.Status == status);
+            //}
+
+            //// ✅ filter available
+            //if (available.HasValue)
+            //{
+            //    staffList = staffList.Where(s => s.IsAvailable == available.Value);
+            //}
+
+            // 📅 filter date / time_period
+            if (date.HasValue && !string.IsNullOrWhiteSpace(period))
+            {
+                var start = date.Value.Date;
+                DateTime end = period.ToLower() switch
+                {
+                    "day" => start.AddDays(1),
+                    "week" => start.AddDays(7),
+                    "month" => start.AddMonths(1),
+                    _ => start.AddDays(1)
+                };
+
+                staffList = staffList.Where(s =>
+                    s.CreatedAt >= start && s.CreatedAt < end);
+            }
+
+            return staffList.ToList();
         }
 
         public async Task<Staff?> GetStaffByIdAsync(int id)
