@@ -24,6 +24,7 @@ namespace Repository.Infrastructure.Data
         public DbSet<EventExtraEquipment> EventExtraEquipments { get; set; } = null!;
         public DbSet<Category> Categories { get; set; } = null!;
         public DbSet<Package> Packages { get; set; } = null!;
+        public DbSet<EventAttachment> EventAttachments { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

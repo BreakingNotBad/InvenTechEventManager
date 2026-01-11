@@ -9,6 +9,13 @@ namespace Entity.Domain.Model
         Afternoon,
     }
 
+    public enum EventType
+    {
+        Online,
+        Hybrid,
+        Offline
+    }
+
     public class Event
     {
         [Key]
@@ -17,8 +24,7 @@ namespace Entity.Domain.Model
         [MaxLength(255)]
         public required string EventName { get; set; }
 
-        [MaxLength(50)]
-        public required string EventType { get; set; }
+        public required EventType EventType { get; set; }
 
         public required DateOnly MeetingDate { get; set; }
         public required TimeOnly RegistrationTime { get; set; }
@@ -35,11 +41,6 @@ namespace Entity.Domain.Model
 
         [MaxLength(2000)]
         public string? Note { get; set; }
-
-        // 5. Best Practice: เก็บเป็น URL/Path แทนไฟล์ Binary
-        // ถ้ามีหลายไฟล์ แนะนำให้แยกเป็น Table "EventAttachments" ต่างหาก
-        [MaxLength(500)]
-        public string? DocumentUrl { get; set; }
 
         public bool IsDeleted { get; set; } = false;
 
@@ -67,6 +68,7 @@ namespace Entity.Domain.Model
         public Package Package { get; set; } = null!;
 
         // Collections
+        public ICollection<EventAttachment> EventAttachments { get; set; } = new List<EventAttachment>();
         public ICollection<EventStaff> EventStaff { get; set; } = new List<EventStaff>();
         public ICollection<EventOutsource> EventOutsources { get; set; } = new List<EventOutsource>();
         public ICollection<EventExtraEquipment> EventExtraEquipments { get; set; } = new List<EventExtraEquipment>();
