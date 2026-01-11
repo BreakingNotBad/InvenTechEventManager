@@ -17,9 +17,9 @@ namespace Presentation.Controllers
 
         [HttpGet]
         public async Task<IActionResult> GetCompanies(
-            [FromQuery(Name = "q")] string? query)
+            [FromQuery] string? companyName)
         {
-            var companiesList = await _service.Company.GetCompaniesAsync(query);
+            var companiesList = await _service.Company.GetCompaniesAsync(companyName);
             return Ok(companiesList);
         }
 

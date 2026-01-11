@@ -19,15 +19,15 @@ namespace Service
             _repo = repo;
         }
 
-        public async Task<IEnumerable<Company>> GetCompaniesAsync(string? query)
+        public async Task<IEnumerable<Company>> GetCompaniesAsync(string? companyName)
         {
             var companiesList = await _repo.Company.GetCompaniesAsync();
 
             // 🔍 search (case-insensitive)
-            if (!string.IsNullOrWhiteSpace(query))
+            if (!string.IsNullOrWhiteSpace(companyName))
             {
                 companiesList = companiesList.Where(c =>
-                    c.CompanyName.Contains(query, StringComparison.OrdinalIgnoreCase)
+                    c.CompanyName.Contains(companyName, StringComparison.OrdinalIgnoreCase)
                 );
             }
 
