@@ -13,33 +13,60 @@ namespace Entity.Domain.Model
     {
         [Key]
         public int EventId { get; set; }
+
+        [MaxLength(255)]
         public required string EventName { get; set; }
+
+        [MaxLength(50)]
         public required string EventType { get; set; }
+
         public required DateOnly MeetingDate { get; set; }
         public required TimeOnly RegistrationTime { get; set; }
         public required TimeOnly StartTime { get; set; }
         public required TimeOnly EndTime { get; set; }
+
         public required TimePeriod Period { get; set; }
-        public double Latitude { get; set; }
-        public double Longitude { get; set; }
+
+        [Column(TypeName = "decimal(9, 6)")]
+        public decimal Latitude { get; set; }
+
+        [Column(TypeName = "decimal(9, 6)")]
+        public decimal Longitude { get; set; }
+
+        [MaxLength(2000)]
         public string? Note { get; set; }
-        public byte[]? Documents { get; set; }
+
+        // 5. Best Practice: เก็บเป็น URL/Path แทนไฟล์ Binary
+        // ถ้ามีหลายไฟล์ แนะนำให้แยกเป็น Table "EventAttachments" ต่างหาก
+        [MaxLength(500)]
+        public string? DocumentUrl { get; set; }
+
+        public bool IsDeleted { get; set; } = false;
+
         public DateTime CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
 
-        // Relations
-        [ForeignKey(nameof(CreatedByStaff))]
+        // --- Relations ---
+
+        // Staff
         public int CreatedByStaffId { get; set; }
+
+        [ForeignKey(nameof(CreatedByStaffId))]
         public Staff CreatedByStaff { get; set; } = null!;
 
-        [ForeignKey(nameof(Company))]
+        // Company
         public int CompanyId { get; set; }
+
+        [ForeignKey(nameof(CompanyId))]
         public Company Company { get; set; } = null!;
 
-        [ForeignKey(nameof(Package))]
+        // Package
         public int PackageId { get; set; }
+
+        [ForeignKey(nameof(PackageId))]
         public Package Package { get; set; } = null!;
 
+        // Collections
         public ICollection<EventStaff> EventStaff { get; set; } = new List<EventStaff>();
         public ICollection<EventOutsource> EventOutsources { get; set; } = new List<EventOutsource>();
         public ICollection<EventExtraEquipment> EventExtraEquipments { get; set; } = new List<EventExtraEquipment>();

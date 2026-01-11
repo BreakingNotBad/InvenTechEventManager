@@ -5,7 +5,7 @@ using Service.Contract.Manager;
 namespace Presentation.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/equipments")]
     public class EquipmentController : ControllerBase
     {
         private readonly IServiceManager _service;

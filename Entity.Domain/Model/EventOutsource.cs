@@ -4,17 +4,20 @@ namespace Entity.Domain.Model
 {
     public class EventOutsource
     {
-        [ForeignKey(nameof(Event))]
         public int EventId { get; set; }
+
+        [ForeignKey(nameof(EventId))]
         public Event Event { get; set; } = null!;
 
-        [ForeignKey(nameof(Outsource))]
         public int OutsourceId { get; set; }
+
+        [ForeignKey(nameof(OutsourceId))]
         public Outsource Outsource { get; set; } = null!;
 
-        [ForeignKey(nameof(RoleName))]
         public int RoleId { get; set; }
-        public Role RoleName { get; set; } = null!;
+
+        [ForeignKey(nameof(RoleId))]
+        public Role Role { get; set; } = null!;
 
         public DateTime AssignedAt { get; set; }
         public DateTime UpdatedAt { get; set; }

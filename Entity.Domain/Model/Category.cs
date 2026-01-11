@@ -6,6 +6,8 @@ namespace Entity.Domain.Model
     {
         [Key]
         public int CategoryId { get; set; }
+
+        [MaxLength(50)]
         public required string CategoryName { get; set; }
 
         public ICollection<Equipment> Equipments { get; set; } = new List<Equipment>();

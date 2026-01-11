@@ -1,15 +1,23 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Entity.Domain.Model
 {
     public class EquipmentSet
     {
-        [ForeignKey(nameof(Equipment))]
+        [Range(1, 1000)]
+        public int Quantity { get; set; } = 1;
+
+        // Foreign Key: Equipment
         public int EquipmentId { get; set; }
+
+        [ForeignKey(nameof(EquipmentId))]
         public Equipment Equipment { get; set; } = null!;
 
-        [ForeignKey(nameof(Package))]
+        // Foreign Key: Package
         public int PackageId { get; set; }
+
+        [ForeignKey(nameof(PackageId))]
         public Package Package { get; set; } = null!;
     }
 }

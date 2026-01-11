@@ -7,6 +7,8 @@ namespace Entity.Domain.Model
     {
         [Key]
         public int RoleId { get; set; }
+
+        [MaxLength(100)]
         public required string RoleName { get; set; }
 
         public ICollection<StaffRole> StaffRoles { get; set; } = new List<StaffRole>();

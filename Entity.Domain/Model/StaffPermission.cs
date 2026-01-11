@@ -4,12 +4,14 @@ namespace Entity.Domain.Model
 {
     public class StaffPermission
     {
-        [ForeignKey(nameof(Staff))]
         public int StaffId { get; set; }
+
+        [ForeignKey(nameof(StaffId))]
         public Staff Staff { get; set; } = null!;
 
-        [ForeignKey(nameof(Permission))]
         public int PermissionId { get; set; }
+
+        [ForeignKey(nameof(PermissionId))]
         public Permission Permission { get; set; } = null!;
     }
 }

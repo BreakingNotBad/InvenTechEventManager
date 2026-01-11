@@ -1,17 +1,21 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Entity.Domain.Model
 {
     public class EventExtraEquipment
     {
-        [ForeignKey(nameof(Event))]
         public int EventId { get; set; }
+
+        [ForeignKey(nameof(EventId))]
         public Event Event { get; set; } = null!;
 
-        [ForeignKey(nameof(Equipment))]
         public int EquipmentId { get; set; }
+
+        [ForeignKey(nameof(EquipmentId))]
         public Equipment Equipment { get; set; } = null!;
 
-        public int Quantity { get; set; }
+        [Range(1, 1000)]
+        public int Quantity { get; set; } = 1;
     }
 }

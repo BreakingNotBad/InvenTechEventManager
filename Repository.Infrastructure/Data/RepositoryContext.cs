@@ -57,7 +57,7 @@ namespace Repository.Infrastructure.Data
 
                 // เชื่อม Role แบบ One-to-Many ปกติ
                 entity
-                    .HasOne(x => x.RoleName)
+                    .HasOne(x => x.Role)
                     .WithMany(r => r.EventOutsources)
                     .HasForeignKey(x => x.RoleId)
                     .OnDelete(DeleteBehavior.Restrict); // แนะนำ Restrict: ห้ามลบ Role ถ้ามีคนใช้อยู่

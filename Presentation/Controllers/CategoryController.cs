@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace Presentation.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/categories")]
     public class CategoryController:ControllerBase
     {
         private readonly IServiceManager _service;

@@ -7,14 +7,21 @@ namespace Entity.Domain.Model
     {
         [Key]
         public int EquipmentId { get; set; }
+
+        [MaxLength(100)]
         public required string EquipmentName { get; set; }
+
+        public bool IsDeleted { get; set; } = false;
+
         public DateTime CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
 
-
-        [ForeignKey(nameof(Category))]
+        // Foreign Key
         public int CategoryId { get; set; }
-        public Category? Category { get; set; } = null!;
+
+        [ForeignKey(nameof(CategoryId))]
+        public Category? Category { get; set; }
+
         public ICollection<EquipmentSet> EquipmentSets { get; set; } = new List<EquipmentSet>();
     }
 }
