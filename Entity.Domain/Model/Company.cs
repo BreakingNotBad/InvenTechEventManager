@@ -14,10 +14,10 @@ namespace Entity.Domain.Model
         [MaxLength(500)]
         public string Address { get; set; } = string.Empty;
 
-        [Column(TypeName = "decimal(9, 6)")]
+        [Column(TypeName = "decimal(18, 15)")]
         public decimal? Latitude { get; set; }
 
-        [Column(TypeName = "decimal(9, 6)")]
+        [Column(TypeName = "decimal(18, 15)")]
         public decimal? Longitude { get; set; }
 
         public bool IsDeleted { get; set; } = false;

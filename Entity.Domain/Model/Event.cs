@@ -27,10 +27,10 @@ namespace Entity.Domain.Model
 
         public required TimePeriod Period { get; set; }
 
-        [Column(TypeName = "decimal(9, 6)")]
+        [Column(TypeName = "decimal(18, 15)")]
         public decimal Latitude { get; set; }
 
-        [Column(TypeName = "decimal(9, 6)")]
+        [Column(TypeName = "decimal(18, 15)")]
         public decimal Longitude { get; set; }
 
         [MaxLength(2000)]
