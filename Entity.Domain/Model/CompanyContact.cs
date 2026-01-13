@@ -8,7 +8,7 @@ namespace Entity.Domain.Model
         [Key]
         public int CompanyContactId { get; set; }
 
-        [MaxLength(200)]
+        [MaxLength(255)]
         public required string FullName { get; set; }
 
         [MaxLength(255)]
