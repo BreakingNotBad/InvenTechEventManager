@@ -100,7 +100,7 @@ namespace Service
             company.Latitude = dto.Latitude;
             company.Longitude = dto.Longitude;
 
-            // update contacts (ถ้ามี)
+            // update contacts
             if (dto.CompanyContacts != null)
             {
                 foreach (var contactDto in dto.CompanyContacts)
@@ -124,8 +124,11 @@ namespace Service
                         company.CompanyContacts.Add(new CompanyContact
                         {
                             FullName = contactDto.FullName,
+                            Position = contactDto.Position,
                             Email = contactDto.Email,
-                            IsPrimary = contactDto.IsPrimary
+                            PhoneNumber = contactDto.PhoneNumber,
+                            IsPrimary = contactDto.IsPrimary,
+                            IsDeleted = contactDto.IsDeleted
                         });
                     }
                 }
