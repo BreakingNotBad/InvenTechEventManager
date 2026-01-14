@@ -75,11 +75,20 @@ namespace Presentation.Controllers
         }
 
         [HttpPut("{id:int}")]
-        public async Task<IActionResult> UpdateStaff(int id,Staff staff)
+        public async Task<IActionResult> UpdateStaff(
+            int id,
+            [FromBody] UpdateStaffRequest request)
         {
-            await _service.Staff.UpdateStaffAsync(id, staff);
-            return Ok(staff);
+            if (!ModelState.IsValid)
+            {
+                return UnprocessableEntity(ModelState);
+            }
+
+            await _service.Staff.UpdateStaffAsync(id, request);
+            return NoContent();
         }
+
+
         [HttpPatch("{id:int}")]
         public async Task<IActionResult> SoftDeleteStaff(int id,bool isDeleted)
         {

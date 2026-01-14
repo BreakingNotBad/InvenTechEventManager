@@ -22,7 +22,7 @@ namespace Repository.Infrastructure.Repository
 
         public async Task<Staff?> GetStaffByIdAsync(int id)
         {
-            return await FindByCondition(s => s.StaffId == id, trackChanges: false)
+            return await FindByCondition(s => s.StaffId == id, trackChanges: true)
                 .Include(s => s.StaffRoles)
                 .ThenInclude(sr => sr.Role)
                 .FirstOrDefaultAsync();

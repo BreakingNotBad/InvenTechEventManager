@@ -1,4 +1,5 @@
-﻿using Contract.Interfaces.IRepository.BaseManager;
+﻿using Contract.Interfaces.DTOs;
+using Contract.Interfaces.IRepository.BaseManager;
 using Entity.Domain.Model;
 using Microsoft.EntityFrameworkCore;
 using Service.Contract;
@@ -96,22 +97,41 @@ namespace Service
             await _repo.SaveAsync(); 
         }
 
-        public async Task UpdateStaffAsync(int id, Staff staff)
+        public async Task UpdateStaffAsync(int id, UpdateStaffRequest request)
         {
-            var exinstingStaff = await _repo.Staff.GetStaffByIdAsync(id);
+            var existingStaff = await _repo.Staff
+                .GetStaffByIdAsync(id);
 
-            if (exinstingStaff == null)
+            if (existingStaff == null)
             {
-                throw new KeyNotFoundException($"Staff with id: {id} does not exist.");
+                throw new KeyNotFoundException($"Staff with id {id} not found.");
             }
 
-            exinstingStaff.FullName = staff.FullName;
-            exinstingStaff.Email = staff.Email;
-            exinstingStaff.PhoneNumber = staff.PhoneNumber;
-            exinstingStaff.Avatar = staff.Avatar;
-            exinstingStaff.UpdatedAt = DateTime.UtcNow;
+            // update staff fields
+            existingStaff.FullName = request.FullName;
+            existingStaff.Email = request.Email;
+            existingStaff.PhoneNumber = request.PhoneNumber;
+            existingStaff.Avatar = request.Avatar;
+            existingStaff.UpdatedAt = DateTime.UtcNow;
 
-            _repo.Staff.UpdateStaff(exinstingStaff);
+            // update roles (ถ้าส่งมา)
+            if (request.RoleIds != null)
+            {
+                // ลบ role เดิม
+                existingStaff.StaffRoles.Clear();
+
+                // เพิ่ม role ใหม่
+                foreach (var roleId in request.RoleIds)
+                {
+                    existingStaff.StaffRoles.Add(new StaffRole
+                    {
+                        RoleId = roleId,
+                        StaffId = existingStaff.StaffId
+                    });
+                }
+            }
+
+            _repo.Staff.UpdateStaff(existingStaff);
             await _repo.SaveAsync();
         }
 
