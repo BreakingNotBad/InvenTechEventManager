@@ -13,14 +13,14 @@ namespace Service
             _repo = repo;
         }
 
-        public async Task<IEnumerable<Outsource>> GetOutsources(string? query)
+        public async Task<IEnumerable<Outsource>> GetOutsources(string? fullName)
         {
             var outsourcesList = await _repo.Outsource.GetOutsourceAsyn();
-            //  search (case-insensitive)
-            if (!string.IsNullOrWhiteSpace(query))
+            //  search 
+            if (!string.IsNullOrWhiteSpace(fullName))
             {
                 outsourcesList = outsourcesList.Where(o =>
-                    o.FullName.Contains(query, StringComparison.OrdinalIgnoreCase)
+                    o.FullName.Contains(fullName, StringComparison.OrdinalIgnoreCase)
                 );
             }
             return outsourcesList;

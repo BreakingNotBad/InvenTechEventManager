@@ -14,7 +14,8 @@ namespace Service
             _repo = repo;
         }
 
-        public async Task<IEnumerable<Staff>> GetStaffMembersAsync(string? query,
+        public async Task<IEnumerable<Staff>> GetStaffMembersAsync(
+            string? fullName,
             string? status,
             string? role,
             bool? available,
@@ -23,19 +24,19 @@ namespace Service
         {
             var staffs = await _repo.Staff.GetStaffMembersAsync();
 
-            //  search (case-insensitive)
-            if (!string.IsNullOrWhiteSpace(query))
+            //  search 
+            if (!string.IsNullOrWhiteSpace(fullName))
             {
                 staffs = staffs.Where(s =>
-                    s.FullName.Contains(query, StringComparison.OrdinalIgnoreCase) ||
+                    s.FullName.Contains(fullName, StringComparison.OrdinalIgnoreCase) ||
                     (!string.IsNullOrEmpty(s.Email) &&
-                        s.Email.Contains(query, StringComparison.OrdinalIgnoreCase)) ||
+                        s.Email.Contains(fullName, StringComparison.OrdinalIgnoreCase)) ||
                     (!string.IsNullOrEmpty(s.PhoneNumber) &&
-                        s.PhoneNumber.Contains(query, StringComparison.OrdinalIgnoreCase))
+                        s.PhoneNumber.Contains(fullName, StringComparison.OrdinalIgnoreCase))
                 );
             }
 
-            //  filter role (case-insensitive ด้วย)
+            //  filter role
             if (!string.IsNullOrWhiteSpace(role))
             {
                 staffs = staffs.Where(s =>
@@ -44,19 +45,19 @@ namespace Service
                 );
             }
 
-            //// 📌 filter status (ถ้ามี field Status)
+            ////  filter status (ถ้ามี field Status)
             //if (!string.IsNullOrWhiteSpace(status))
             //{
             //    staffList = staffList.Where(s => s.Status == status);
             //}
 
-            //// ✅ filter available
+            //// filter available
             //if (available.HasValue)
             //{
             //    staffList = staffList.Where(s => s.IsAvailable == available.Value);
             //}
 
-            // 📅 filter date / time_period
+            //  filter date / time_period
             if (date.HasValue && !string.IsNullOrWhiteSpace(period))
             {
                 var start = date.Value.Date;
@@ -115,6 +116,17 @@ namespace Service
             }
 
             _repo.Staff.DeleteStaff(exinstingStaff);
+            await _repo.SaveAsync();
+        }
+        public async Task SoftDeleteStaffAsync(int id, bool isDeleted)
+        {
+            var existingStaff = await _repo.Staff.GetStaffByIdAsync(id);
+            if (existingStaff == null)
+            {
+                throw new KeyNotFoundException($"Staff with id {id} not found.");
+            }
+            existingStaff.IsDeleted = isDeleted;
+            _repo.Staff.UpdateStaff(existingStaff);
             await _repo.SaveAsync();
         }
     }

@@ -15,16 +15,16 @@ namespace Service
         }
 
         public async Task<IEnumerable<Equipment>> GetEquipmentAsync(
-            string? query,
+            string? equipmentName,
             string? category)
         {
             var equipment = await _repo.Equipment.GetEquipmentAsync();
 
             //  search (q) - case-insensitive
-            if (!string.IsNullOrWhiteSpace(query))
+            if (!string.IsNullOrWhiteSpace(equipmentName))
             {
                 equipment = equipment.Where(e =>
-                    e.EquipmentName.Contains(query, StringComparison.OrdinalIgnoreCase));
+                    e.EquipmentName.Contains(equipmentName, StringComparison.OrdinalIgnoreCase));
             }
 
             //  filter category 

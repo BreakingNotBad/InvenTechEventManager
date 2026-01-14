@@ -5,12 +5,13 @@ namespace Service.Contract
     public interface ICompanyService
     {
         Task<IEnumerable<Company>> GetCompaniesAsync(
-            string? companyName);
+            string? companyName,
+            string? companyContact);
         Task<Company?> GetCompanyByIdAsync(int id);
         Task CreateCompanyAsync(Company company);
         Task DeleteCompanyAsync(int id);
         Task UpdateCompanyAsync(int id, Company company);
-
+        Task SoftDeleteCompanyAsync(int id, bool isDeleted);
         Task<Company?> GetCompanyContactByCompanyIdAsync (int id);
     }
 }

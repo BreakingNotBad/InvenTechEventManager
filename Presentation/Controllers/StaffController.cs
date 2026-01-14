@@ -17,16 +17,16 @@ namespace Presentation.Controllers
 
         [HttpGet]
         public async Task<IActionResult> GetStaffMembers(
-            [FromQuery(Name = "q")] string? query,
-            [FromQuery] string? status,
-            [FromQuery] string? role,
-            [FromQuery] bool? available,
-            [FromQuery] DateTime? date,
-            [FromQuery] string? period
+            string? fullName,
+            string? status,
+            string? role,
+            DateTime? date,
+            bool? available,
+            string? period
         )
         {
             var staffList = await _service.Staff.GetStaffMembersAsync(
-                query,
+                fullName,
                 status,
                 role,
                 available,
@@ -45,17 +45,23 @@ namespace Presentation.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateStaff([FromBody] Staff staff)
+        public async Task<IActionResult> CreateStaff(Staff staff)
         {
             await _service.Staff.CreateStaffAsync(staff);
             return CreatedAtAction(nameof(GetStaffById), new { id = staff.StaffId }, staff);
         }
 
         [HttpPut("{id:int}")]
-        public async Task<IActionResult> UpdateStaff(int id, [FromBody] Staff staff)
+        public async Task<IActionResult> UpdateStaff(int id,Staff staff)
         {
             await _service.Staff.UpdateStaffAsync(id, staff);
             return Ok(staff);
+        }
+        [HttpPatch("{id:int}")]
+        public async Task<IActionResult> SoftDeleteStaff(int id,bool isDeleted)
+        {
+            await _service.Staff.SoftDeleteStaffAsync(id, isDeleted);
+            return Ok(new { status = 200 });
         }
 
         [HttpDelete("{id:int}")]

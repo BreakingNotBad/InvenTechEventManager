@@ -5,7 +5,7 @@ namespace Service.Contract
     public interface IStaffService
     {
         Task<IEnumerable<Staff>> GetStaffMembersAsync(
-            string? query, 
+            string? fullName, 
             string? status, 
             string? role,
             bool? available,
@@ -15,5 +15,6 @@ namespace Service.Contract
         Task CreateStaffAsync(Staff staff);
         Task UpdateStaffAsync(int id, Staff staff);
         Task DeleteStaffAsync(int id);
+        Task SoftDeleteStaffAsync(int id, bool isDeleted);
     }
 }

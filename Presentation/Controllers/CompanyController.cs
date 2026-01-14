@@ -17,9 +17,12 @@ namespace Presentation.Controllers
 
         [HttpGet]
         public async Task<IActionResult> GetCompanies(
-            [FromQuery] string? companyName)
+            string? companyName,
+            string? companyContact)
         {
-            var companiesList = await _service.Company.GetCompaniesAsync(companyName);
+            var companiesList = await _service.Company.GetCompaniesAsync(
+                companyName,
+                companyContact);
             return Ok(companiesList);
         }
 
@@ -40,7 +43,7 @@ namespace Presentation.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateCompany([FromBody] Company company)
+        public async Task<IActionResult> CreateCompany(Company company)
         {
             if (company == null)
                 return BadRequest();
@@ -52,12 +55,20 @@ namespace Presentation.Controllers
         [HttpPut("{id:int}")]
         public async Task<IActionResult> UpdateCompany(
             int id,
-            [FromBody] Company company
+            Company company
         )
         {
             await _service.Company.UpdateCompanyAsync(id, company);
             return NoContent();
         }
+
+        [HttpPatch("{id:int}")]
+        public async Task<IActionResult> SoftDeleteCompany( int id, bool isDeleted = true)
+        {
+            await _service.Company.SoftDeleteCompanyAsync(id, isDeleted);
+            return Ok(new { status = 200 });
+        }
+
 
         //GetCompanyContacts
         [HttpGet("cc/{id:int}")]

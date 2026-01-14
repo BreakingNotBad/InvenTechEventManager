@@ -4,7 +4,7 @@ namespace Service.Contract
 {
     public interface IOutsourceService
     {
-        Task<IEnumerable<Outsource>> GetOutsources(string? query);
+        Task<IEnumerable<Outsource>> GetOutsources(string? fullName);
         Task<Outsource?> GetOutsourcesByIdAsync(int id);
         Task CreateOutsourceAsync(Outsource outsource);
         Task UpdateOutsourceAsync(int id, Outsource outsource);

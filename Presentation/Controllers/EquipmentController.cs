@@ -17,10 +17,10 @@ namespace Presentation.Controllers
 
         [HttpGet]
         public async Task<IActionResult> GetEquipment(
-            [FromQuery(Name = "q")] string? query,
-            [FromQuery] string? category)
+            string? equipmentName,
+            string? category)
         {
-            var items = await _service.Equipment.GetEquipmentAsync(query, category);
+            var items = await _service.Equipment.GetEquipmentAsync(equipmentName, category);
             return Ok(items);
         }
 

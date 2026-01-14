@@ -5,7 +5,7 @@ namespace Service.Contract
     public interface IEquipmentService
     {
         Task<IEnumerable<Equipment>> GetEquipmentAsync(
-            string? query,
+            string? equipmentName,
             string? category);
         Task<Equipment?> GetEquipmentByIdAsync(int id);
         Task CreateEquipmentAsync(Equipment equipment);
