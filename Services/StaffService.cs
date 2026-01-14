@@ -83,7 +83,6 @@ namespace Service
 
         public async Task CreateStaffAsync(Staff staff, List<int> roleIds)
         {
-            // Logic การ map RoleIds ใส่ StaffRoles
             if (roleIds != null && roleIds.Any())
             {
                 staff.StaffRoles = new List<StaffRole>();
