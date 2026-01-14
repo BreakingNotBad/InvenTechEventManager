@@ -5,7 +5,6 @@ namespace Contract.DTOs.Company
 {
     public class UpdateCompanyContactDto
     {
-        [JsonIgnore]
         public int? CompanyContactId { get; set; }
         public string FullName { get; set; } = null!;
         public string? Position { get; set; }

@@ -100,6 +100,30 @@ namespace Service
             company.Latitude = dto.Latitude;
             company.Longitude = dto.Longitude;
 
+            //  DELETE logic (สำคัญ)
+            // -----------------------------
+            if (dto.CompanyContacts != null)
+            {
+                // ID ที่ frontend ส่งมา (เฉพาะตัวที่มี ID)
+                var requestContactIds = dto.CompanyContacts
+                    .Where(x => x.CompanyContactId.HasValue)
+                    .Select(x => x.CompanyContactId!.Value)
+                    .ToList();
+
+                // ตัวที่อยู่ใน DB แต่ไม่มีใน request → ต้องลบ
+                var contactsToDelete = company.CompanyContacts
+                    .Where(existing => !requestContactIds.Contains(existing.CompanyContactId))
+                    .ToList();
+
+                foreach (var contact in contactsToDelete)
+                {
+                    // ถ้าเป็น soft delete
+                    //contact.IsDeleted = true;
+
+                    // ❌ ถ้าอยาก hard delete จริง ใช้บรรทัดนี้แทน
+                     _repo.CompanyContact.DeleteCompanyContact(contact);
+                }
+            }
             // update contacts
             if (dto.CompanyContacts != null)
             {
@@ -138,19 +162,6 @@ namespace Service
         }
 
         public async Task SoftDeleteCompanyAsync(int id, bool isDeleted)
-        {
-            var company = await _repo.Company.GetCompanyByIdAsync(id);
-
-            if (company == null)
-            {
-                throw new KeyNotFoundException($"Company with id {id} not found.");
-            }
-            company.IsDeleted = isDeleted;
-
-            _repo.Company.UpdateCompany(company);
-            await _repo.SaveAsync();
-        }
-        public async Task SoftDeleteCompanyContactAsync(int id, bool isDeleted)
         {
             var company = await _repo.Company.GetCompanyByIdAsync(id);
 
