@@ -7,6 +7,8 @@ using Contract.Interfaces.IRepository.BaseManager;
 using Entity.Domain.Model;
 using Microsoft.EntityFrameworkCore;
 using Service.Contract;
+using Contract.DTOs.Company;
+
 
 namespace Service
 {
@@ -82,20 +84,54 @@ namespace Service
             await _repo.SaveAsync();
         }
 
-        public async Task UpdateCompanyAsync(int id, Company company)
+        public async Task UpdateCompanyAsync(int id, UpdateCompanyDto dto)
         {
-            var existingCompany = await _repo.Company.GetCompanyByIdAsync(id);
-            if (existingCompany == null)
-            {
+            var company = await _repo.Company
+                .FindByCondition(c => c.CompanyId == id, trackChanges: true)
+                .Include(c => c.CompanyContacts)
+                .FirstOrDefaultAsync();
+
+            if (company == null)
                 throw new KeyNotFoundException($"Company with id {id} not found.");
+
+            // update company
+            company.CompanyName = dto.CompanyName;
+            company.Address = dto.Address;
+            company.Latitude = dto.Latitude;
+            company.Longitude = dto.Longitude;
+
+            // update contacts (ถ้ามี)
+            if (dto.CompanyContacts != null)
+            {
+                foreach (var contactDto in dto.CompanyContacts)
+                {
+                    if (contactDto.CompanyContactId.HasValue)
+                    {
+                        var contact = company.CompanyContacts
+                            .FirstOrDefault(c => c.CompanyContactId == contactDto.CompanyContactId);
+
+                        if (contact == null) continue;
+
+                        contact.FullName = contactDto.FullName;
+                        contact.Email = contactDto.Email;
+                        contact.IsPrimary = contactDto.IsPrimary;
+                        contact.IsDeleted = contactDto.IsDeleted;
+                    }
+                    else
+                    {
+                        company.CompanyContacts.Add(new CompanyContact
+                        {
+                            FullName = contactDto.FullName,
+                            Email = contactDto.Email,
+                            IsPrimary = contactDto.IsPrimary
+                        });
+                    }
+                }
             }
 
-            // Update fields
-            existingCompany.CompanyName = company.CompanyName;
-
-            _repo.Company.UpdateCompany(existingCompany);
             await _repo.SaveAsync();
         }
+
         public async Task SoftDeleteCompanyAsync(int id, bool isDeleted)
         {
             var company = await _repo.Company.GetCompanyByIdAsync(id);
@@ -109,7 +145,19 @@ namespace Service
             _repo.Company.UpdateCompany(company);
             await _repo.SaveAsync();
         }
+        public async Task SoftDeleteCompanyContactAsync(int id, bool isDeleted)
+        {
+            var company = await _repo.Company.GetCompanyByIdAsync(id);
 
+            if (company == null)
+            {
+                throw new KeyNotFoundException($"Company with id {id} not found.");
+            }
+            company.IsDeleted = isDeleted;
+
+            _repo.Company.UpdateCompany(company);
+            await _repo.SaveAsync();
+        }
 
         public async Task<Company?> GetCompanyContactByCompanyIdAsync(int id)
         {

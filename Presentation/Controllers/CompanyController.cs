@@ -1,4 +1,5 @@
-﻿using Entity.Domain.Model;
+﻿using Contract.DTOs.Company;
+using Entity.Domain.Model;
 using Microsoft.AspNetCore.Mvc;
 using Service.Contract.Manager;
 
@@ -55,10 +56,10 @@ namespace Presentation.Controllers
         [HttpPut("{id:int}")]
         public async Task<IActionResult> UpdateCompany(
             int id,
-            Company company
+            [FromBody] UpdateCompanyDto dto
         )
         {
-            await _service.Company.UpdateCompanyAsync(id, company);
+            await _service.Company.UpdateCompanyAsync(id, dto);
             return NoContent();
         }
 
@@ -68,7 +69,6 @@ namespace Presentation.Controllers
             await _service.Company.SoftDeleteCompanyAsync(id, isDeleted);
             return Ok(new { status = 200 });
         }
-
 
         //GetCompanyContacts
         [HttpGet("cc/{id:int}")]

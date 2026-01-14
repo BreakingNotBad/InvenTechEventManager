@@ -1,4 +1,5 @@
-﻿using Entity.Domain.Model;
+﻿using Contract.DTOs.Company;
+using Entity.Domain.Model;
 
 namespace Service.Contract
 {
@@ -10,7 +11,7 @@ namespace Service.Contract
         Task<Company?> GetCompanyByIdAsync(int id);
         Task CreateCompanyAsync(Company company);
         Task DeleteCompanyAsync(int id);
-        Task UpdateCompanyAsync(int id, Company company);
+        Task UpdateCompanyAsync(int id, UpdateCompanyDto dto);
         Task SoftDeleteCompanyAsync(int id, bool isDeleted);
         Task<Company?> GetCompanyContactByCompanyIdAsync (int id);
     }
