@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Contract.Interfaces.IRepository.BaseManager;
+﻿using Contract.Interfaces.IRepository.BaseManager;
 using Entity.Domain.Model;
 using Microsoft.EntityFrameworkCore;
 using Service.Contract;
@@ -99,6 +94,7 @@ namespace Service
             company.Address = dto.Address;
             company.Latitude = dto.Latitude;
             company.Longitude = dto.Longitude;
+            company.IsDeleted = dto.IsDeleted;
 
             //  DELETE
             if (dto.CompanyContacts != null)
