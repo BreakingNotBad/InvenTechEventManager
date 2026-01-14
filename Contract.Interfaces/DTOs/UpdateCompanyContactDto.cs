@@ -1,11 +1,19 @@
-﻿namespace Contract.DTOs.Company
+﻿using System.ComponentModel;
+using System.Text.Json.Serialization;
+
+namespace Contract.DTOs.Company
 {
     public class UpdateCompanyContactDto
     {
-        public int? CompanyContactId { get; set; } // null = new
+        [JsonIgnore]
+        public int? CompanyContactId { get; set; }
         public string FullName { get; set; } = null!;
+        public string? Position { get; set; }
         public string? Email { get; set; }
-        public bool IsPrimary { get; set; } = false;
-        public bool IsDeleted { get; set; } = false;
+        public string? PhoneNumber { get; set; }
+        [DefaultValue(false)]
+        public bool IsPrimary { get; set; }
+        [DefaultValue(false)]
+        public bool IsDeleted { get; set; }
     }
 }

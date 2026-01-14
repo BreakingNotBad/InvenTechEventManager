@@ -113,7 +113,9 @@ namespace Service
                         if (contact == null) continue;
 
                         contact.FullName = contactDto.FullName;
+                        contact.Position = contactDto.Position;
                         contact.Email = contactDto.Email;
+                        contact.PhoneNumber = contactDto.PhoneNumber;
                         contact.IsPrimary = contactDto.IsPrimary;
                         contact.IsDeleted = contactDto.IsDeleted;
                     }
