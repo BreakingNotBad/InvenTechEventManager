@@ -1,4 +1,5 @@
-﻿using Entity.Domain.Model;
+﻿using Contract.Interfaces.DTOs;
+using Entity.Domain.Model;
 using Microsoft.AspNetCore.Mvc;
 using Service.Contract.Manager;
 
@@ -45,10 +46,35 @@ namespace Presentation.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateStaff(Staff staff)
+        public async Task<IActionResult> CreateStaff([FromBody] CreateStaffRequest request)
         {
-            await _service.Staff.CreateStaffAsync(staff);
-            return CreatedAtAction(nameof(GetStaffById), new { id = staff.StaffId }, staff);
+            if (request == null)
+            {
+                return BadRequest("CreateStaffRequest object is null");
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return UnprocessableEntity(ModelState);
+            }
+
+            // 1. Manual Mapping: ย้ายข้อมูลจาก DTO ลง Entity
+            // (เฉพาะข้อมูลพื้นฐาน ไม่รวม RoleIds)
+            var staffEntity = new Staff
+            {
+                FullName = request.FullName,
+                Email = request.Email,
+                PhoneNumber = request.PhoneNumber
+                // CreatedAt = DateTime.UtcNow // ถ้าไม่ได้ตั้งค่า Default ใน DB
+            };
+
+            // 2. เรียก Service: ส่ง Entity และ RoleIds ไปพร้อมกัน
+            // (Service จะทำหน้าที่เอา RoleIds ไปยัดใส่ staffEntity.StaffRoles ให้เอง)
+            await _service.Staff.CreateStaffAsync(staffEntity, request.RoleIds);
+
+            // 3. Return ผลลัพธ์
+            // ตอนนี้ staffEntity จะมี StaffId แล้ว เพราะผ่านการ SaveChanges ใน Service มาแล้ว
+            return CreatedAtAction(nameof(GetStaffById), new { id = staffEntity.StaffId }, staffEntity);
         }
 
         [HttpPut("{id:int}")]

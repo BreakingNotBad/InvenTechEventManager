@@ -81,10 +81,20 @@ namespace Service
             return await _repo.Staff.GetStaffByIdAsync(id);
         }
 
-        public async Task CreateStaffAsync(Staff staff)
+        public async Task CreateStaffAsync(Staff staff, List<int> roleIds)
         {
+            // Logic การ map RoleIds ใส่ StaffRoles
+            if (roleIds != null && roleIds.Any())
+            {
+                staff.StaffRoles = new List<StaffRole>();
+                foreach (var roleId in roleIds)
+                {
+                    staff.StaffRoles.Add(new StaffRole { RoleId = roleId });
+                }
+            }
+
             _repo.Staff.CreateStaff(staff);
-            await _repo.SaveAsync();
+            await _repo.SaveAsync(); 
         }
 
         public async Task UpdateStaffAsync(int id, Staff staff)
