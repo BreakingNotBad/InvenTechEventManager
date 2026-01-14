@@ -4,6 +4,7 @@
     {
         IEventRepository Event { get; }
         ICompanyRepository Company { get; }
+        ICompanyContactRepository CompanyContact { get; }
         IStaffRepository Staff { get; }
         IOutsourceRepository Outsource { get; }
         IEquipmentRepository Equipment { get; }
