@@ -152,7 +152,12 @@ namespace Service
         }
 
         // UPDATE
-        public async Task UpdateStaffAsync(int id, UpdateStaffDto dto, Stream? avatarStream, string? avatarFileName)
+        public async Task UpdateStaffAsync(
+            int id,
+            UpdateStaffDto dto,
+            Stream? avatarStream,
+            string? avatarFileName
+        )
         {
             var staff = await _repo.Staff.GetStaffByIdAsync(id);
 
@@ -166,7 +171,7 @@ namespace Service
             staff.UpdatedAt = DateTime.UtcNow;
 
             // Delete Avatar
-            if (dto.RemoveAvatar == true)
+            if (dto.DeleteAvatar == true)
             {
                 if (!string.IsNullOrEmpty(staff.Avatar))
                 {
@@ -178,10 +183,15 @@ namespace Service
             else if (avatarStream != null && !string.IsNullOrEmpty(avatarFileName))
             {
                 // 3.1 (Optional) ลบไฟล์เก่าทิ้งก่อน ถ้าต้องการประหยัดพื้นที่
-                 if (!string.IsNullOrEmpty(staff.Avatar)) await _fileService.DeleteFileAsync(staff.Avatar);
+                if (!string.IsNullOrEmpty(staff.Avatar))
+                    await _fileService.DeleteFileAsync(staff.Avatar);
 
                 // 3.2 เซฟไฟล์ใหม่
-                var newAvatarPath = await _fileService.SaveFileAsync(avatarStream, avatarFileName, "Staff");
+                var newAvatarPath = await _fileService.SaveFileAsync(
+                    avatarStream,
+                    avatarFileName,
+                    "Staff"
+                );
 
                 // 3.3 อัปเดต Path ใน DB
                 staff.Avatar = newAvatarPath;
@@ -193,11 +203,9 @@ namespace Service
                 staff.StaffRoles.Clear();
                 foreach (var roleId in dto.RoleIds)
                 {
-                    staff.StaffRoles.Add(new StaffRole
-                    {
-                        StaffId = staff.StaffId,
-                        RoleId = roleId
-                    });
+                    staff.StaffRoles.Add(
+                        new StaffRole { StaffId = staff.StaffId, RoleId = roleId }
+                    );
                 }
             }
 

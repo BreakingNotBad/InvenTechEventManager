@@ -95,12 +95,12 @@ namespace Presentation.Controllers
         {
             var dto = new UpdateStaffDto
             {
-                
+
                 FullName = request.FullName,
                 Email = request.Email,
                 PhoneNumber = request.PhoneNumber,
                 RoleIds = request.RoleIds,
-                RemoveAvatar = request.RemoveAvatar,
+                DeleteAvatar = request.DeleteAvatar,
                 IsDeleted = request.IsDeleted
             };
             Stream? stream = null;
@@ -111,7 +111,6 @@ namespace Presentation.Controllers
                 stream = request.AvatarFile.OpenReadStream();
                 fileName = request.AvatarFile.FileName;
             }
-
 
             using (stream)
             {
