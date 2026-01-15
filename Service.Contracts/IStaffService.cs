@@ -14,7 +14,7 @@ namespace Service.Contract
             string? period);
         Task<Staff?> GetStaffByIdAsync(int id);
         Task<Staff> CreateStaffAsync(CreateStaffDto staffDto, Stream? avatarStream, string? avatarFileName);
-        Task UpdateStaffAsync(int id, UpdateStaffRequest request);
+        Task UpdateStaffAsync(int id, UpdateStaffDto dto, Stream? avatarStream, string? avatarFileName);
         Task DeleteStaffAsync(int id);
         Task SoftDeleteStaffAsync(int id, bool isDeleted);
     }

@@ -152,39 +152,53 @@ namespace Service
         }
 
         // UPDATE
-        public async Task UpdateStaffAsync(int id, UpdateStaffRequest request)
+        public async Task UpdateStaffAsync(int id, UpdateStaffDto dto, Stream? avatarStream, string? avatarFileName)
         {
-            var existingStaff = await _repo.Staff.GetStaffByIdAsync(id);
+            var staff = await _repo.Staff.GetStaffByIdAsync(id);
 
-            if (existingStaff == null)
-            {
+            if (staff == null)
                 throw new KeyNotFoundException($"Staff with id {id} not found.");
+
+            // update fields
+            staff.FullName = dto.FullName;
+            staff.Email = dto.Email;
+            staff.PhoneNumber = dto.PhoneNumber;
+            staff.UpdatedAt = DateTime.UtcNow;
+
+            // avatar
+            if (avatarStream != null && !string.IsNullOrEmpty(avatarFileName))
+            {
+                // 3.1 (Optional) ลบไฟล์เก่าทิ้งก่อน ถ้าต้องการประหยัดพื้นที่
+                 if (!string.IsNullOrEmpty(staff.Avatar)) await _fileService.DeleteFileAsync(staff.Avatar);
+
+                // 3.2 เซฟไฟล์ใหม่
+                var newAvatarPath = await _fileService.SaveFileAsync(avatarStream, avatarFileName, "Staff");
+
+                // 3.3 อัปเดต Path ใน DB
+                staff.Avatar = newAvatarPath;
             }
 
-            // update staff fields
-            existingStaff.FullName = request.FullName;
-            existingStaff.Email = request.Email;
-            existingStaff.PhoneNumber = request.PhoneNumber;
-            existingStaff.Avatar = request.Avatar;
-            existingStaff.UpdatedAt = DateTime.UtcNow;
-            existingStaff.IsDeleted = request.IsDeleted;
-
-            // update roles (ถ้าส่งมา)
-            if (request.RoleIds != null)
+            // roles (เฉพาะเมื่อส่งมา)
+            if (dto.RoleIds != null)
             {
-                // ลบ role เดิม
-                existingStaff.StaffRoles.Clear();
-
-                // เพิ่ม role ใหม่
-                foreach (var roleId in request.RoleIds)
+                staff.StaffRoles.Clear();
+                foreach (var roleId in dto.RoleIds)
                 {
-                    existingStaff.StaffRoles.Add(
-                        new StaffRole { RoleId = roleId, StaffId = existingStaff.StaffId }
-                    );
+                    staff.StaffRoles.Add(new StaffRole
+                    {
+                        StaffId = staff.StaffId,
+                        RoleId = roleId
+                    });
                 }
             }
 
-            _repo.Staff.UpdateStaff(existingStaff);
+            // ✅ soft delete
+            if (dto.IsDeleted.HasValue)
+            {
+                staff.IsDeleted = dto.IsDeleted.Value;
+            }
+
+            _repo.Staff.UpdateStaff(staff);
             await _repo.SaveAsync();
         }
 

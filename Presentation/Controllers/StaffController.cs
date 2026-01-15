@@ -1,6 +1,7 @@
 ﻿using Contract.Interfaces.DTOs;
 using Entity.Domain.Model;
 using Microsoft.AspNetCore.Mvc;
+using Presentation.Requests.Staff;
 using Presentation.Requests.StaffRequests;
 using Service.Contract.Manager;
 
@@ -88,14 +89,35 @@ namespace Presentation.Controllers
         }
 
         [HttpPut("{id:int}")]
-        public async Task<IActionResult> UpdateStaff(int id, [FromBody] UpdateStaffRequest request)
+        public async Task<IActionResult> UpdateStaff(
+            int id,
+            [FromForm] UpdateStaffRequest request)
         {
-            if (!ModelState.IsValid)
+            var dto = new UpdateStaffDto
             {
-                return UnprocessableEntity(ModelState);
+                
+                FullName = request.FullName,
+                Email = request.Email,
+                PhoneNumber = request.PhoneNumber,
+                RoleIds = request.RoleIds,
+
+                IsDeleted = request.IsDeleted
+            };
+            Stream? stream = null;
+            string? fileName = null;
+
+            if (request.AvatarFile != null)
+            {
+                stream = request.AvatarFile.OpenReadStream();
+                fileName = request.AvatarFile.FileName;
             }
 
-            await _service.Staff.UpdateStaffAsync(id, request);
+
+            using (stream)
+            {
+                await _service.Staff.UpdateStaffAsync(id, dto,stream, fileName);
+            }
+
             return NoContent();
         }
 
