@@ -12,6 +12,7 @@ namespace Contract.Interfaces.DTOs
         public string? Email { get; set; }
         public string? PhoneNumber { get; set; }
         public string? Avatar { get; set; }
+        public bool IsDeleted { get; set; } = false;
 
         // ถ้าไม่ส่งมา = ไม่แก้ role
         public List<int>? RoleIds { get; set; }

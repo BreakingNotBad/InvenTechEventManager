@@ -113,6 +113,7 @@ namespace Service
             existingStaff.PhoneNumber = request.PhoneNumber;
             existingStaff.Avatar = request.Avatar;
             existingStaff.UpdatedAt = DateTime.UtcNow;
+            existingStaff.IsDeleted = request.IsDeleted;
 
             // update roles (ถ้าส่งมา)
             if (request.RoleIds != null)
