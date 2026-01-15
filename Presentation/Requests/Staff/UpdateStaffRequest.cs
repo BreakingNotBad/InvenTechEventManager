@@ -14,6 +14,7 @@ namespace Presentation.Requests.Staff
         public string? PhoneNumber { get; set; }
         public IFormFile? AvatarFile { get; set; }
         public bool? IsDeleted { get; set; }
+        public bool? RemoveAvatar { get; set; }
 
         // รับเป็น List ของ Int ตาม JSON
         public List<int> RoleIds { get; set; } = new List<int>();

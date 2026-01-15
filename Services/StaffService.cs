@@ -165,8 +165,17 @@ namespace Service
             staff.PhoneNumber = dto.PhoneNumber;
             staff.UpdatedAt = DateTime.UtcNow;
 
+            // Delete Avatar
+            if (dto.RemoveAvatar == true)
+            {
+                if (!string.IsNullOrEmpty(staff.Avatar))
+                {
+                    await _fileService.DeleteFileAsync(staff.Avatar);
+                }
+                staff.Avatar = null;
+            }
             // avatar
-            if (avatarStream != null && !string.IsNullOrEmpty(avatarFileName))
+            else if (avatarStream != null && !string.IsNullOrEmpty(avatarFileName))
             {
                 // 3.1 (Optional) ลบไฟล์เก่าทิ้งก่อน ถ้าต้องการประหยัดพื้นที่
                  if (!string.IsNullOrEmpty(staff.Avatar)) await _fileService.DeleteFileAsync(staff.Avatar);

@@ -100,7 +100,7 @@ namespace Presentation.Controllers
                 Email = request.Email,
                 PhoneNumber = request.PhoneNumber,
                 RoleIds = request.RoleIds,
-
+                RemoveAvatar = request.RemoveAvatar,
                 IsDeleted = request.IsDeleted
             };
             Stream? stream = null;
