@@ -64,11 +64,14 @@ namespace Presentation.Controllers
         }
 
         [HttpPatch("{id:int}")]
-        public async Task<IActionResult> SoftDeleteCompany( int id, bool isDeleted = true)
+        public async Task<IActionResult> SoftDeleteCompany(
+            int id,
+            [FromQuery] bool isDeleted = true)
         {
             await _service.Company.SoftDeleteCompanyAsync(id, isDeleted);
-            return Ok(new { status = 200 });
+            return Ok();
         }
+
 
         //GetCompanyContacts
         [HttpGet("cc/{id:int}")]
