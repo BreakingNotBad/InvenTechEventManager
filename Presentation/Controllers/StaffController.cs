@@ -63,7 +63,8 @@ namespace Presentation.Controllers
             {
                 FullName = request.FullName,
                 Email = request.Email,
-                PhoneNumber = request.PhoneNumber
+                PhoneNumber = request.PhoneNumber,
+                Avatar = request.Avatar,
               
             };
 

@@ -46,11 +46,20 @@ namespace Service
                 );
             }
 
-            ////  filter status (ถ้ามี field Status)
-            //if (!string.IsNullOrWhiteSpace(status))
-            //{
-            //    staffList = staffList.Where(s => s.Status == status);
-            //}
+            //  filter status (active / inactive)
+            if (!string.IsNullOrWhiteSpace(status))
+            {
+                status = status.Trim().ToLower();
+
+                if (status == "active" || status == "false")
+                {
+                    staffs = staffs.Where(s => !s.IsDeleted);
+                }
+                else if (status == "inactive" || status == "true")
+                {
+                    staffs = staffs.Where(s => s.IsDeleted);
+                }
+            }
 
             //// filter available
             //if (available.HasValue)
