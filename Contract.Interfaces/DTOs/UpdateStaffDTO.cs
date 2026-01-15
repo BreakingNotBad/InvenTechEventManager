@@ -11,7 +11,7 @@ namespace Contract.Interfaces.DTOs
         public required string FullName { get; set; }
         public string? Email { get; set; }
         public string? PhoneNumber { get; set; }
-
+        public string? Avatar { get; set; }
         public bool? IsDeleted { get; set; }
 
         // ถ้าไม่ส่งมา = ไม่แก้ role
