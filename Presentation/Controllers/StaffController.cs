@@ -1,6 +1,7 @@
 ﻿using Contract.Interfaces.DTOs;
 using Entity.Domain.Model;
 using Microsoft.AspNetCore.Mvc;
+using Presentation.Requests.StaffRequests;
 using Service.Contract.Manager;
 
 namespace Presentation.Controllers
@@ -46,39 +47,48 @@ namespace Presentation.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateStaff([FromBody] CreateStaffRequest request)
+        public async Task<IActionResult> CreateStaff([FromForm] CreateStaffRequest request)
         {
-            if (request == null)
-            {
-                return BadRequest("CreateStaffRequest object is null");
-            }
-
-            if (!ModelState.IsValid)
-            {
-                return UnprocessableEntity(ModelState);
-            }
-
-        
-            var staffEntity = new Staff
+            // --- Step 1: แปลง CreateStaffRequest (ที่มีไฟล์) ให้เป็น CreateStaffDto (ไม่มีไฟล์) ---
+            // เราต้อง "สร้างใหม่" (new) ขึ้นมาเอง แล้วจับยัดข้อมูลใส่ทีละตัวครับ
+            var staffDto = new CreateStaffDto
             {
                 FullName = request.FullName,
                 Email = request.Email,
                 PhoneNumber = request.PhoneNumber,
-                Avatar = request.Avatar,
-              
+                RoleIds = request.RoleIds
             };
 
-            
-            await _service.Staff.CreateStaffAsync(staffEntity, request.RoleIds);
+            // --- Step 2: เตรียม Stream จากไฟล์ (ถ้ามี) ---
+            Stream? stream = null;
+            string? fileName = null;
 
-       
-            return CreatedAtAction(nameof(GetStaffById), new { id = staffEntity.StaffId }, staffEntity);
+            if (request.AvatarFile != null)
+            {
+                stream = request.AvatarFile.OpenReadStream();
+                fileName = request.AvatarFile.FileName;
+            }
+
+            // --- Step 3: ส่งของ 3 ชิ้นให้ Service (Dto, Stream, FileName) ---
+            // ใช้ using เพื่อปิด Stream อัตโนมัติเมื่อ Service ทำงานจบ
+            using (stream)
+            {
+                // ตรงนี้แหละครับ คือการส่งของให้ Service
+                // Service จะคืนค่ากลับมาเป็น 'Staff' entity (result)
+                var resultStaff = await _service.Staff.CreateStaffAsync(staffDto, stream, fileName);
+
+                // --- Step 4: Return ผลลัพธ์กลับไปให้ Client ---
+                // เอา resultStaff ที่ได้จาก Service ส่งกลับไป
+                return CreatedAtAction(
+                    nameof(GetStaffById),
+                    new { id = resultStaff.StaffId },
+                    resultStaff
+                );
+            }
         }
 
         [HttpPut("{id:int}")]
-        public async Task<IActionResult> UpdateStaff(
-            int id,
-            [FromBody] UpdateStaffRequest request)
+        public async Task<IActionResult> UpdateStaff(int id, [FromBody] UpdateStaffRequest request)
         {
             if (!ModelState.IsValid)
             {
@@ -89,9 +99,8 @@ namespace Presentation.Controllers
             return NoContent();
         }
 
-
         [HttpPatch("{id:int}")]
-        public async Task<IActionResult> SoftDeleteStaff(int id,bool isDeleted)
+        public async Task<IActionResult> SoftDeleteStaff(int id, bool isDeleted)
         {
             await _service.Staff.SoftDeleteStaffAsync(id, isDeleted);
             return Ok(new { status = 200 });

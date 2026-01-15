@@ -10,5 +10,6 @@
         IPackageService Package { get; }
         IRoleService Role { get; }
         ICategoryService Category { get; }
+        IFileService File { get; }
     }
 }

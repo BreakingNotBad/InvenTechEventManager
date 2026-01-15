@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore;
 using Repository.Infrastructure.Data;
 using Repository.Infrastructure.Repository.BaseManager;
 using Scalar.AspNetCore;
+using Service;
+using Service.Contract;
 using Service.Contract.Manager;
 using Service.Manager;
 using System.Text.Json.Serialization;
@@ -16,6 +18,7 @@ builder.Services.AddDbContext<RepositoryContext>(options =>
 // DI
 builder.Services.AddScoped<IRepositoryManager, RepositoryManager>();
 builder.Services.AddScoped<IServiceManager, ServiceManager>();
+builder.Services.AddScoped<IFileService, FileService>();
 
 builder.Services.AddControllers();
 
@@ -71,6 +74,8 @@ app.UseHttpsRedirection();
 app.UseCors("AllowFrontend");
 
 app.UseAuthorization();
+
+app.UseStaticFiles();
 
 app.MapControllers();
 
