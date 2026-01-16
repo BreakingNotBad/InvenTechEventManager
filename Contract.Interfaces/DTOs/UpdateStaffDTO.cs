@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Contract.Interfaces.DTOs
+﻿namespace Contract.Interfaces.DTOs
 {
     public class UpdateStaffDto
     {
@@ -13,7 +7,7 @@ namespace Contract.Interfaces.DTOs
         public string? PhoneNumber { get; set; }
         public string? Avatar { get; set; }
         public bool? IsDeleted { get; set; }
-        public bool? RemoveAvatar { get; set; }
+        public bool? DeleteAvatar { get; set; }
 
         // ถ้าไม่ส่งมา = ไม่แก้ role
         public List<int>? RoleIds { get; set; }
