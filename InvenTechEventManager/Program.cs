@@ -1,5 +1,6 @@
 ﻿using Contract.Interfaces.IRepository.BaseManager;
 using Microsoft.EntityFrameworkCore;
+using Presentation.Mapping;
 using Repository.Infrastructure.Data;
 using Repository.Infrastructure.Repository.BaseManager;
 using Scalar.AspNetCore;
@@ -19,6 +20,12 @@ builder.Services.AddDbContext<RepositoryContext>(options =>
 builder.Services.AddScoped<IRepositoryManager, RepositoryManager>();
 builder.Services.AddScoped<IServiceManager, ServiceManager>();
 builder.Services.AddScoped<IFileService, FileService>();
+
+// AutoMapper
+builder.Services.AddAutoMapper(typeof(StaffProfile).Assembly);
+
+
+
 
 builder.Services.AddControllers();
 

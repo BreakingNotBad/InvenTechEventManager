@@ -9,7 +9,7 @@ namespace Service.Contract
             string? companyName,
             string? companyContact);
         Task<Company?> GetCompanyByIdAsync(int id);
-        Task CreateCompanyAsync(Company company);
+        Task <Company>CreateCompanyAsync(CreateCompanyDto dto);
         Task DeleteCompanyAsync(int id);
         Task UpdateCompanyAsync(int id, UpdateCompanyDto dto);
         Task SoftDeleteCompanyAsync(int id, bool isDeleted);

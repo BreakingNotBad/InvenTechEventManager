@@ -44,13 +44,11 @@ namespace Presentation.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateCompany(Company company)
+        public async Task<IActionResult> CreateCompany(CreateCompanyDto dto)
         {
-            if (company == null)
-                return BadRequest();
+            var createCompany = await _service.Company.CreateCompanyAsync(dto);
 
-            await _service.Company.CreateCompanyAsync(company);
-            return CreatedAtAction(nameof(GetCompanyById), new { id = company.CompanyId }, company);
+            return CreatedAtAction(nameof(GetCompanyById), new { id = createCompany.CompanyId }, createCompany);
         }
 
         [HttpPut("{id:int}")]

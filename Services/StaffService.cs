@@ -1,4 +1,5 @@
-﻿using Contract.Interfaces.DTOs;
+﻿using AutoMapper;
+using Contract.Interfaces.DTOs;
 using Contract.Interfaces.IRepository.BaseManager;
 using Entity.Domain.Model;
 using Microsoft.EntityFrameworkCore;
@@ -10,11 +11,13 @@ namespace Service
     {
         private readonly IRepositoryManager _repo;
         private readonly IFileService _fileService;
+        private readonly IMapper _mapper;
 
-        public StaffService(IRepositoryManager repo, IFileService fileService)
+        public StaffService(IRepositoryManager repo, IFileService fileService, IMapper mapper)
         {
             _repo = repo;
             _fileService = fileService;
+            _mapper = mapper;
         }
 
         // GET ALL
@@ -126,13 +129,8 @@ namespace Service
             }
 
             // 2. สร้าง Entity (Mapping)
-            var staffEntity = new Staff
-            {
-                FullName = staffDto.FullName,
-                Email = staffDto.Email,
-                PhoneNumber = staffDto.PhoneNumber,
-                Avatar = avatarPath, // เอา Path ที่ได้จากการเซฟมาใส่
-            };
+            var staffEntity = _mapper.Map<Staff>(staffDto);
+            staffEntity.Avatar = avatarPath;
 
             // 3. จัดการ Role
             if (staffDto.RoleIds != null && staffDto.RoleIds.Any())
@@ -160,9 +158,7 @@ namespace Service
                 throw new KeyNotFoundException($"Staff with id {id} not found.");
 
             // update fields
-            staff.FullName = dto.FullName;
-            staff.Email = dto.Email;
-            staff.PhoneNumber = dto.PhoneNumber;
+            _mapper.Map(dto, staff);
             staff.UpdatedAt = DateTime.UtcNow;
 
             // Delete Avatar

@@ -1,4 +1,5 @@
-﻿using Contract.Interfaces.DTOs;
+﻿using AutoMapper;
+using Contract.Interfaces.DTOs;
 using Entity.Domain.Model;
 using Microsoft.AspNetCore.Mvc;
 using Presentation.Requests.Staff;
@@ -12,10 +13,12 @@ namespace Presentation.Controllers
     public class StaffController : ControllerBase
     {
         private readonly IServiceManager _service;
+        private readonly IMapper _mapper;
 
-        public StaffController(IServiceManager service)
+        public StaffController(IServiceManager service, IMapper mapper)
         {
             _service = service;
+            _mapper = mapper;
         }
 
         [HttpGet]
@@ -50,17 +53,8 @@ namespace Presentation.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateStaff([FromForm] CreateStaffRequest request)
         {
-            // --- Step 1: แปลง CreateStaffRequest (ที่มีไฟล์) ให้เป็น CreateStaffDto (ไม่มีไฟล์) ---
-            // เราต้อง "สร้างใหม่" (new) ขึ้นมาเอง แล้วจับยัดข้อมูลใส่ทีละตัวครับ
-            var staffDto = new CreateStaffDto
-            {
-                FullName = request.FullName,
-                Email = request.Email,
-                PhoneNumber = request.PhoneNumber,
-                RoleIds = request.RoleIds
-            };
+            var staffDto = _mapper.Map<CreateStaffDto>(request);
 
-            // --- Step 2: เตรียม Stream จากไฟล์ (ถ้ามี) ---
             Stream? stream = null;
             string? fileName = null;
 
@@ -70,16 +64,10 @@ namespace Presentation.Controllers
                 fileName = request.AvatarFile.FileName;
             }
 
-            // --- Step 3: ส่งของ 3 ชิ้นให้ Service (Dto, Stream, FileName) ---
-            // ใช้ using เพื่อปิด Stream อัตโนมัติเมื่อ Service ทำงานจบ
             using (stream)
             {
-                // ตรงนี้แหละครับ คือการส่งของให้ Service
-                // Service จะคืนค่ากลับมาเป็น 'Staff' entity (result)
                 var resultStaff = await _service.Staff.CreateStaffAsync(staffDto, stream, fileName);
 
-                // --- Step 4: Return ผลลัพธ์กลับไปให้ Client ---
-                // เอา resultStaff ที่ได้จาก Service ส่งกลับไป
                 return CreatedAtAction(
                     nameof(GetStaffById),
                     new { id = resultStaff.StaffId },
@@ -93,16 +81,8 @@ namespace Presentation.Controllers
             int id,
             [FromForm] UpdateStaffRequest request)
         {
-            var dto = new UpdateStaffDto
-            {
-                
-                FullName = request.FullName,
-                Email = request.Email,
-                PhoneNumber = request.PhoneNumber,
-                RoleIds = request.RoleIds,
-                RemoveAvatar = request.RemoveAvatar,
-                IsDeleted = request.IsDeleted
-            };
+            var dto = _mapper.Map<UpdateStaffDto>(request);
+
             Stream? stream = null;
             string? fileName = null;
 
@@ -111,7 +91,6 @@ namespace Presentation.Controllers
                 stream = request.AvatarFile.OpenReadStream();
                 fileName = request.AvatarFile.FileName;
             }
-
 
             using (stream)
             {
@@ -125,7 +104,7 @@ namespace Presentation.Controllers
         public async Task<IActionResult> SoftDeleteStaff(int id, bool isDeleted)
         {
             await _service.Staff.SoftDeleteStaffAsync(id, isDeleted);
-            return Ok(new { status = 200 });
+            return Ok();
         }
 
         [HttpDelete("{id:int}")]

@@ -1,4 +1,5 @@
-﻿using Contract.Interfaces.IRepository.BaseManager;
+﻿using Contract.Interfaces.DTOs;
+using Contract.Interfaces.IRepository.BaseManager;
 using Entity.Domain.Model;
 using Service.Contract;
 
@@ -31,10 +32,21 @@ namespace Service
             return await _repo.Outsource.GetOutsourceByIdAsync(id);
         }
 
-        public async Task CreateOutsourceAsync(Outsource outsource)
+        public async Task<Outsource> CreateOutsourceAsync(CreateOutsourceDto dto)
         {
+            var outsource = new Outsource
+            {
+                FullName = dto.FullName,
+                Email = dto.Email,
+                PhoneNumber = dto.PhoneNumber,
+                IsDeleted = false,
+                CreatedAt = DateTime.UtcNow
+            };
+
             _repo.Outsource.CreateOutsource(outsource);
             await _repo.SaveAsync();
+
+            return outsource;
         }
 
         public async Task UpdateOutsourceAsync(int id, Outsource outsource)

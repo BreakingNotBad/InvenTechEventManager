@@ -1,3 +1,4 @@
+using Contract.Interfaces.DTOs;
 using Entity.Domain.Model;
 
 namespace Service.Contract
@@ -6,7 +7,7 @@ namespace Service.Contract
     {
         Task<IEnumerable<Outsource>> GetOutsources(string? fullName);
         Task<Outsource?> GetOutsourcesByIdAsync(int id);
-        Task CreateOutsourceAsync(Outsource outsource);
+        Task<Outsource> CreateOutsourceAsync(CreateOutsourceDto dto);
         Task UpdateOutsourceAsync(int id, Outsource outsource);
         Task DeleteOutsourceAsync(int id);
     }

@@ -2,7 +2,7 @@
 
 namespace Contract.DTOs.Company
 {
-    public class UpdateCompanyDto
+    public class CreateCompanyDto
     {
         public string CompanyName { get; set; } = null!;
         public string? Address { get; set; }

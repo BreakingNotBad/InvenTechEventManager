@@ -1,3 +1,4 @@
+using Contract.Interfaces.DTOs;
 using Entity.Domain.Model;
 using Microsoft.AspNetCore.Mvc;
 using Service.Contract.Manager;
@@ -34,13 +35,14 @@ namespace Presentation.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateOutsource([FromBody] Outsource outsource)
+        public async Task<IActionResult> CreateOutsource([FromBody] CreateOutsourceDto dto)
         {
-            await _service.Outsource.CreateOutsourceAsync(outsource);
+            var createdOutsource = await _service.Outsource.CreateOutsourceAsync(dto);
+
             return CreatedAtAction(
                 nameof(GetOutsourceById),
-                new { id = outsource.OutsourceId },
-                outsource
+                new { id = createdOutsource.OutsourceId },
+                createdOutsource
             );
         }
 

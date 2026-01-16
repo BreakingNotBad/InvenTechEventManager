@@ -62,10 +62,29 @@ namespace Service
             return await _repo.Company.GetCompanyByIdAsync(id);
         }
 
-        public async Task CreateCompanyAsync(Company company)
+        public async Task<Company> CreateCompanyAsync(CreateCompanyDto dto)
         {
+            var company = new Company
+            {
+                CompanyName = dto.CompanyName,
+                Address = dto.Address,
+                Latitude = dto.Latitude,
+                Longitude = dto.Longitude,
+                IsDeleted = false,
+                CreatedAt = DateTime.UtcNow,
+                CompanyContacts = dto.CompanyContacts?.Select(cc => new CompanyContact
+                {
+                    FullName = cc.FullName,
+                    Position = cc.Position,
+                    Email = cc.Email,
+                    PhoneNumber = cc.PhoneNumber,
+                    IsPrimary = cc.IsPrimary,
+                    IsDeleted = false
+                }).ToList() ?? new List<CompanyContact>()
+            };
             _repo.Company.CreateCompany(company);
             await _repo.SaveAsync();
+            return company;
         }
 
         public async Task DeleteCompanyAsync(int id)
