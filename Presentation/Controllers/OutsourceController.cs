@@ -47,9 +47,9 @@ namespace Presentation.Controllers
         }
 
         [HttpPut("{id:int}")]
-        public async Task<IActionResult> UpdateOutsource(int id, [FromBody] Outsource outsource)
+        public async Task<IActionResult> UpdateOutsource(int id, [FromBody] UpdateOutsourceDto dto)
         {
-            await _service.Outsource.UpdateOutsourceAsync(id, outsource);
+            await _service.Outsource.UpdateOutsourceAsync(id, dto);
             return NoContent();
         }
 

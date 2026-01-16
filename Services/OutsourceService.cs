@@ -49,7 +49,7 @@ namespace Service
             return outsource;
         }
 
-        public async Task UpdateOutsourceAsync(int id, Outsource outsource)
+        public async Task UpdateOutsourceAsync(int id, UpdateOutsourceDto dto)
         {
             var exinstingOutsource = await _repo.Outsource.GetOutsourceByIdAsync(id);
 
@@ -58,7 +58,15 @@ namespace Service
                 throw new KeyNotFoundException($"Staff with id: {id} does not exist.");
             }
 
-            exinstingOutsource.FullName = outsource.FullName;
+            exinstingOutsource.FullName = dto.FullName;
+            exinstingOutsource.Email = dto.Email;
+            exinstingOutsource.PhoneNumber = dto.PhoneNumber;
+            exinstingOutsource.UpdatedAt = DateTime.UtcNow;
+
+            if(dto.IsDeleted.HasValue)
+            {
+                exinstingOutsource.IsDeleted = dto.IsDeleted.Value;
+            }
 
             _repo.Outsource.UpdateOutsource(exinstingOutsource);
             await _repo.SaveAsync();
