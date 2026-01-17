@@ -1,7 +1,7 @@
-using Contract.Interfaces.DTOs;
-using Entity.Domain.Model;
+using Contracts.DTOs;
+using Entities.Models;
 using Microsoft.AspNetCore.Mvc;
-using Service.Contract.Manager;
+using Service.Contracts.Manager;
 
 namespace Presentation.Controllers
 {
@@ -17,8 +17,7 @@ namespace Presentation.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetOutsources(
-            string? fullName)
+        public async Task<IActionResult> GetOutsources(string? fullName)
         {
             var items = await _service.Outsource.GetOutsources(fullName);
             return Ok(items);

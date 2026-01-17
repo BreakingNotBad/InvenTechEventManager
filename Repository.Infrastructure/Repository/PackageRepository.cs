@@ -1,10 +1,10 @@
-using Contract.Interfaces.IRepository;
-using Entity.Domain.Model;
+using Contracts.IRepository;
+using Entities.Models;
 using Microsoft.EntityFrameworkCore;
-using Repository.Infrastructure.Data;
-using Repository.Infrastructure.Repository.BaseManager;
+using Repositories.Data;
+using Repositories.Repository.BaseManager;
 
-namespace Repository.Infrastructure.Repository
+namespace Repositories.Repository
 {
     public class PackageRepository : RepositoryBase<Package>, IPackageRepository
     {
@@ -13,7 +13,10 @@ namespace Repository.Infrastructure.Repository
 
         public async Task<IEnumerable<Package>> GetPackagesAsync()
         {
-            return await FindAll(trackChanges: false).Include(e=>e.EquipmentSets).ThenInclude(es=>es.Equipment).ToListAsync();
+            return await FindAll(trackChanges: false)
+                .Include(e => e.EquipmentSets)
+                    .ThenInclude(es => es.Equipment)
+                .ToListAsync();
         }
 
         public async Task<Package?> GetPackageByIdAsync(int id)

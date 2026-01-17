@@ -1,7 +1,6 @@
-﻿
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
-namespace Entity.Domain.Model
+namespace Entities.Models
 {
     public class Role
     {
@@ -12,6 +11,7 @@ namespace Entity.Domain.Model
         public required string RoleName { get; set; }
 
         public ICollection<StaffRole> StaffRoles { get; set; } = new List<StaffRole>();
-        public ICollection<EventOutsource> EventOutsources { get; set; } = new List<EventOutsource>();
+        public ICollection<EventOutsource> EventOutsources { get; set; } =
+            new List<EventOutsource>();
     }
 }

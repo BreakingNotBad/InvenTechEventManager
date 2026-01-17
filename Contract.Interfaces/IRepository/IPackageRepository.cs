@@ -1,7 +1,7 @@
-using Contract.Interfaces.IRepository.BaseManager;
-using Entity.Domain.Model;
+using Contracts.IRepository.BaseManager;
+using Entities.Models;
 
-namespace Contract.Interfaces.IRepository
+namespace Contracts.IRepository
 {
     public interface IPackageRepository : IRepositoryBase<Package>
     {
@@ -11,5 +11,4 @@ namespace Contract.Interfaces.IRepository
         void UpdatePackage(Package package);
         void DeletePackage(Package package);
     }
-
 }

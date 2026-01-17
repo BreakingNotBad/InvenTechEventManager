@@ -1,4 +1,4 @@
-﻿namespace Contract.Interfaces.DTOs
+﻿namespace Contracts.DTOs
 {
     public class CreateStaffDto
     {

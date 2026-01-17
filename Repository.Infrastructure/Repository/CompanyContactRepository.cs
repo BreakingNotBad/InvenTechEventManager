@@ -1,18 +1,13 @@
-﻿using Contract.Interfaces.IRepository;
-using Entity.Domain.Model;
-using Microsoft.EntityFrameworkCore;
-using Repository.Infrastructure.Data;
-using Repository.Infrastructure.Repository.BaseManager;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Contracts.IRepository;
+using Entities.Models;
+using Repositories.Data;
+using Repositories.Repository.BaseManager;
 
-
-namespace Repository.Infrastructure.Repository
+namespace Repositories.Repository
 {
-    public class CompanyContactRepository : RepositoryBase<CompanyContact>, ICompanyContactRepository
+    public class CompanyContactRepository
+        : RepositoryBase<CompanyContact>,
+            ICompanyContactRepository
     {
         public CompanyContactRepository(RepositoryContext context)
             : base(context) { }
@@ -21,6 +16,5 @@ namespace Repository.Infrastructure.Repository
         {
             Delete(companyContact);
         }
-
     }
 }

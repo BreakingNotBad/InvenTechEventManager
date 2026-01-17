@@ -1,7 +1,7 @@
-﻿using Contract.DTOs.Company;
-using Entity.Domain.Model;
+﻿using Contracts.DTOs;
+using Entities.Models;
 using Microsoft.AspNetCore.Mvc;
-using Service.Contract.Manager;
+using Service.Contracts.Manager;
 
 namespace Presentation.Controllers
 {
@@ -17,13 +17,13 @@ namespace Presentation.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetCompanies(
-            string? companyName,
-            string? companyContact)
+        public async Task<IActionResult> GetCompanies(string? companyName, string? companyContact)
         {
             var companiesList = await _service.Company.GetCompaniesAsync(
                 companyName,
-                companyContact);
+                companyContact
+            );
+
             return Ok(companiesList);
         }
 
@@ -31,16 +31,11 @@ namespace Presentation.Controllers
         public async Task<IActionResult> GetCompanyById(int id)
         {
             var company = await _service.Company.GetCompanyByIdAsync(id);
+
             if (company == null)
                 return NotFound();
-            return Ok(company);
-        }
 
-        [HttpDelete("{id:int}")]
-        public async Task<IActionResult> DeleteCompany(int id)
-        {
-            await _service.Company.DeleteCompanyAsync(id);
-            return NoContent();
+            return Ok(company);
         }
 
         [HttpPost]
@@ -48,35 +43,25 @@ namespace Presentation.Controllers
         {
             var createCompany = await _service.Company.CreateCompanyAsync(dto);
 
-            return CreatedAtAction(nameof(GetCompanyById), new { id = createCompany.CompanyId }, createCompany);
+            return CreatedAtAction(
+                nameof(GetCompanyById),
+                new { id = createCompany.CompanyId },
+                createCompany
+            );
         }
 
         [HttpPut("{id:int}")]
-        public async Task<IActionResult> UpdateCompany(
-            int id,
-            [FromBody] UpdateCompanyDto dto
-        )
+        public async Task<IActionResult> UpdateCompany(int id, [FromBody] UpdateCompanyDto dto)
         {
             await _service.Company.UpdateCompanyAsync(id, dto);
             return NoContent();
         }
 
-        [HttpPatch("{id:int}")]
-        public async Task<IActionResult> SoftDeleteCompany(
-            int id,
-            [FromQuery] bool isDeleted = true)
+        [HttpDelete("{id:int}")]
+        public async Task<IActionResult> DeleteCompany(int id)
         {
-            await _service.Company.SoftDeleteCompanyAsync(id, isDeleted);
-            return Ok();
-        }
-
-
-        //GetCompanyContacts
-        [HttpGet("cc/{id:int}")]
-        public async Task<IActionResult> GetCompanyContactByCompanyId(int id)
-        {
-            var companycontact = await _service.Company.GetCompanyContactByCompanyIdAsync(id);
-            return Ok(companycontact);
+            await _service.Company.DeleteCompanyAsync(id);
+            return NoContent();
         }
     }
 }

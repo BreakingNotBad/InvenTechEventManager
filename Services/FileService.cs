@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Service.Contract;
+﻿using Service.Contracts;
 
 namespace Service
 {
@@ -29,7 +24,6 @@ namespace Service
 
             return Task.CompletedTask;
         }
-
 
         public async Task<string> SaveFileAsync(
             Stream fileStream,
@@ -59,7 +53,7 @@ namespace Service
                 await fileStream.CopyToAsync(targetStream);
             }
 
-            return Path.Combine(subFolder, uniqueName).Replace("\\", "/");// คืนค่า path สำหรับเก็บใน DB
+            return Path.Combine(subFolder, uniqueName).Replace("\\", "/"); // คืนค่า path สำหรับเก็บใน DB
         }
     }
 }

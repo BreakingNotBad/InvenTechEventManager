@@ -1,16 +1,15 @@
-﻿using Contract.Interfaces.IRepository;
-using Entity.Domain.Model;
+﻿using Contracts.IRepository;
+using Entities.Models;
 using Microsoft.EntityFrameworkCore;
-using Repository.Infrastructure.Data;
-using Repository.Infrastructure.Repository.BaseManager;
+using Repositories.Data;
+using Repositories.Repository.BaseManager;
 
-namespace Repository.Infrastructure.Repository
+namespace Repositories.Repository
 {
     public class EventRepository : RepositoryBase<Event>, IEventRepository
     {
-        public EventRepository(RepositoryContext context) : base(context)
-        {
-        }
+        public EventRepository(RepositoryContext context)
+            : base(context) { }
 
         public async Task<IEnumerable<Event>> GetEventsAsync()
         {
@@ -26,10 +25,12 @@ namespace Repository.Infrastructure.Repository
             return await FindByCondition(e => e.EventId == id, trackChanges: false)
                 .FirstOrDefaultAsync();
         }
+
         public void CreateEvent(Event eventEntity)
         {
             Create(eventEntity);
         }
+
         public async void DeleteEvent(Event eventEntity)
         {
             Delete(eventEntity);

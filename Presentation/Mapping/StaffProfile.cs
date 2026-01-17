@@ -1,8 +1,7 @@
 ﻿using AutoMapper;
-using Contract.Interfaces.DTOs;
-using Entity.Domain.Model;
+using Contracts.DTOs;
+using Entities.Models;
 using Presentation.Requests.Staff;
-using Presentation.Requests.StaffRequests;
 
 namespace Presentation.Mapping
 {
@@ -17,7 +16,6 @@ namespace Presentation.Mapping
             CreateMap<CreateStaffRequest, CreateStaffDto>();
 
             CreateMap<UpdateStaffRequest, UpdateStaffDto>();
-
 
             // ========================
             // DTO → Entity

@@ -1,16 +1,16 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Service.Contract.Manager;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using Service.Contracts.Manager;
 
 namespace Presentation.Controllers
 {
     [ApiController]
     [Route("api/categories")]
-    public class CategoryController:ControllerBase
+    public class CategoryController : ControllerBase
     {
         private readonly IServiceManager _service;
 
@@ -18,6 +18,7 @@ namespace Presentation.Controllers
         {
             _service = service;
         }
+
         [HttpGet]
         public async Task<IActionResult> GetCategory()
         {

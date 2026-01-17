@@ -1,12 +1,7 @@
-﻿using Contract.Interfaces.IRepository.BaseManager;
-using Entity.Domain.Model;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Contracts.IRepository.BaseManager;
+using Entities.Models;
 
-namespace Contract.Interfaces.IRepository
+namespace Contracts.IRepository
 {
     public interface IRoleRepository : IRepositoryBase<Role>
     {

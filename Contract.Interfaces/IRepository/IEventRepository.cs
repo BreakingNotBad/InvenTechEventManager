@@ -1,7 +1,7 @@
-﻿using Contract.Interfaces.IRepository.BaseManager;
-using Entity.Domain.Model;
+﻿using Contracts.IRepository.BaseManager;
+using Entities.Models;
 
-namespace Contract.Interfaces.IRepository;
+namespace Contracts.IRepository;
 
 public interface IEventRepository : IRepositoryBase<Event>
 {

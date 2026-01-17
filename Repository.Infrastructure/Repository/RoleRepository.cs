@@ -1,24 +1,19 @@
-﻿using Contract.Interfaces.IRepository;
-using Entity.Domain.Model;
+﻿using Contracts.IRepository;
+using Entities.Models;
 using Microsoft.EntityFrameworkCore;
-using Repository.Infrastructure.Data;
-using Repository.Infrastructure.Repository.BaseManager;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Repositories.Data;
+using Repositories.Repository.BaseManager;
 
-namespace Repository.Infrastructure.Repository
+namespace Repositories.Repository
 {
-    public class RoleRepository :RepositoryBase<Role>, IRoleRepository
+    public class RoleRepository : RepositoryBase<Role>, IRoleRepository
     {
         public RoleRepository(RepositoryContext context)
             : base(context) { }
 
         public async Task<IEnumerable<Role>> GetAllRoleAsync()
         {
-            return await FindAll(trackChanges:false).ToListAsync();
+            return await FindAll(trackChanges: false).ToListAsync();
         }
     }
 }

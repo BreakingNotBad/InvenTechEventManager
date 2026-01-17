@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Entity.Domain.Model
+namespace Entities.Models
 {
     public class Permission
     {
@@ -13,6 +13,7 @@ namespace Entity.Domain.Model
         [MaxLength(500)]
         public string? Description { get; set; }
 
-        public ICollection<StaffPermission> StaffPermissions { get; set; } = new List<StaffPermission>();
+        public ICollection<StaffPermission> StaffPermissions { get; set; } =
+            new List<StaffPermission>();
     }
 }

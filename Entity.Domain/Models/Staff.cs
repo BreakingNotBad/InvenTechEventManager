@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Entity.Domain.Model
+namespace Entities.Models
 {
     public class Staff
     {
@@ -27,7 +27,8 @@ namespace Entity.Domain.Model
         public DateTime? UpdatedAt { get; set; }
 
         // Navigation Properties
-        public ICollection<StaffPermission> StaffPermissions { get; set; } = new List<StaffPermission>();
+        public ICollection<StaffPermission> StaffPermissions { get; set; } =
+            new List<StaffPermission>();
         public ICollection<StaffRole> StaffRoles { get; set; } = new List<StaffRole>();
         public ICollection<EventStaff> EventStaff { get; set; } = new List<EventStaff>();
         public ICollection<Event> CreatedEvents { get; set; } = new List<Event>();

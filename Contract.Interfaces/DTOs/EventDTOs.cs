@@ -1,17 +1,11 @@
-﻿namespace Contract.Interfaces.DTOs
+﻿namespace Contracts.DTOs
 {
     public static class EventDTOs
     {
-        public class EventDto
-        {
-        }
+        public class EventDto { }
 
-        public class EventCreateDto
-        {
-        }
+        public class EventCreateDto { }
 
-        public class EventUpdateDto
-        {
-        }
+        public class EventUpdateDto { }
     }
 }

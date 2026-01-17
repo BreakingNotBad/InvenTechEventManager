@@ -1,14 +1,9 @@
-﻿using Entity.Domain.Model;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Entities.Models;
 
-namespace Service.Contract
+namespace Service.Contracts
 {
     public interface IRoleService
     {
-        Task<IEnumerable<Role>>GetRoleByAsync();
+        Task<IEnumerable<Role>> GetRoleByAsync();
     }
 }
