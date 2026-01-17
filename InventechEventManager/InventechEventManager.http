@@ -1,0 +1,6 @@
+@InventechEventManager_HostAddress = http://localhost:5090
+
+GET {{InventechEventManager_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
