@@ -1,8 +1,7 @@
-﻿using Contract.Interfaces.IRepository.BaseManager;
-using Entity.Domain.Model;
+﻿using Contracts.IRepository.BaseManager;
+using Entities.Models;
 
-
-namespace Contract.Interfaces.IRepository
+namespace Contracts.IRepository
 {
     public interface ICompanyRepository : IRepositoryBase<Company>
     {
@@ -11,7 +10,5 @@ namespace Contract.Interfaces.IRepository
         void CreateCompany(Company company);
         void DeleteCompany(Company company);
         void UpdateCompany(Company company);
-
-        Task<Company?> GetCompanyContactsAsync(int id);
     }
 }

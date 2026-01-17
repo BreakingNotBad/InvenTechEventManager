@@ -1,7 +1,6 @@
-﻿using Contract.Interfaces.IRepository.BaseManager;
-using Entity.Domain.Model;
-using Microsoft.EntityFrameworkCore;
-using Service.Contract;
+﻿using Contracts.IRepository.BaseManager;
+using Entities.Models;
+using Service.Contracts;
 
 namespace Service
 {
@@ -16,7 +15,8 @@ namespace Service
 
         public async Task<IEnumerable<Equipment>> GetEquipmentAsync(
             string? equipmentName,
-            string? category)
+            string? category
+        )
         {
             var equipment = await _repo.Equipment.GetEquipmentAsync();
 
@@ -24,15 +24,20 @@ namespace Service
             if (!string.IsNullOrWhiteSpace(equipmentName))
             {
                 equipment = equipment.Where(e =>
-                    e.EquipmentName.Contains(equipmentName, StringComparison.OrdinalIgnoreCase));
+                    e.EquipmentName.Contains(equipmentName, StringComparison.OrdinalIgnoreCase)
+                );
             }
 
-            //  filter category 
+            //  filter category
             if (!string.IsNullOrWhiteSpace(category))
             {
                 equipment = equipment.Where(e =>
-                    e.Category != null &&
-                    e.Category.CategoryName.Contains(category, StringComparison.OrdinalIgnoreCase));
+                    e.Category != null
+                    && e.Category.CategoryName.Contains(
+                        category,
+                        StringComparison.OrdinalIgnoreCase
+                    )
+                );
             }
 
             return equipment;

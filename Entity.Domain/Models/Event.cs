@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Entity.Domain.Model
+namespace Entities.Models
 {
     public enum TimePeriod
     {
@@ -13,7 +13,7 @@ namespace Entity.Domain.Model
     {
         Online,
         Hybrid,
-        Offline
+        Offline,
     }
 
     public class Event
@@ -68,9 +68,12 @@ namespace Entity.Domain.Model
         public Package Package { get; set; } = null!;
 
         // Collections
-        public ICollection<EventAttachment> EventAttachments { get; set; } = new List<EventAttachment>();
+        public ICollection<EventAttachment> EventAttachments { get; set; } =
+            new List<EventAttachment>();
         public ICollection<EventStaff> EventStaff { get; set; } = new List<EventStaff>();
-        public ICollection<EventOutsource> EventOutsources { get; set; } = new List<EventOutsource>();
-        public ICollection<EventExtraEquipment> EventExtraEquipments { get; set; } = new List<EventExtraEquipment>();
+        public ICollection<EventOutsource> EventOutsources { get; set; } =
+            new List<EventOutsource>();
+        public ICollection<EventExtraEquipment> EventExtraEquipments { get; set; } =
+            new List<EventExtraEquipment>();
     }
 }

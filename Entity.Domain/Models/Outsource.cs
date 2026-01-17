@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Entity.Domain.Model
+namespace Entities.Models
 {
     public class Outsource
     {
@@ -24,6 +24,7 @@ namespace Entity.Domain.Model
         public DateTime? UpdatedAt { get; set; }
 
         // Navigation Properties
-        public ICollection<EventOutsource> EventOutsources { get; set; } = new List<EventOutsource>();
+        public ICollection<EventOutsource> EventOutsources { get; set; } =
+            new List<EventOutsource>();
     }
 }

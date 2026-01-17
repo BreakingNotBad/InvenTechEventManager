@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Entity.Domain.Model
+namespace Entities.Models
 {
     public class EventAttachment
     {

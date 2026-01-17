@@ -1,5 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Service.Contract.Manager;
+﻿using Entities.Models;
+using Microsoft.AspNetCore.Mvc;
+using Service.Contracts.Manager;
 
 namespace Presentation.Controllers
 {
@@ -32,9 +33,7 @@ namespace Presentation.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateEvent(
-            [FromBody] Entity.Domain.Model.Event eventEntity
-        )
+        public async Task<IActionResult> CreateEvent([FromBody] Event eventEntity)
         {
             await _service.Event.CreateEventAsync(eventEntity);
             return CreatedAtAction(

@@ -1,11 +1,10 @@
-﻿using Contract.Interfaces.IRepository;
-using Entity.Domain.Model;
+﻿using Contracts.IRepository;
+using Entities.Models;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
-using Repository.Infrastructure.Data;
-using Repository.Infrastructure.Repository.BaseManager;
+using Repositories.Data;
+using Repositories.Repository.BaseManager;
 
-namespace Repository.Infrastructure.Repository
+namespace Repositories.Repository
 {
     public class StaffRepository : RepositoryBase<Staff>, IStaffRepository
     {
@@ -16,7 +15,7 @@ namespace Repository.Infrastructure.Repository
         {
             return await FindAll(trackChanges: false)
                 .Include(s => s.StaffRoles)
-                .ThenInclude(sr => sr.Role)
+                    .ThenInclude(sr => sr.Role)
                 .ToListAsync();
         }
 
@@ -24,7 +23,7 @@ namespace Repository.Infrastructure.Repository
         {
             return await FindByCondition(s => s.StaffId == id, trackChanges: true)
                 .Include(s => s.StaffRoles)
-                .ThenInclude(sr => sr.Role)
+                    .ThenInclude(sr => sr.Role)
                 .FirstOrDefaultAsync();
         }
 

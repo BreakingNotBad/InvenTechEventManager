@@ -1,6 +1,6 @@
-using Contract.Interfaces.IRepository.BaseManager;
-using Entity.Domain.Model;
-using Service.Contract;
+using Contracts.IRepository.BaseManager;
+using Entities.Models;
+using Service.Contracts;
 
 namespace Service
 {

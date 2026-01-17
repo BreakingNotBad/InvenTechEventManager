@@ -1,20 +1,30 @@
-using Contract.Interfaces.DTOs;
-using Entity.Domain.Model;
+using Contracts.DTOs;
+using Entities.Models;
 
-namespace Service.Contract
+namespace Service.Contracts
 {
     public interface IStaffService
     {
         Task<IEnumerable<Staff>> GetStaffMembersAsync(
-            string? fullName, 
-            string? status, 
+            string? fullName,
+            string? status,
             string? role,
             bool? available,
             DateTime? date,
-            string? period);
+            string? period
+        );
         Task<Staff?> GetStaffByIdAsync(int id);
-        Task<Staff> CreateStaffAsync(CreateStaffDto staffDto, Stream? avatarStream, string? avatarFileName);
-        Task UpdateStaffAsync(int id, UpdateStaffDto dto, Stream? avatarStream, string? avatarFileName);
+        Task<Staff> CreateStaffAsync(
+            CreateStaffDto staffDto,
+            Stream? avatarStream,
+            string? avatarFileName
+        );
+        Task UpdateStaffAsync(
+            int id,
+            UpdateStaffDto dto,
+            Stream? avatarStream,
+            string? avatarFileName
+        );
         Task DeleteStaffAsync(int id);
         Task SoftDeleteStaffAsync(int id, bool isDeleted);
     }

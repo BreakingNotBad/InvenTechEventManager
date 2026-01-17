@@ -1,10 +1,10 @@
-using Contract.Interfaces.IRepository;
-using Entity.Domain.Model;
+using Contracts.IRepository;
+using Entities.Models;
 using Microsoft.EntityFrameworkCore;
-using Repository.Infrastructure.Data;
-using Repository.Infrastructure.Repository.BaseManager;
+using Repositories.Data;
+using Repositories.Repository.BaseManager;
 
-namespace Repository.Infrastructure.Repository
+namespace Repositories.Repository
 {
     public class EquipmentRepository : RepositoryBase<Equipment>, IEquipmentRepository
     {

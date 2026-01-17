@@ -1,6 +1,6 @@
-﻿using Entity.Domain.Model;
+﻿using Entities.Models;
 
-namespace Service.Contract
+namespace Service.Contracts
 {
     public interface IEventService
     {

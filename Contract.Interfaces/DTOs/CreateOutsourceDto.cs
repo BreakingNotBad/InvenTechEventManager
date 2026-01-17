@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Contract.Interfaces.DTOs
+namespace Contracts.DTOs
 {
     public class CreateOutsourceDto
     {

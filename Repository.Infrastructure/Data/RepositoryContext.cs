@@ -1,7 +1,7 @@
-﻿using Entity.Domain.Model;
+﻿using Entities.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace Repository.Infrastructure.Data
+namespace Repositories.Data
 {
     public class RepositoryContext : DbContext
     {
@@ -93,7 +93,7 @@ namespace Repository.Infrastructure.Data
                 .Entity<Event>()
                 .HasOne(e => e.CreatedByStaff)
                 .WithMany(s => s.CreatedEvents)
-                .HasForeignKey(e => e.CreatedByStaffId) 
+                .HasForeignKey(e => e.CreatedByStaffId)
                 .OnDelete(DeleteBehavior.NoAction);
         }
     }

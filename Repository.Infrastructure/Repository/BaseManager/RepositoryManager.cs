@@ -1,8 +1,8 @@
-﻿using Contract.Interfaces.IRepository;
-using Contract.Interfaces.IRepository.BaseManager;
-using Repository.Infrastructure.Data;
+﻿using Contracts.IRepository;
+using Contracts.IRepository.BaseManager;
+using Repositories.Data;
 
-namespace Repository.Infrastructure.Repository.BaseManager
+namespace Repositories.Repository.BaseManager
 {
     public class RepositoryManager : IRepositoryManager
     {
@@ -16,6 +16,7 @@ namespace Repository.Infrastructure.Repository.BaseManager
         private readonly Lazy<IRoleRepository> _roleRepo;
         private readonly Lazy<ICategoryRepository> _categoryRepo;
         private readonly Lazy<ICompanyContactRepository> _companyContactRepo;
+
         //private readonly Lazy<IEquipmentSetContentRepository> _equipmentSetContentRepo;
         //private readonly Lazy<IEquipmentSetRepository> _equipmentSetRepo;
         //private readonly Lazy<IEventEquipmentRepository> _eventEquipmentRepo;
@@ -37,7 +38,9 @@ namespace Repository.Infrastructure.Repository.BaseManager
             _packageRepo = new Lazy<IPackageRepository>(() => new PackageRepository(context));
             _roleRepo = new Lazy<IRoleRepository>(() => new RoleRepository(context));
             _categoryRepo = new Lazy<ICategoryRepository>(() => new CategoryRepository(context));
-            _companyContactRepo = new Lazy<ICompanyContactRepository>(() => new CompanyContactRepository(context));
+            _companyContactRepo = new Lazy<ICompanyContactRepository>(() =>
+                new CompanyContactRepository(context)
+            );
             //_equipmentSetContentRepo = new Lazy<IEquipmentSetContentRepository>(() => new EquipmentSetContentRepository(context));
             //_equipmentSetRepo = new Lazy<IEquipmentSetRepository>(() => new EquipmentSetRepository(context));
             //_eventEquipmentRepo = new Lazy<IEventEquipmentRepository>(() => new EventEquipmentRepository(context));
@@ -58,6 +61,7 @@ namespace Repository.Infrastructure.Repository.BaseManager
         public IRoleRepository Role => _roleRepo.Value;
         public ICategoryRepository Category => _categoryRepo.Value;
         public ICompanyContactRepository CompanyContact => _companyContactRepo.Value;
+
         //public IEquipmentSetContentRepository EquipmentSetContent => _equipmentSetContentRepo.Value;
         //public IEquipmentSetRepository EquipmentSet => _equipmentSetRepo.Value;
         //public IEventEquipmentRepository EventEquipment => _eventEquipmentRepo.Value;

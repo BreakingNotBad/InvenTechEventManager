@@ -1,10 +1,9 @@
 ﻿using AutoMapper;
-using Contract.Interfaces.DTOs;
-using Entity.Domain.Model;
+using Contracts.DTOs;
+using Entities.Models;
 using Microsoft.AspNetCore.Mvc;
 using Presentation.Requests.Staff;
-using Presentation.Requests.StaffRequests;
-using Service.Contract.Manager;
+using Service.Contracts.Manager;
 
 namespace Presentation.Controllers
 {
@@ -77,9 +76,7 @@ namespace Presentation.Controllers
         }
 
         [HttpPut("{id:int}")]
-        public async Task<IActionResult> UpdateStaff(
-            int id,
-            [FromForm] UpdateStaffRequest request)
+        public async Task<IActionResult> UpdateStaff(int id, [FromForm] UpdateStaffRequest request)
         {
             var dto = _mapper.Map<UpdateStaffDto>(request);
 
@@ -94,7 +91,7 @@ namespace Presentation.Controllers
 
             using (stream)
             {
-                await _service.Staff.UpdateStaffAsync(id, dto,stream, fileName);
+                await _service.Staff.UpdateStaffAsync(id, dto, stream, fileName);
             }
 
             return NoContent();

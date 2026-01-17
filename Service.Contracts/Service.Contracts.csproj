@@ -12,8 +12,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Contract.Interfaces\Contract.Interfaces.csproj" />
-    <ProjectReference Include="..\Entity.Domain\Entity.Domain.csproj" />
+    <ProjectReference Include="..\Contract.Interfaces\Contracts.csproj" />
+    <ProjectReference Include="..\Entity.Domain\Entities.csproj" />
   </ItemGroup>
 
 </Project>

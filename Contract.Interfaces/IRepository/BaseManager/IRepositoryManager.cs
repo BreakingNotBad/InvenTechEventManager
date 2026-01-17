@@ -1,4 +1,4 @@
-﻿namespace Contract.Interfaces.IRepository.BaseManager
+﻿namespace Contracts.IRepository.BaseManager
 {
     public interface IRepositoryManager
     {

@@ -1,13 +1,15 @@
-﻿using Contract.Interfaces.IRepository.BaseManager;
+﻿using System.Linq.Expressions;
+using Contracts.IRepository.BaseManager;
 using Microsoft.EntityFrameworkCore;
-using Repository.Infrastructure.Data;
-using System.Linq.Expressions;
+using Repositories.Data;
 
-namespace Repository.Infrastructure.Repository.BaseManager
+namespace Repositories.Repository.BaseManager
 {
-    public abstract class RepositoryBase<T> : IRepositoryBase<T> where T : class
+    public abstract class RepositoryBase<T> : IRepositoryBase<T>
+        where T : class
     {
         protected readonly RepositoryContext _context;
+
         public RepositoryBase(RepositoryContext context)
         {
             _context = context;
@@ -17,16 +19,17 @@ namespace Repository.Infrastructure.Repository.BaseManager
         {
             // ถ้า trackChanges เป็น false ให้ใช้ AsNoTracking()
             // ถ้าเป็น true (ต้องการแก้ไขข้อมูล) ให้ใช้แบบปกติ
-            return !trackChanges ?
-                _context.Set<T>().AsNoTracking() :
-                _context.Set<T>();
+            return !trackChanges ? _context.Set<T>().AsNoTracking() : _context.Set<T>();
         }
 
-        public IQueryable<T> FindByCondition(Expression<Func<T, bool>> expression, bool trackChanges)
+        public IQueryable<T> FindByCondition(
+            Expression<Func<T, bool>> expression,
+            bool trackChanges
+        )
         {
-            return !trackChanges ?
-                _context.Set<T>().Where(expression).AsNoTracking() :
-                _context.Set<T>().Where(expression);
+            return !trackChanges
+                ? _context.Set<T>().Where(expression).AsNoTracking()
+                : _context.Set<T>().Where(expression);
         }
 
         public void Create(T entity)

@@ -1,7 +1,7 @@
-﻿using Contract.Interfaces.DTOs;
-using Contract.Interfaces.IRepository.BaseManager;
-using Entity.Domain.Model;
-using Service.Contract;
+﻿using Contracts.DTOs;
+using Contracts.IRepository.BaseManager;
+using Entities.Models;
+using Service.Contracts;
 
 namespace Service
 {
@@ -17,7 +17,7 @@ namespace Service
         public async Task<IEnumerable<Outsource>> GetOutsources(string? fullName)
         {
             var outsourcesList = await _repo.Outsource.GetOutsourceAsyn();
-            //  search 
+            //  search
             if (!string.IsNullOrWhiteSpace(fullName))
             {
                 outsourcesList = outsourcesList.Where(o =>
@@ -40,7 +40,7 @@ namespace Service
                 Email = dto.Email,
                 PhoneNumber = dto.PhoneNumber,
                 IsDeleted = false,
-                CreatedAt = DateTime.UtcNow
+                CreatedAt = DateTime.UtcNow,
             };
 
             _repo.Outsource.CreateOutsource(outsource);
@@ -63,7 +63,7 @@ namespace Service
             exinstingOutsource.PhoneNumber = dto.PhoneNumber;
             exinstingOutsource.UpdatedAt = DateTime.UtcNow;
 
-            if(dto.IsDeleted.HasValue)
+            if (dto.IsDeleted.HasValue)
             {
                 exinstingOutsource.IsDeleted = dto.IsDeleted.Value;
             }

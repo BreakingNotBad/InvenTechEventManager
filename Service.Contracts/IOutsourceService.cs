@@ -1,7 +1,7 @@
-using Contract.Interfaces.DTOs;
-using Entity.Domain.Model;
+using Contracts.DTOs;
+using Entities.Models;
 
-namespace Service.Contract
+namespace Service.Contracts
 {
     public interface IOutsourceService
     {

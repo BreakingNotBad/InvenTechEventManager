@@ -1,9 +1,8 @@
 ﻿using AutoMapper;
-using Contract.Interfaces.DTOs;
-using Contract.Interfaces.IRepository.BaseManager;
-using Entity.Domain.Model;
-using Microsoft.EntityFrameworkCore;
-using Service.Contract;
+using Contracts.DTOs;
+using Contracts.IRepository.BaseManager;
+using Entities.Models;
+using Service.Contracts;
 
 namespace Service
 {

@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 
-namespace Presentation.Requests.StaffRequests
+namespace Presentation.Requests.Staff
 {
     public class CreateStaffRequest
     {

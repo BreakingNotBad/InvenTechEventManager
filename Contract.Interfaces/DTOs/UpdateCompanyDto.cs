@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace Contract.DTOs.Company
+namespace Contracts.DTOs
 {
     public class UpdateCompanyDto
     {
@@ -8,6 +8,7 @@ namespace Contract.DTOs.Company
         public string? Address { get; set; }
         public decimal? Latitude { get; set; }
         public decimal? Longitude { get; set; }
+
         [DefaultValue(false)]
         public bool IsDeleted { get; set; }
 
