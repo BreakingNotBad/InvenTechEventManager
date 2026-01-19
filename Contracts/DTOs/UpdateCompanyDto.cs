@@ -12,6 +12,6 @@ namespace Contracts.DTOs
         [DefaultValue(false)]
         public bool IsDeleted { get; set; }
 
-        public List<UpdateCompanyContactDto>? CompanyContacts { get; set; }
+        public List<UpdateCompanyContactDto> CompanyContacts { get; set; } = [];
     }
 }

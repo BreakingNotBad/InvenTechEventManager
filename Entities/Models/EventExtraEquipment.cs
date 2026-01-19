@@ -15,7 +15,6 @@ namespace Entities.Models
         [ForeignKey(nameof(EquipmentId))]
         public Equipment Equipment { get; set; } = null!;
 
-
         public int Quantity { get; set; } = 1;
     }
 }

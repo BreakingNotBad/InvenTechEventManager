@@ -1,5 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Entities.Models
 {
@@ -19,29 +18,17 @@ namespace Entities.Models
     public class Event
     {
         public int EventId { get; set; }
-
-
         public required string EventName { get; set; }
-
         public required EventType EventType { get; set; }
-
         public required DateOnly MeetingDate { get; set; }
         public required TimeOnly RegistrationTime { get; set; }
         public required TimeOnly StartTime { get; set; }
         public required TimeOnly EndTime { get; set; }
-
         public required TimePeriod Period { get; set; }
-
-
         public decimal Latitude { get; set; }
-
         public decimal Longitude { get; set; }
-
-
         public string? Note { get; set; }
-
         public bool IsDeleted { get; set; } = false;
-
         public DateTime CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
 
@@ -65,13 +52,10 @@ namespace Entities.Models
         [ForeignKey(nameof(PackageId))]
         public Package Package { get; set; } = null!;
 
-        // Collections
-        public ICollection<EventAttachment> EventAttachments { get; set; } =
-            new List<EventAttachment>();
-        public ICollection<EventStaff> EventStaff { get; set; } = new List<EventStaff>();
-        public ICollection<EventOutsource> EventOutsources { get; set; } =
-            new List<EventOutsource>();
-        public ICollection<EventExtraEquipment> EventExtraEquipments { get; set; } =
-            new List<EventExtraEquipment>();
+        // Navigation Properties
+        public ICollection<EventAttachment> EventAttachments { get; set; } = [];
+        public ICollection<EventStaff> EventStaff { get; set; } = [];
+        public ICollection<EventOutsource> EventOutsources { get; set; } = [];
+        public ICollection<EventExtraEquipment> EventExtraEquipments { get; set; } = [];
     }
 }
