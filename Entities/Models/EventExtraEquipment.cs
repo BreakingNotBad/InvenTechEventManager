@@ -15,7 +15,7 @@ namespace Entities.Models
         [ForeignKey(nameof(EquipmentId))]
         public Equipment Equipment { get; set; } = null!;
 
-        [Range(1, 1000)]
+
         public int Quantity { get; set; } = 1;
     }
 }

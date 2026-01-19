@@ -18,10 +18,9 @@ namespace Entities.Models
 
     public class Event
     {
-        [Key]
         public int EventId { get; set; }
 
-        [MaxLength(255)]
+
         public required string EventName { get; set; }
 
         public required EventType EventType { get; set; }
@@ -33,13 +32,12 @@ namespace Entities.Models
 
         public required TimePeriod Period { get; set; }
 
-        [Column(TypeName = "decimal(18, 15)")]
+
         public decimal Latitude { get; set; }
 
-        [Column(TypeName = "decimal(18, 15)")]
         public decimal Longitude { get; set; }
 
-        [MaxLength(2000)]
+
         public string? Note { get; set; }
 
         public bool IsDeleted { get; set; } = false;

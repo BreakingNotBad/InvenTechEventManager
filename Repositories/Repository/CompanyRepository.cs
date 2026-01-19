@@ -16,9 +16,9 @@ namespace Repositories.Repository
             return await FindAll(trackChanges: false).Include(e => e.CompanyContacts).ToListAsync();
         }
 
-        public async Task<Company?> GetCompanyByIdAsync(int id)
+        public async Task<Company?> GetCompanyByIdAsync(int id, bool trackchanges)
         {
-            return await FindByCondition(e => e.CompanyId == id, trackChanges: false)
+            return await FindByCondition(e => e.CompanyId == id, trackchanges)
                 .Include(e => e.CompanyContacts)
                 .FirstOrDefaultAsync();
         }

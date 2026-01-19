@@ -4,12 +4,10 @@ namespace Entities.Models
 {
     public class Category
     {
-        [Key]
-        public int CategoryId { get; set; }
-
-        [MaxLength(50)]
+        public  int CategoryId { get; set; }
+        
         public required string CategoryName { get; set; }
 
-        public ICollection<Equipment> Equipments { get; set; } = new List<Equipment>();
+        public ICollection<Equipment>? Equipments { get; set; } = new List<Equipment>();
     }
 }

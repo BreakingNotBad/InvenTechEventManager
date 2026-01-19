@@ -5,7 +5,7 @@ namespace Entities.Models
 {
     public class EquipmentSet
     {
-        [Range(1, 1000)]
+
         public int Quantity { get; set; } = 1;
 
         // Foreign Key: Equipment

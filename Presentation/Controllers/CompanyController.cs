@@ -17,11 +17,26 @@ namespace Presentation.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetCompanies(string? companyName, string? companyContact)
+        public async Task<IActionResult> GetCompanies(
+            string? companyName, 
+            string? companyContact, 
+            string? Address,
+            decimal? Latitude,
+            decimal? Longitude,
+            bool IsDeleted,
+            DateTime CreatedAt,
+            DateTime UpdatedAt)
         {
+            Console.WriteLine("Hello woRld");
             var companiesList = await _service.Company.GetCompaniesAsync(
                 companyName,
-                companyContact
+                companyContact,
+                Address,
+                Latitude,
+                Longitude,
+                IsDeleted,
+                CreatedAt,
+                UpdatedAt
             );
 
             return Ok(companiesList);

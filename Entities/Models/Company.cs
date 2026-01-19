@@ -5,19 +5,19 @@ namespace Entities.Models
 {
     public class Company
     {
-        [Key]
+
         public int CompanyId { get; set; }
 
-        [MaxLength(255)]
+
         public required string CompanyName { get; set; }
 
-        [MaxLength(500)]
-        public string Address { get; set; } = string.Empty;
 
-        [Column(TypeName = "decimal(18, 15)")]
+        public  string? Address { get; set; }
+
+
         public decimal? Latitude { get; set; }
 
-        [Column(TypeName = "decimal(18, 15)")]
+
         public decimal? Longitude { get; set; }
 
         public bool IsDeleted { get; set; } = false;
@@ -28,6 +28,6 @@ namespace Entities.Models
         // Navigation Properties
         public ICollection<CompanyContact> CompanyContacts { get; set; } =
             new List<CompanyContact>();
-        public ICollection<Event> Events { get; set; } = new List<Event>();
+        public ICollection<Event>? Events { get; set; } = new List<Event>();
     }
 }

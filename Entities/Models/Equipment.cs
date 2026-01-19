@@ -5,10 +5,10 @@ namespace Entities.Models
 {
     public class Equipment
     {
-        [Key]
+
         public int EquipmentId { get; set; }
 
-        [MaxLength(100)]
+
         public required string EquipmentName { get; set; }
 
         public bool IsDeleted { get; set; } = false;
@@ -22,6 +22,6 @@ namespace Entities.Models
         [ForeignKey(nameof(CategoryId))]
         public Category? Category { get; set; }
 
-        public ICollection<EquipmentSet> EquipmentSets { get; set; } = new List<EquipmentSet>();
+        public ICollection<EquipmentSet>? EquipmentSets { get; set; } = new List<EquipmentSet>();
     }
 }
