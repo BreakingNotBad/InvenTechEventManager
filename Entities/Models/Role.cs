@@ -4,14 +4,11 @@ namespace Entities.Models
 {
     public class Role
     {
-
         public int RoleId { get; set; }
-
-
         public required string RoleName { get; set; }
 
-        public ICollection<StaffRole> StaffRoles { get; set; } = new List<StaffRole>();
-        public ICollection<EventOutsource>? EventOutsources { get; set; } =
-            new List<EventOutsource>();
+        // Navigation properties
+        public ICollection<StaffRole> StaffRoles { get; set; } = [];
+        public ICollection<EventOutsource>? EventOutsources { get; set; } = [];
     }
 }
