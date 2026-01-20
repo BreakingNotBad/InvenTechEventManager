@@ -6,7 +6,7 @@ namespace Contracts.IRepository
     public interface IOutsourceRepository : IRepositoryBase<Outsource>
     {
         Task<IEnumerable<Outsource>> GetOutsourceAsyn();
-        Task<Outsource?> GetOutsourceByIdAsync(int id);
+        Task<Outsource?> GetOutsourceByIdAsync(int id, bool trackchange);
         void CreateOutsource(Outsource outsource);
         void UpdateOutsource(Outsource outsource);
         void DeleteOutsource(Outsource outsource);

@@ -21,7 +21,7 @@ namespace Service
             if (!string.IsNullOrWhiteSpace(fullName))
             {
                 outsourcesList = outsourcesList.Where(o =>
-                    o.FullName.Contains(fullName, StringComparison.OrdinalIgnoreCase)
+                    o.FullName.ToLower().Contains(fullName.ToLower())
                 );
             }
             return outsourcesList;
@@ -29,7 +29,7 @@ namespace Service
 
         public async Task<Outsource?> GetOutsourcesByIdAsync(int id)
         {
-            return await _repo.Outsource.GetOutsourceByIdAsync(id);
+            return await _repo.Outsource.GetOutsourceByIdAsync(id,false);
         }
 
         public async Task<Outsource> CreateOutsourceAsync(CreateOutsourceDto dto)
@@ -45,13 +45,12 @@ namespace Service
 
             _repo.Outsource.CreateOutsource(outsource);
             await _repo.SaveAsync();
-
             return outsource;
         }
 
         public async Task UpdateOutsourceAsync(int id, UpdateOutsourceDto dto)
         {
-            var exinstingOutsource = await _repo.Outsource.GetOutsourceByIdAsync(id);
+            var exinstingOutsource = await _repo.Outsource.GetOutsourceByIdAsync(id,true); 
 
             if (exinstingOutsource == null)
             {
@@ -74,7 +73,7 @@ namespace Service
 
         public async Task DeleteOutsourceAsync(int id)
         {
-            var exinstingOutsource = await _repo.Outsource.GetOutsourceByIdAsync(id);
+            var exinstingOutsource = await _repo.Outsource.GetOutsourceByIdAsync(id,true);
             if (exinstingOutsource == null)
             {
                 throw new ArgumentException($"Outsource with id {id} not found.");

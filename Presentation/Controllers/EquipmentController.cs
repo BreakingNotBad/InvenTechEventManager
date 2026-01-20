@@ -1,3 +1,4 @@
+using Contracts.DTOs;
 using Entities.Models;
 using Microsoft.AspNetCore.Mvc;
 using Service.Contracts.Manager;
@@ -16,9 +17,19 @@ namespace Presentation.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetEquipment(string? equipmentName, string? category)
+        public async Task<IActionResult> GetEquipment(
+            string? equipmentName, 
+            string? category,
+            bool? IsDeleted,
+            DateTime CreatedAt,
+            DateTime UpdatedAt)
         {
-            var items = await _service.Equipment.GetEquipmentAsync(equipmentName, category);
+            var items = await _service.Equipment.GetEquipmentAsync(
+                equipmentName, 
+                category,
+                IsDeleted,
+                CreatedAt,
+                UpdatedAt);
             return Ok(items);
         }
 
@@ -33,20 +44,21 @@ namespace Presentation.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateEquipment([FromBody] Equipment equipment)
+        public async Task<IActionResult> CreateEquipment(CreateEquipmentDto dto)
         {
-            await _service.Equipment.CreateEquipmentAsync(equipment);
+            var createEquipment = await _service.Equipment.CreateEquipmentAsync(dto);
+
             return CreatedAtAction(
                 nameof(GetEquipmentById),
-                new { id = equipment.EquipmentId },
-                equipment
+                new { id = createEquipment.EquipmentId },
+                createEquipment
             );
         }
 
         [HttpPut("{id:int}")]
-        public async Task<IActionResult> UpdateEquipment(int id, [FromBody] Equipment equipment)
+        public async Task<IActionResult> UpdateEquipment(int id, UpdateEquipmentDto dto)
         {
-            await _service.Equipment.UpdateEquipmentAsync(id, equipment);
+            await _service.Equipment.UpdateEquipmentAsync(id, dto);
             return NoContent();
         }
 

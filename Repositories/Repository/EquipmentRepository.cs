@@ -16,9 +16,9 @@ namespace Repositories.Repository
             return await FindAll(trackChanges: false).Include(e => e.Category).ToListAsync();
         }
 
-        public async Task<Equipment?> GetEquipmentByIdAsync(int id)
+        public async Task<Equipment?> GetEquipmentByIdAsync(int id,bool trackchange)
         {
-            return await FindByCondition(e => e.EquipmentId == id, trackChanges: false)
+            return await FindByCondition(e => e.EquipmentId == id, trackchange)
                 .FirstOrDefaultAsync();
         }
 

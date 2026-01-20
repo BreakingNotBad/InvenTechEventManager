@@ -19,9 +19,10 @@ namespace Repositories.Repository
                 .ToListAsync();
         }
 
-        public async Task<Package?> GetPackageByIdAsync(int id)
+        public async Task<Package?> GetPackageByIdAsync(int id,bool trackchange)
         {
-            return await FindByCondition(e => e.PackageId == id, trackChanges: false)
+            return await FindByCondition(e => e.PackageId == id, trackchange)
+                .Include(e => e.EquipmentSets)
                 .FirstOrDefaultAsync();
         }
 

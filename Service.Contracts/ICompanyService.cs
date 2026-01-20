@@ -11,7 +11,7 @@ namespace Service.Contracts
             string? Address,
             decimal? Latitude,
             decimal? Longitude,
-            bool IsDeleted,
+            bool? IsDeleted,
             DateTime CreatedAt,
             DateTime UpdatedAt);
         Task<Company?> GetCompanyByIdAsync(int id);

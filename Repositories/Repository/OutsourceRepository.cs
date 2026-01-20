@@ -16,9 +16,9 @@ namespace Repositories.Repository
             return await FindAll(trackChanges: false).ToListAsync();
         }
 
-        public async Task<Outsource?> GetOutsourceByIdAsync(int id)
+        public async Task<Outsource?> GetOutsourceByIdAsync(int id, bool trackchange)
         {
-            return await FindByCondition(e => e.OutsourceId == id, trackChanges: false)
+            return await FindByCondition(e => e.OutsourceId == id, trackchange)
                 .FirstOrDefaultAsync();
         }
 

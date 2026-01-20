@@ -1,3 +1,4 @@
+using Contracts.DTOs;
 using Entities.Models;
 using Microsoft.AspNetCore.Mvc;
 using Service.Contracts.Manager;
@@ -33,17 +34,20 @@ namespace Presentation.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreatePackage([FromBody] Package package)
+        public async Task<IActionResult> CreatePackage(CreatePackageDto dto)
         {
-            await _service.Package.CreatePackageAsync(package);
-            return CreatedAtAction(nameof(GetPackageById), new { id = package.PackageId }, package);
+            var createdPackage = await _service.Package.CreatePackageAsync(dto);
+            return CreatedAtAction(
+                nameof(GetPackageById), 
+                new { id = createdPackage.PackageId }, 
+                createdPackage);
         }
 
         [HttpPut("{id:int}")]
-        public async Task<IActionResult> UpdatePackage(int id, [FromBody] Package package)
+        public async Task<IActionResult> UpdatePackage(int id, UpdatePackageDto dto)
         {
-            await _service.Package.UpdatePackageAsync(id, package);
-            return Ok(package);
+            await _service.Package.UpdatePackageAsync(id, dto);
+            return Ok(dto);
         }
 
         [HttpDelete("{id:int}")]

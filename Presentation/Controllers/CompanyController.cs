@@ -23,7 +23,7 @@ namespace Presentation.Controllers
             string? Address,
             decimal? Latitude,
             decimal? Longitude,
-            bool IsDeleted,
+            bool? IsDeleted,
             DateTime CreatedAt,
             DateTime UpdatedAt)
         {

@@ -3,6 +3,7 @@ using Contracts.DTOs;
 using Contracts.IRepository.BaseManager;
 using Entities.Models;
 using Service.Contracts;
+using System.Collections;
 
 namespace Service
 {
@@ -34,16 +35,8 @@ namespace Service
             //  search
             if (!string.IsNullOrWhiteSpace(fullName))
             {
-                staffs = staffs.Where(s =>
-                    s.FullName.Contains(fullName, StringComparison.OrdinalIgnoreCase)
-                    || (
-                        !string.IsNullOrEmpty(s.Email)
-                        && s.Email.Contains(fullName, StringComparison.OrdinalIgnoreCase)
-                    )
-                    || (
-                        !string.IsNullOrEmpty(s.PhoneNumber)
-                        && s.PhoneNumber.Contains(fullName, StringComparison.OrdinalIgnoreCase)
-                    )
+                staffs = staffs.Where(
+                    s => s.FullName?.ToLower().Contains(fullName.Trim().ToLower()) == true 
                 );
             }
 
@@ -51,9 +44,7 @@ namespace Service
             if (!string.IsNullOrWhiteSpace(role))
             {
                 staffs = staffs.Where(s =>
-                    s.StaffRoles.Any(r =>
-                        r.Role.RoleName.Equals(role, StringComparison.OrdinalIgnoreCase)
-                    )
+                    s.StaffRoles.Any(r => r.Role.RoleName.Equals(role)) 
                 );
             }
 
@@ -99,7 +90,7 @@ namespace Service
         // GET BY ID
         public async Task<Staff?> GetStaffByIdAsync(int id)
         {
-            return await _repo.Staff.GetStaffByIdAsync(id);
+            return await _repo.Staff.GetStaffByIdAsync(id,false);
         }
 
         // CREATE
@@ -110,41 +101,42 @@ namespace Service
         )
         {
             // 1. จัดการเรื่องไฟล์
-            string? avatarPath = null;
+            Console.WriteLine($"--------------------------------------------------");
+            Console.WriteLine($"[Start] Creating Staff: {staffDto.FullName} (Email: {staffDto.Email})");
+            string? avatarPath = null; // กำหนดค่าเริ่มต้นเป็น null
 
             // เช็คว่ามี Stream ส่งมาไหม
             if (
-                avatarStream != null
-                && avatarStream.Length > 0
-                && !string.IsNullOrEmpty(avatarFileName)
+                avatarStream != null // ถ้ามีไฟล์แนบมา 
+                && avatarStream.Length > 0 // และไฟล์ไม่ว่างเปล่า
+                && !string.IsNullOrEmpty(avatarFileName) // และมีชื่อไฟล์
             )
             {
-                // เรียก FileService ให้ช่วยเซฟ (โดยส่ง Stream ไป)
-                avatarPath = await _fileService.SaveFileAsync(
-                    avatarStream,
-                    avatarFileName,
-                    "Staff" // ชื่อ Folder ย่อย
+                Console.WriteLine($"[File] Uploading avatar: {avatarFileName} ({avatarStream.Length} bytes)...");
+                // ให้บันทึกไฟล์ผ่าน FileService
+                avatarPath = await _fileService.SaveFileAsync( // เรียกใช้เมธอด SaveFileAsync
+                    avatarStream, // ส่ง Stream ของไฟล์
+                    avatarFileName, // ชื่อไฟล์
+                    "Staff" // โฟลเดอร์ที่เก็บไฟล์ ชื่อโฟลเดอร์ "Staff"
                 );
+                Console.WriteLine($"[File] Avatar saved at: {avatarPath}");
             }
 
             // 2. สร้าง Entity (Mapping)
-            var staffEntity = _mapper.Map<Staff>(staffDto);
-            staffEntity.Avatar = avatarPath;
-
+            var staffEntity = _mapper.Map<Staff>(staffDto); // แปลงจาก DTO เป็น Entity
+            staffEntity.Avatar = avatarPath; // กำหนดค่า Avatar ที่ได้จากการบันทึกไฟล์ ไปยัง Entity
             // 3. จัดการ Role
-            if (staffDto.RoleIds != null && staffDto.RoleIds.Any())
+            if (staffDto.RoleIds != null)// ถ้ามีการกำหนด RoleIds มา
             {
-                staffEntity.StaffRoles = new List<StaffRole>();
-                foreach (var roleId in staffDto.RoleIds)
-                {
-                    staffEntity.StaffRoles.Add(new StaffRole { RoleId = roleId });
-                }
+                Console.WriteLine($"[Role] Assigning {staffDto.RoleIds.Count} roles...");
+                staffEntity.StaffRoles = staffDto.RoleIds // รับ RoleIds จาก DTO
+                    .Select(roleId => new StaffRole { RoleId = roleId }) // สร้าง StaffRole ใหม่สำหรับแต่ละ RoleId
+                    .ToList();
             }
-
+            Console.WriteLine($"[DB] Saving to database...");
             // 4. บันทึกลง Database
             _repo.Staff.CreateStaff(staffEntity);
             await _repo.SaveAsync();
-
             return staffEntity;
         }
 
@@ -156,7 +148,9 @@ namespace Service
             string? avatarFileName
         )
         {
-            var staff = await _repo.Staff.GetStaffByIdAsync(id);
+            Console.WriteLine($"--------------------------------------------------");
+            Console.WriteLine($"[Start] Updating Staff ID: {id} | Name: {dto.FullName}");
+            var staff = await _repo.Staff.GetStaffByIdAsync(id,true);
 
             if (staff == null)
                 throw new KeyNotFoundException($"Staff with id {id} not found.");
@@ -166,58 +160,65 @@ namespace Service
             staff.UpdatedAt = DateTime.UtcNow;
 
             // Delete Avatar
-            if (dto.DeleteAvatar == true)
+            if (dto.DeleteAvatar == true) // ถ้ามีการส่งค่านี้มาเป็น true
             {
-                if (!string.IsNullOrEmpty(staff.Avatar))
+                if (!string.IsNullOrEmpty(staff.Avatar))// ถ้ามี Avatar เดิมอยู่
                 {
-                    await _fileService.DeleteFileAsync(staff.Avatar);
+                    Console.WriteLine($"[Avatar] Removing old file at: {staff.Avatar}");
+                    await _fileService.DeleteFileAsync(staff.Avatar);// ลบไฟล์เก่าออก
                 }
-                staff.Avatar = null;
+                staff.Avatar = null;// ตั้งค่า Avatar ใน DB เป็น null
             }
             // avatar
-            else if (avatarStream != null && !string.IsNullOrEmpty(avatarFileName))
+            else if (avatarStream != null && !string.IsNullOrEmpty(avatarFileName)) // ถ้ามีการส่งไฟล์ใหม่มา
             {
-                // 3.1 (Optional) ลบไฟล์เก่าทิ้งก่อน ถ้าต้องการประหยัดพื้นที่
-                if (!string.IsNullOrEmpty(staff.Avatar))
-                    await _fileService.DeleteFileAsync(staff.Avatar);
+                Console.WriteLine($"[Avatar] New file detected: {avatarFileName} ({avatarStream.Length} bytes)");
+                // ลบไฟล์เก่าออกก่อน
+                if (!string.IsNullOrEmpty(staff.Avatar))// ถ้ามี Avatar เดิมอยู่
+                Console.WriteLine($"[Avatar] Removing old file before replacement...");
+                await _fileService.DeleteFileAsync(staff.Avatar);// ลบไฟล์เก่าออก
 
-                // 3.2 เซฟไฟล์ใหม่
-                var newAvatarPath = await _fileService.SaveFileAsync(
+                // บันทึกไฟล์ใหม่
+                var newAvatarPath = await _fileService.SaveFileAsync( // เรียกใช้เมธอด SaveFileAsync
                     avatarStream,
                     avatarFileName,
-                    "Staff"
+                    "Staff" // เก็บในโฟลเดอร์ "Staff"
                 );
-
-                // 3.3 อัปเดต Path ใน DB
+                Console.WriteLine($"[Avatar] New file saved at: {newAvatarPath}");
+                // อัปเดตเส้นทางไฟล์ในฐานข้อมูล
                 staff.Avatar = newAvatarPath;
             }
 
-            // roles (เฉพาะเมื่อส่งมา)
-            if (dto.RoleIds != null)
+            // update roles
+            if (dto.RoleIds != null) // ถ้ามีการส่ง RoleIds มา
             {
-                staff.StaffRoles.Clear();
-                foreach (var roleId in dto.RoleIds)
+                Console.WriteLine($"[Role] Updating roles. New Role IDs: [{string.Join(", ", dto.RoleIds)}]");
+                staff.StaffRoles.Clear(); // ลบ Role เดิมทั้งหมดออกก่อน
+                foreach (var roleId in dto.RoleIds) // เพิ่ม Role ใหม่ตามที่ส่งมา
                 {
                     staff.StaffRoles.Add(
-                        new StaffRole { StaffId = staff.StaffId, RoleId = roleId }
+                        new StaffRole { StaffId = staff.StaffId, RoleId = roleId } // สร้าง StaffRole ใหม่
                     );
                 }
             }
 
-            // ✅ soft delete
-            if (dto.IsDeleted.HasValue)
+            // เช็คการลบ
+            if (dto.IsDeleted.HasValue) // ถ้ามีการส่งค่านี้มา
             {
-                staff.IsDeleted = dto.IsDeleted.Value;
+                Console.WriteLine($"[Status] Changing 'IsDeleted' to: {dto.IsDeleted.Value}");
+                staff.IsDeleted = dto.IsDeleted.Value; // อัปเดตสถานะ
             }
-
+            Console.WriteLine($"[DB] Saving changes to database...");
             _repo.Staff.UpdateStaff(staff);
             await _repo.SaveAsync();
+            Console.WriteLine($"[Success] Staff ID {id} updated successfully.");
+            Console.WriteLine($"--------------------------------------------------");
         }
 
         // DELETE
         public async Task DeleteStaffAsync(int id)
         {
-            var exinstingStaff = await _repo.Staff.GetStaffByIdAsync(id);
+            var exinstingStaff = await _repo.Staff.GetStaffByIdAsync(id,true);
 
             if (exinstingStaff == null)
             {
@@ -230,7 +231,7 @@ namespace Service
 
         public async Task SoftDeleteStaffAsync(int id, bool isDeleted)
         {
-            var existingStaff = await _repo.Staff.GetStaffByIdAsync(id);
+            var existingStaff = await _repo.Staff.GetStaffByIdAsync(id,true);
             if (existingStaff == null)
             {
                 throw new KeyNotFoundException($"Staff with id {id} not found.");

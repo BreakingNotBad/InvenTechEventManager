@@ -22,7 +22,7 @@ namespace Service
             string? Address,
             decimal? Latitude,
             decimal? Longitude,
-            bool IsDeleted,
+            bool? IsDeleted,
             DateTime CreatedAt,
             DateTime UpdatedAt
         )
@@ -72,7 +72,10 @@ namespace Service
             }
 
             // search IsDeleted
-            companiesList = companiesList.Where(c => c.IsDeleted == IsDeleted);
+            if(IsDeleted.HasValue)
+            {
+                companiesList = companiesList.Where(c => c.IsDeleted == IsDeleted.Value);
+            }
 
             // search CreatedAt
             if (CreatedAt != default(DateTime))

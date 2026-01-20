@@ -1,4 +1,5 @@
-﻿using Contracts.IRepository.BaseManager;
+﻿using Contracts.DTOs;
+using Contracts.IRepository.BaseManager;
 using Entities.Models;
 using Service.Contracts;
 
@@ -15,64 +16,78 @@ namespace Service
 
         public async Task<IEnumerable<Equipment>> GetEquipmentAsync(
             string? equipmentName,
-            string? category
+            string? category,
+            bool? IsDeleted,
+            DateTime CreatedAt,
+            DateTime UpdatedAt
         )
         {
-            var equipment = await _repo.Equipment.GetEquipmentAsync();
+            var equipmentList = await _repo.Equipment.GetEquipmentAsync();
 
-            //  search (q) - case-insensitive
+            //  search
             if (!string.IsNullOrWhiteSpace(equipmentName))
             {
-                equipment = equipment.Where(e =>
-                    e.EquipmentName.Contains(equipmentName, StringComparison.OrdinalIgnoreCase)
+                equipmentList = equipmentList.Where(e =>
+                    e.EquipmentName.ToLower().Contains(equipmentName.ToLower())
                 );
             }
 
             //  filter category
             if (!string.IsNullOrWhiteSpace(category))
             {
-                equipment = equipment.Where(e =>
-                    e.Category != null
-                    && e.Category.CategoryName.Contains(
-                        category,
-                        StringComparison.OrdinalIgnoreCase
-                    )
+                equipmentList = equipmentList.Where(e =>
+                e.Category.CategoryName.ToLower().Contains(category.ToLower())
                 );
             }
 
-            return equipment;
+            return equipmentList;
         }
 
         public async Task<Equipment?> GetEquipmentByIdAsync(int id)
         {
-            return await _repo.Equipment.GetEquipmentByIdAsync(id);
+            return await _repo.Equipment.GetEquipmentByIdAsync(id,false);
         }
 
-        public async Task CreateEquipmentAsync(Equipment equipment)
+        public async Task<Equipment> CreateEquipmentAsync(CreateEquipmentDto dto)
         {
+
+            var equipment = new Equipment
+            {
+                EquipmentName = dto.EquipmentName,
+                CategoryId = dto.CategoryId,
+                IsDeleted = false,
+                CreatedAt = DateTime.UtcNow,
+                UpdatedAt = DateTime.UtcNow,
+            };
+
             _repo.Equipment.CreateEquipment(equipment);
             await _repo.SaveAsync();
+
+            return equipment;
         }
 
-        public async Task UpdateEquipmentAsync(int id, Equipment equipment)
+
+        public async Task<Equipment> UpdateEquipmentAsync(int id, UpdateEquipmentDto dto)
         {
-            var existingEquipment = await _repo.Equipment.GetEquipmentByIdAsync(id);
+            var existingEquipment = await _repo.Equipment.GetEquipmentByIdAsync(id,true);
             if (existingEquipment == null)
             {
                 throw new KeyNotFoundException($"Equipment with id {id} not found.");
             }
-
-            existingEquipment.EquipmentName = equipment.EquipmentName;
-            existingEquipment.CategoryId = equipment.CategoryId;
+            // Update fields
+            existingEquipment.EquipmentName = dto.EquipmentName;
+            existingEquipment.CategoryId = dto.CategoryId;
+            existingEquipment.IsDeleted = dto.IsDeleted;
             existingEquipment.UpdatedAt = DateTime.UtcNow;
 
             _repo.Equipment.UpdateEquipment(existingEquipment);
             await _repo.SaveAsync();
+            return existingEquipment;
         }
 
         public async Task DeleteEquipment(int id)
         {
-            var existingEquipment = await _repo.Equipment.GetEquipmentByIdAsync(id);
+            var existingEquipment = await _repo.Equipment.GetEquipmentByIdAsync(id,true);
             if (existingEquipment == null)
             {
                 throw new KeyNotFoundException($"Equipment with id {id} not found.");
