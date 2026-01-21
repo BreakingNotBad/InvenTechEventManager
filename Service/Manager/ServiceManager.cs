@@ -1,7 +1,8 @@
 ﻿using AutoMapper;
 using Contracts.IRepository.BaseManager;
-using Service.Contracts;
+using Service.Contracts.IService;
 using Service.Contracts.Manager;
+using Service.Service;
 
 namespace Service.Manager
 {
@@ -20,7 +21,7 @@ namespace Service.Manager
         public ServiceManager(IRepositoryManager repo, IFileService fileService, IMapper mapper)
         {
             _eventService = new Lazy<IEventService>(() => new EventService(repo));
-            _companyService = new Lazy<ICompanyService>(() => new CompanyService(repo));
+            _companyService = new Lazy<ICompanyService>(() => new CompanyService(repo, mapper));
             _staffService = new Lazy<IStaffService>(() =>
                 new StaffService(repo, fileService, mapper)
             );

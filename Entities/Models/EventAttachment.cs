@@ -1,11 +1,9 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Entities.Models
 {
     public class EventAttachment
     {
-
         public int EventAttachmentId { get; set; }
 
         // ชื่อไฟล์ต้นฉบับที่ user อัปโหลด (เช่น "Project_Brief.pdf")

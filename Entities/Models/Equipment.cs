@@ -1,14 +1,12 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
+using Entities.Common;
 
 namespace Entities.Models
 {
-    public class Equipment
+    public class Equipment : BaseEntity
     {
         public int EquipmentId { get; set; }
         public required string EquipmentName { get; set; }
-        public bool IsDeleted { get; set; } = false;
-        public DateTime CreatedAt { get; set; }
-        public DateTime? UpdatedAt { get; set; }
 
         // Foreign Key
         public int CategoryId { get; set; }
