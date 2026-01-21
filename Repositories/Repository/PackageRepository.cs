@@ -23,6 +23,7 @@ namespace Repositories.Repository
         {
             return await FindByCondition(e => e.PackageId == id, trackchange)
                 .Include(e => e.EquipmentSets)
+                .ThenInclude(eq => eq.Equipment)
                 .FirstOrDefaultAsync();
         }
 
