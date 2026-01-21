@@ -19,6 +19,7 @@ namespace Repositories.Repository
         public async Task<Equipment?> GetEquipmentByIdAsync(int id,bool trackchange)
         {
             return await FindByCondition(e => e.EquipmentId == id, trackchange)
+                .Include(e => e.Category)
                 .FirstOrDefaultAsync();
         }
 
