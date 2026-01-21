@@ -1,4 +1,6 @@
-﻿namespace Service.Contracts.Manager
+﻿using Service.Contracts.IService;
+
+namespace Service.Contracts.Manager
 {
     public interface IServiceManager
     {

@@ -1,6 +1,6 @@
-using Contracts.DTOs;
 using Entities.Models;
 using Microsoft.AspNetCore.Mvc;
+using Service.Contracts.DTOs.Package;
 using Service.Contracts.Manager;
 
 namespace Presentation.Controllers

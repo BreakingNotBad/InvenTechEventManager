@@ -1,4 +1,5 @@
-﻿using Entities.Models;
+﻿using Entities.Interfaces;
+using Entities.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace Repositories.Data
@@ -95,6 +96,39 @@ namespace Repositories.Data
                 .WithMany(s => s.CreatedEvents)
                 .HasForeignKey(e => e.CreatedByStaffId)
                 .OnDelete(DeleteBehavior.NoAction);
+        }
+
+        public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        {
+            // วนลูปดูว่ามี Entity ตัวไหนบ้างที่มีการเปลี่ยนแปลง (Added หรือ Modified)
+            // และ Entity ตัวนั้นต้องสืบทอด IAuditable ด้วยนะ
+            var entries = ChangeTracker
+                .Entries<IAuditable>()
+                .Where(e => e.State == EntityState.Added || e.State == EntityState.Modified);
+
+            foreach (var entry in entries)
+            {
+                // ใช้ UtcNow เพื่อป้องกันปัญหาเรื่อง Timezone ของ Server
+                var now = DateTime.UtcNow;
+
+                if (entry.State == EntityState.Added)
+                {
+                    entry.Entity.CreatedAt = now;
+                    // ตอนสร้างใหม่ UpdatedAt ควรเป็น null หรือจะให้เท่ากับ CreatedAt ก็ได้แล้วแต่ design
+                    entry.Entity.UpdatedAt = null;
+                }
+
+                if (entry.State == EntityState.Modified)
+                {
+                    // ถ้าเป็นการแก้ไข ให้แก้แค่ UpdatedAt
+                    entry.Entity.UpdatedAt = now;
+
+                    // ป้องกันไม่ให้ CreatedAt โดนแก้ (เผื่อมีใครเผลอไป set ค่าใหม่)
+                    entry.Property(x => x.CreatedAt).IsModified = false;
+                }
+            }
+
+            return base.SaveChangesAsync(cancellationToken);
         }
     }
 }

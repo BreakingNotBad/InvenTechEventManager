@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
+using Entities.Common;
 
 namespace Entities.Models
 {
@@ -15,7 +16,7 @@ namespace Entities.Models
         Offline,
     }
 
-    public class Event
+    public class Event : BaseEntity
     {
         public int EventId { get; set; }
         public required string EventName { get; set; }
@@ -28,9 +29,6 @@ namespace Entities.Models
         public decimal Latitude { get; set; }
         public decimal Longitude { get; set; }
         public string? Note { get; set; }
-        public bool IsDeleted { get; set; } = false;
-        public DateTime CreatedAt { get; set; }
-        public DateTime? UpdatedAt { get; set; }
 
         // --- Relations ---
 

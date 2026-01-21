@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
-using Contracts.DTOs;
 using Entities.Models;
 using Microsoft.AspNetCore.Mvc;
 using Presentation.Requests.Staff;
+using Service.Contracts.DTOs.Staff;
 using Service.Contracts.Manager;
 
 namespace Presentation.Controllers

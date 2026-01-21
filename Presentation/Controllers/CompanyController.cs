@@ -1,6 +1,5 @@
-﻿using Contracts.DTOs;
-using Entities.Models;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using Service.Contracts.DTOs.Company;
 using Service.Contracts.Manager;
 
 namespace Presentation.Controllers
@@ -18,14 +17,15 @@ namespace Presentation.Controllers
 
         [HttpGet]
         public async Task<IActionResult> GetCompanies(
-            string? companyName, 
-            string? companyContact, 
+            string? companyName,
+            string? companyContact,
             string? Address,
             decimal? Latitude,
             decimal? Longitude,
             bool? IsDeleted,
             DateTime CreatedAt,
-            DateTime UpdatedAt)
+            DateTime UpdatedAt
+        )
         {
             Console.WriteLine("Hello woRld");
             var companiesList = await _service.Company.GetCompaniesAsync(
@@ -54,22 +54,26 @@ namespace Presentation.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateCompany(CreateCompanyDto dto)
+        public async Task<IActionResult> CreateCompany(CreateCompanyDto companyDto)
         {
-            var createCompany = await _service.Company.CreateCompanyAsync(dto);
+            var createdCompany = await _service.Company.CreateCompanyAsync(companyDto);
 
             return CreatedAtAction(
                 nameof(GetCompanyById),
-                new { id = createCompany.CompanyId },
-                createCompany
+                new { id = createdCompany.CompanyId },
+                createdCompany
             );
         }
 
         [HttpPut("{id:int}")]
-        public async Task<IActionResult> UpdateCompany(int id, [FromBody] UpdateCompanyDto dto)
+        public async Task<IActionResult> UpdateCompany(
+            int id,
+            [FromBody] UpdateCompanyDto companyDto
+        )
         {
-            await _service.Company.UpdateCompanyAsync(id, dto);
-            return NoContent();
+            var updatedCompany = await _service.Company.UpdateCompanyAsync(id, companyDto);
+
+            return Ok(updatedCompany);
         }
 
         [HttpDelete("{id:int}")]

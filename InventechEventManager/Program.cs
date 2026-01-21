@@ -1,14 +1,13 @@
-﻿using System.Text.Json.Serialization;
-using Contracts.IRepository.BaseManager;
+﻿using Contracts.IRepository.BaseManager;
 using Microsoft.EntityFrameworkCore;
-using Presentation.Mapping;
 using Repositories.Data;
 using Repositories.Repository.BaseManager;
 using Scalar.AspNetCore;
-using Service;
-using Service.Contracts;
+using Service.Contracts.IService;
 using Service.Contracts.Manager;
 using Service.Manager;
+using Service.Service;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,7 +20,11 @@ builder.Services.AddScoped<IServiceManager, ServiceManager>();
 builder.Services.AddScoped<IFileService, FileService>();
 
 // AutoMapper
-builder.Services.AddAutoMapper(typeof(StaffProfile).Assembly);
+builder.Services.AddAutoMapper(cfg =>
+{
+    cfg.AddMaps(typeof(Program));
+    cfg.AddMaps(typeof(Service.Profiles.CompanyProfile));
+});
 
 builder.Services.AddControllers();
 

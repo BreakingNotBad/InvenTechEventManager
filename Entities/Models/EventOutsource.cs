@@ -1,8 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
+using Entities.Common;
 
 namespace Entities.Models
 {
-    public class EventOutsource
+    public class EventOutsource : AuditableEntity
     {
         public int EventId { get; set; }
 
@@ -18,8 +19,5 @@ namespace Entities.Models
 
         [ForeignKey(nameof(RoleId))]
         public Role Role { get; set; } = null!;
-
-        public DateTime AssignedAt { get; set; }
-        public DateTime UpdatedAt { get; set; }
     }
 }

@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
-using Contracts.DTOs;
 using Entities.Models;
 using Presentation.Requests.Staff;
+using Service.Contracts.DTOs.Staff;
 
 namespace Presentation.Mapping
 {

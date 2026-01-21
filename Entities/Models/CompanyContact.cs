@@ -1,8 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
+using Entities.Common;
 
 namespace Entities.Models
 {
-    public class CompanyContact
+    public class CompanyContact : AuditableEntity
     {
         public int CompanyContactId { get; set; }
         public required string FullName { get; set; }
@@ -10,9 +11,6 @@ namespace Entities.Models
         public string? PhoneNumber { get; set; }
         public string? Position { get; set; }
         public bool IsPrimary { get; set; } = false;
-        public bool IsDeleted { get; set; } = false;
-        public DateTime CreatedAt { get; set; }
-        public DateTime? UpdatedAt { get; set; }
 
         // Foreign Key
         public int CompanyId { get; set; }
