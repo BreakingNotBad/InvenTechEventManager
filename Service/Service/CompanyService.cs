@@ -177,6 +177,7 @@ namespace Service.Service
                 foreach (var contact in deletedContacts)
                 {
                     _repo.CompanyContact.DeleteCompanyContact(contact);
+                    existingCompany.CompanyContacts.Remove(contact);
                 }
 
                 // วนลูปเพื่อ "แก้ไข" หรือ "เพิ่มใหม่" ของ CompanyContacts
@@ -200,11 +201,19 @@ namespace Service.Service
                         var newContact = _mapper.Map<CompanyContact>(contactDto);
                         existingCompany.CompanyContacts.Add(newContact);
                     }
-
-                    // ตรวจสอบว่ามีการกำหนด IsPrimary มากกว่า 1 รายการหรือไม่
-                    if (existingCompany.CompanyContacts.Count(c => c.IsPrimary) > 1)
-                        throw new Exception("Company can have only one primary contact.");
                 }
+            }
+
+            // ตรวจสอบหลังจาก Update ครบทุกตัวแล้ว (ไว้มาลบหลังจากทำ Validation แล้ว)
+            var primaryCount = existingCompany.CompanyContacts.Count(c => c.IsPrimary);
+
+            if (primaryCount > 1)
+            {
+                throw new Exception("Company can have only one primary contact.");
+            }
+            else if (primaryCount == 0)
+            {
+                throw new Exception("Company must have at least one primary contact.");
             }
 
             await _repo.SaveAsync();
