@@ -4,7 +4,7 @@ namespace Service.Contracts.DTOs.Package
 {
     public class CreatePackageDto
     {
-        public required string PackageName { get; set; }
+        public string? PackageName { get; set; }
         public List<CreateEquipmentSetDto> EquipmentSets { get; set; } = [];
     }
 }

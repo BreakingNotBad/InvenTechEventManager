@@ -117,9 +117,6 @@ namespace Service.Service
         // CREATE
         public async Task<CompanyDto> CreateCompanyAsync(CreateCompanyDto companyDto) // รับค่ามาจาก controller ผ่าน dto
         {
-            // ไว้ทำ validation เองทีหลัง (เดี๋ยวมาลบด้วย)
-            if (string.IsNullOrWhiteSpace(companyDto.CompanyName)) // ตรวจสอบว่ามีการกรอก CompanyName มาหรือไม่
-                throw new Exception("CompanyName is required.");
 
             var newCompany = _mapper.Map<Company>(companyDto); // แปลงข้อมูลจาก Dto เป็น Entity
 
@@ -139,12 +136,7 @@ namespace Service.Service
             if (existingCompany == null)
                 throw new KeyNotFoundException($"Company with id {id} not found.");
 
-            // update company fields // เดี๋ยวทำ autp mapper (เดี๋ยวมาลบด้วย)
-            //existingCompany.CompanyName = companyDto.CompanyName;
-            //existingCompany.Address = companyDto.Address;
-            //existingCompany.Latitude = companyDto.Latitude;
-            //existingCompany.Longitude = companyDto.Longitude;
-            //existingCompany.IsDeleted = companyDto.IsDeleted;
+            // update company fields 
             _mapper.Map(companyDto, existingCompany);
 
             //  DELETE (CompanyContacts)
@@ -204,17 +196,6 @@ namespace Service.Service
                 }
             }
 
-            // ตรวจสอบหลังจาก Update ครบทุกตัวแล้ว (ไว้มาลบหลังจากทำ Validation แล้ว)
-            var primaryCount = existingCompany.CompanyContacts.Count(c => c.IsPrimary);
-
-            if (primaryCount > 1)
-            {
-                throw new Exception("Company can have only one primary contact.");
-            }
-            else if (primaryCount == 0)
-            {
-                throw new Exception("Company must have at least one primary contact.");
-            }
 
             await _repo.SaveAsync();
 

@@ -1,9 +1,10 @@
 using Contracts.IRepository.BaseManager;
 using Entities.Models;
+using Service.Contracts;
 using Service.Contracts.DTOs.Package;
 using Service.Contracts.IService;
 
-namespace Service.Service
+namespace Service
 {
     public class PackageService : IPackageService
     {
@@ -21,7 +22,7 @@ namespace Service.Service
 
         public async Task<Package?> GetPackageByIdAsync(int id)
         {
-            return await _repo.Package.GetPackageByIdAsync(id,false);
+            return await _repo.Package.GetPackageByIdAsync(id, false);
         }
 
         public async Task<Package> CreatePackageAsync(CreatePackageDto dto)
@@ -49,7 +50,7 @@ namespace Service.Service
 
         public async Task<Package> UpdatePackageAsync(int id, UpdatePackageDto dto)
         {
-            var existingPackage = await _repo.Package.GetPackageByIdAsync(id,true); // ดึงข้อมูลพร้อม EquipmentSets
+            var existingPackage = await _repo.Package.GetPackageByIdAsync(id, true); // ดึงข้อมูลพร้อม EquipmentSets
             if (existingPackage == null) // ตรวจสอบว่าพบ Package หรือไม่
             {
                 throw new KeyNotFoundException($"Package with id {id} not found.");
@@ -58,21 +59,37 @@ namespace Service.Service
             existingPackage.PackageName = dto.PackageName;
             existingPackage.UpdatedAt = DateTime.UtcNow;
 
-            // Clear existing EquipmentSets
-            existingPackage.EquipmentSets.Clear();
+            var existingSets = existingPackage.EquipmentSets.ToList(); // รายชื่อของที่มีอยู่ตอนนี้ออกมาเก็บไว้ดู เพื่อจะได้เปรียบเทียบ เอาไว้ ลบ / แก้ / เพิ่ม
 
-            // เพิ่มของใหม่
-            foreach (var equipment in dto.EquipmentSets) // ตรวจสอบ EquipmentId ว่ามีอยู่จริงหรือไม่
+            foreach (var set in existingSets) // ลูปเช็คว่าอันไหนต้องลบ
             {
-                var equipmentExists = await _repo.Equipment.GetEquipmentByIdAsync(equipment.EquipmentId,false); //
-                if (equipmentExists == null) // ถ้าไม่พบ Equipment
-                    throw new Exception($"Equipment {equipment.EquipmentId} not found");
+                if (!dto.EquipmentSets.Any(d => d.EquipmentId == set.EquipmentId)) // ดูของเก่าทีละชิ้นถ้าชิ้นไหน ไม่อยู่ในรายการใหม่ ให้ลบ
+                    existingPackage.EquipmentSets.Remove(set); // ลบออกจากรายการ
+            }
 
-                existingPackage.EquipmentSets.Add(new EquipmentSet // เพิ่ม EquipmentSet ใหม่
+            foreach (var Set in dto.EquipmentSets) // ดูของใหม่ทีละชิ้น ลูปเช็คว่าอันไหนต้องแก้ไข หรือเพิ่ม
+            {
+                var existingSet = existingSets
+                    .FirstOrDefault(x => x.EquipmentId == Set.EquipmentId); // หาในรายการเก่าว่ามีชิ้นนี้อยู่ไหม
+
+                if (existingSet != null) // ถ้ามีอยู่แล้ว ให้แก้ไขจำนวน
                 {
-                    EquipmentId = equipment.EquipmentId,
-                    Quantity = equipment.Quantity
-                });
+                    existingSet.Quantity = Set.Quantity;
+                }
+                else // ถ้าไม่มีอยู่ในรายการเก่า ให้เพิ่มใหม่
+                {
+                    var equipmentExists = await _repo.Equipment // เช็คก่อนว่า อุปกรณ์ที่เพิ่มมานั้น มีอยู่จริงไหม
+                        .GetEquipmentByIdAsync(Set.EquipmentId, false); // ดึงข้อมูลอุปกรณ์
+
+                    if (equipmentExists == null)
+                        throw new Exception($"Equipment {Set.EquipmentId} not found");
+
+                    existingPackage.EquipmentSets.Add(new EquipmentSet // เพิ่มใหม่
+                    {
+                        EquipmentId = Set.EquipmentId,
+                        Quantity = Set.Quantity
+                    });
+                }
             }
 
             _repo.Package.UpdatePackage(existingPackage);
@@ -82,7 +99,7 @@ namespace Service.Service
 
         public async Task DeletePackage(int id)
         {
-            var existingPackage = await _repo.Package.GetPackageByIdAsync(id,true);
+            var existingPackage = await _repo.Package.GetPackageByIdAsync(id, true);
             if (existingPackage == null)
             {
                 throw new KeyNotFoundException($"Package with id {id} not found.");

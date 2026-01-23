@@ -8,6 +8,13 @@ using Service.Contracts.Manager;
 using Service.Manager;
 using Service.Service;
 using System.Text.Json.Serialization;
+using FluentValidation;
+using FluentValidation.AspNetCore;
+using Service.Validators.Company;
+using Presentation.Validators.staff;
+using Service.Validators.Outsource;
+using Service.Validators.Equipment;
+using Service.Validators.Package;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,6 +31,7 @@ builder.Services.AddAutoMapper(cfg =>
 {
     cfg.AddMaps(typeof(Program));
     cfg.AddMaps(typeof(Service.Profiles.CompanyProfile));
+    cfg.AddMaps(typeof(Presentation.Mapping.StaffProfile));
 });
 
 builder.Services.AddControllers();
@@ -58,6 +66,19 @@ builder.Services.AddCors(options =>
         }
     );
 });
+
+// Fluent Validation
+builder.Services.AddFluentValidationAutoValidation();
+builder.Services.AddValidatorsFromAssemblyContaining<CreateCompanyValidator>();
+builder.Services.AddValidatorsFromAssemblyContaining<UpdateCompanyValidator>();
+builder.Services.AddValidatorsFromAssemblyContaining<CreateStaffValidator>();
+builder.Services.AddValidatorsFromAssemblyContaining<UpdateStaffValidator>();
+builder.Services.AddValidatorsFromAssemblyContaining<CreateOutsourceValidator>();
+builder.Services.AddValidatorsFromAssemblyContaining<UpdateOutsourceValidator>();
+builder.Services.AddValidatorsFromAssemblyContaining<CreateEquipmentValidator>();
+builder.Services.AddValidatorsFromAssemblyContaining<UpdateEquipmentValidator>();
+builder.Services.AddValidatorsFromAssemblyContaining<CreatePackageValidator>();
+builder.Services.AddValidatorsFromAssemblyContaining<UpdatePackegeValidator>();
 
 var app = builder.Build();
 
