@@ -1,5 +1,4 @@
 ﻿using Service.Contracts.DTOs.CompanyContact;
-using System.ComponentModel;
 
 namespace Service.Contracts.DTOs.Company
 {

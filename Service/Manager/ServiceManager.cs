@@ -1,5 +1,8 @@
 ﻿using AutoMapper;
 using Contracts.IRepository.BaseManager;
+using FluentValidation;
+using Microsoft.Extensions.DependencyInjection;
+using Service.Contracts.DTOs.Company;
 using Service.Contracts.IService;
 using Service.Contracts.Manager;
 using Service.Service;
@@ -18,10 +21,25 @@ namespace Service.Manager
         private readonly Lazy<ICategoryService> _categoryService;
         private readonly Lazy<IFileService> _fileService;
 
-        public ServiceManager(IRepositoryManager repo, IFileService fileService, IMapper mapper)
+        public ServiceManager(
+            IRepositoryManager repo,
+            IFileService fileService,
+            IMapper mapper,
+            IServiceProvider serviceProvider
+        )
         {
             _eventService = new Lazy<IEventService>(() => new EventService(repo));
-            _companyService = new Lazy<ICompanyService>(() => new CompanyService(repo, mapper));
+            //_companyService = new Lazy<ICompanyService>(() => new CompanyService(repo, mapper));
+            _companyService = new Lazy<ICompanyService>(() =>
+            {
+                var createValidator = serviceProvider.GetRequiredService<
+                    IValidator<CreateCompanyDto>
+                >();
+                var updateValidator = serviceProvider.GetRequiredService<
+                    IValidator<UpdateCompanyDto>
+                >();
+                return new CompanyService(repo, mapper, createValidator, updateValidator);
+            });
             _staffService = new Lazy<IStaffService>(() =>
                 new StaffService(repo, fileService, mapper)
             );
