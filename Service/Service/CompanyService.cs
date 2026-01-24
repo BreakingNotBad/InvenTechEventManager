@@ -1,9 +1,10 @@
 ﻿using AutoMapper;
 using Contracts.IRepository.BaseManager;
+using Entities.Exceptions;
 using Entities.Models;
+using FluentValidation;
 using Service.Contracts.DTOs.Company;
 using Service.Contracts.IService;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace Service.Service
 {
@@ -11,11 +12,20 @@ namespace Service.Service
     {
         private readonly IRepositoryManager _repo;
         private readonly IMapper _mapper;
+        private readonly IValidator<CreateCompanyDto> _createValidator;
+        private readonly IValidator<UpdateCompanyDto> _updateValidator;
 
-        public CompanyService(IRepositoryManager repo, IMapper mapper)
+        public CompanyService(
+            IRepositoryManager repo,
+            IMapper mapper,
+            IValidator<CreateCompanyDto> createValidator,
+            IValidator<UpdateCompanyDto> updateValidator
+        )
         {
             _repo = repo;
             _mapper = mapper;
+            _createValidator = createValidator;
+            _updateValidator = updateValidator;
         }
 
         // GET ALL
@@ -62,13 +72,13 @@ namespace Service.Service
                 );
             }
 
-            // search Latitude
+            //search Latitude
             if (Latitude.HasValue)
             {
                 companiesList = companiesList.Where(c => c.Latitude == Latitude);
             }
 
-            // search Longitude
+            //search Longitude
             if (Longitude.HasValue)
             {
                 companiesList = companiesList.Where(c => c.Longitude == Longitude);
@@ -94,7 +104,8 @@ namespace Service.Service
                 );
             }
 
-            var companyResponse = _mapper.Map<IEnumerable<CompanyDto>>(companiesList); // แปลงข้อมูลจาก Entity เป็น Dto
+            // แปลงข้อมูลจาก Entity เป็น Dto
+            var companyResponse = _mapper.Map<IEnumerable<CompanyDto>>(companiesList);
 
             return companyResponse;
         }
@@ -106,24 +117,28 @@ namespace Service.Service
 
             if (existingCompany == null)
             {
-                throw new KeyNotFoundException($"Company with id {id} not found.");
+                throw new NotFoundException(nameof(Company), id);
             }
 
-            var companyResponse = _mapper.Map<CompanyDto>(existingCompany); // แปลงข้อมูลจาก Entity เป็น Dto
+            // แปลงข้อมูลจาก Entity เป็น Dto
+            var companyResponse = _mapper.Map<CompanyDto>(existingCompany);
 
             return companyResponse;
         }
 
         // CREATE
-        public async Task<CompanyDto> CreateCompanyAsync(CreateCompanyDto companyDto) // รับค่ามาจาก controller ผ่าน dto
+        public async Task<CompanyDto> CreateCompanyAsync(CreateCompanyDto companyDto)
         {
+            await _createValidator.ValidateAndThrowAsync(companyDto);
 
-            var newCompany = _mapper.Map<Company>(companyDto); // แปลงข้อมูลจาก Dto เป็น Entity
+            // แปลงข้อมูลจาก Dto เป็น Entity
+            var newCompany = _mapper.Map<Company>(companyDto);
 
             _repo.Company.CreateCompany(newCompany);
             await _repo.SaveAsync();
 
-            var companyResponse = _mapper.Map<CompanyDto>(newCompany); // แปลงข้อมูลจาก Entity เป็น Dto
+            // แปลงข้อมูลจาก Entity เป็น Dto
+            var companyResponse = _mapper.Map<CompanyDto>(newCompany);
 
             return companyResponse;
         }
@@ -131,12 +146,16 @@ namespace Service.Service
         // UPDATE
         public async Task<CompanyDto> UpdateCompanyAsync(int id, UpdateCompanyDto companyDto)
         {
+            await _updateValidator.ValidateAndThrowAsync(companyDto);
+
             var existingCompany = await _repo.Company.GetCompanyByIdAsync(id, true);
 
             if (existingCompany == null)
-                throw new KeyNotFoundException($"Company with id {id} not found.");
+            {
+                throw new NotFoundException(nameof(Company), id);
+            }
 
-            // update company fields 
+            // แปลงข้อมูลจาก Entity เป็น Dto
             _mapper.Map(companyDto, existingCompany);
 
             //  DELETE (CompanyContacts)
@@ -196,7 +215,6 @@ namespace Service.Service
                 }
             }
 
-
             await _repo.SaveAsync();
 
             var companyResponse = _mapper.Map<CompanyDto>(existingCompany); // แปลงข้อมูลจาก Entity เป็น Dto
@@ -207,14 +225,14 @@ namespace Service.Service
         // DELETE
         public async Task DeleteCompanyAsync(int id)
         {
-            var exinstingCompany = await _repo.Company.GetCompanyByIdAsync(id, true);
+            var existingCompany = await _repo.Company.GetCompanyByIdAsync(id, true);
 
-            if (exinstingCompany == null)
+            if (existingCompany == null)
             {
-                throw new KeyNotFoundException($"Company with id {id} not found.");
+                throw new NotFoundException(nameof(Company), id);
             }
 
-            _repo.Company.DeleteCompany(exinstingCompany);
+            _repo.Company.DeleteCompany(existingCompany);
             await _repo.SaveAsync();
         }
     }

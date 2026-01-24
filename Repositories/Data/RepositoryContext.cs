@@ -96,6 +96,10 @@ namespace Repositories.Data
                 .WithMany(s => s.CreatedEvents)
                 .HasForeignKey(e => e.CreatedByStaffId)
                 .OnDelete(DeleteBehavior.NoAction);
+
+            // สั่งให้เก็บทศนิยม 15 ตำแหน่ง Latitude, Longitude (หน้าจุด 3 หลังจุด 15 รวม 18)
+            modelBuilder.Entity<Company>().Property(c => c.Latitude).HasPrecision(18, 15);
+            modelBuilder.Entity<Company>().Property(c => c.Longitude).HasPrecision(18, 15);
         }
 
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)

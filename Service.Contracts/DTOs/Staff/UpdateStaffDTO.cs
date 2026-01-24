@@ -7,7 +7,7 @@
         public string? PhoneNumber { get; set; }
         public string? Avatar { get; set; }
         public bool? IsDeleted { get; set; }
-        public bool? DeleteAvatar { get; set; } 
+        public bool? DeleteAvatar { get; set; }
 
         // ถ้าไม่ส่งมา = ไม่แก้ role
         public List<int>? RoleIds { get; set; }
