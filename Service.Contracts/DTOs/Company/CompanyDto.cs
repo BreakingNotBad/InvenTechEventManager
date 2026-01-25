@@ -5,7 +5,7 @@ namespace Service.Contracts.DTOs.Company
     public class CompanyDto
     {
         public int CompanyId { get; set; }
-        public string CompanyName { get; set; } = string.Empty;
+        public string CompanyName { get; set; } = null!;
         public string? Address { get; set; }
         public decimal? Latitude { get; set; }
         public decimal? Longitude { get; set; }

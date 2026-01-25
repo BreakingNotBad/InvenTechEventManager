@@ -1,37 +1,40 @@
 ﻿using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 
-public class GlobalExceptionHandler : IExceptionHandler
+namespace InventechEventManager.Exceptions
 {
-    private readonly ILogger<GlobalExceptionHandler> _logger;
-
-    public GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logger)
+    public class GlobalExceptionHandler : IExceptionHandler
     {
-        _logger = logger;
-    }
+        private readonly ILogger<GlobalExceptionHandler> _logger;
 
-    public async ValueTask<bool> TryHandleAsync(
-        HttpContext httpContext,
-        Exception exception,
-        CancellationToken cancellationToken
-    )
-    {
-        // Log Error ไว้ดูภายหลัง
-        _logger.LogError(exception, "เกิดข้อผิดพลาดที่ไม่คาดคิด: {Message}", exception.Message);
-
-        // สร้าง ProblemDetails สำหรับ Error 500
-        var problemDetails = new ProblemDetails
+        public GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logger)
         {
-            Status = StatusCodes.Status500InternalServerError,
-            Title = "Server Error",
-            Detail = "เกิดข้อผิดพลาดภายในระบบ โปรดติดต่อผู้ดูแลระบบ",
-        };
+            _logger = logger;
+        }
 
-        httpContext.Response.StatusCode = problemDetails.Status.Value;
+        public async ValueTask<bool> TryHandleAsync(
+            HttpContext httpContext,
+            Exception exception,
+            CancellationToken cancellationToken
+        )
+        {
+            // Log Error ไว้ดูภายหลัง
+            _logger.LogError(exception, "เกิดข้อผิดพลาดที่ไม่คาดคิด: {Message}", exception.Message);
 
-        // ส่ง JSON กลับไป
-        await httpContext.Response.WriteAsJsonAsync(problemDetails, cancellationToken);
+            // สร้าง ProblemDetails สำหรับ Error 500
+            var problemDetails = new ProblemDetails
+            {
+                Status = StatusCodes.Status500InternalServerError,
+                Title = "Server Error",
+                Detail = "เกิดข้อผิดพลาดภายในระบบ โปรดติดต่อผู้ดูแลระบบ",
+            };
 
-        return true;
+            httpContext.Response.StatusCode = problemDetails.Status.Value;
+
+            // ส่ง JSON กลับไป
+            await httpContext.Response.WriteAsJsonAsync(problemDetails, cancellationToken);
+
+            return true;
+        }
     }
 }

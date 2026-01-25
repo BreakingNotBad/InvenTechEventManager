@@ -1,7 +1,9 @@
-﻿using Contracts.IRepository.BaseManager;
+﻿using System.Text.Json.Serialization;
+using Contracts.IRepository.BaseManager;
 using FluentValidation;
+using InventechEventManager.Exceptions;
 using Microsoft.EntityFrameworkCore;
-using Presentation.Validators.Staff;
+using Presentation.Validators;
 using Repositories.Data;
 using Repositories.Repository.BaseManager;
 using Scalar.AspNetCore;
@@ -25,12 +27,12 @@ builder.Services.AddScoped<IFileService, FileService>();
 builder.Services.AddAutoMapper(cfg =>
 {
     cfg.AddMaps(typeof(Service.Profiles.CompanyProfile));
-    cfg.AddMaps(typeof(Presentation.Mapping.StaffProfile));
+    cfg.AddMaps(typeof(Presentation.Profiles.StaffProfile));
 });
 
 // Fluent Validation
 builder.Services.AddValidatorsFromAssemblyContaining<CreateCompanyValidator>();
-builder.Services.AddValidatorsFromAssemblyContaining<CreateStaffValidator>();
+builder.Services.AddValidatorsFromAssemblyContaining<CreateStaffRequestValidator>();
 
 // ช่วยจัดการ Format มาตรฐาน
 builder.Services.AddProblemDetails();

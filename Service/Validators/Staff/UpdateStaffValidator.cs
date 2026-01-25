@@ -1,9 +1,9 @@
 ﻿using FluentValidation;
-using Presentation.Requests.Staff;
+using Service.Contracts.DTOs.Staff;
 
-namespace Presentation.Validators.Staff
+namespace Service.Validators.Staff
 {
-    public class UpdateStaffValidator : AbstractValidator<UpdateStaffRequest>
+    public class UpdateStaffValidator : AbstractValidator<UpdateStaffDto>
     {
         public UpdateStaffValidator()
         {
@@ -20,20 +20,14 @@ namespace Presentation.Validators.Staff
                 .WithMessage("Email must not exceed 255 characters");
 
             RuleFor(x => x.PhoneNumber)
-                .Matches(@"^\+?[1-9]\d{1,14}$")
-                .WithMessage("Invalid phone number format")
-                .MaximumLength(50)
-                .WithMessage("Phone number must not exceed 50 characters");
+                .Matches(@"^0\d{9}$")
+                .WithMessage("Phone number must be a valid Thai mobile number");
 
             RuleFor(x => x.RoleIds)
                 .NotEmpty()
                 .WithMessage("At least one RoleId must be provided")
                 .NotNull()
                 .WithMessage("RoleIds cannot be null");
-
-            RuleFor(RuleFor => RuleFor.AvatarFile)
-                .Must(file => file == null || file.Length <= 5 * 1024 * 1024) // 5 MB limit
-                .WithMessage("Avatar file size must not exceed 5 MB");
         }
     }
 }

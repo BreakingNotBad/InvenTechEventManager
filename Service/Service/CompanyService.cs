@@ -217,7 +217,8 @@ namespace Service.Service
 
             await _repo.SaveAsync();
 
-            var companyResponse = _mapper.Map<CompanyDto>(existingCompany); // แปลงข้อมูลจาก Entity เป็น Dto
+            // แปลงข้อมูลจาก Entity เป็น Dto
+            var companyResponse = _mapper.Map<CompanyDto>(existingCompany);
 
             return companyResponse;
         }

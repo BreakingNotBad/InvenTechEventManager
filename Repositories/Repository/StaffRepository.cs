@@ -19,7 +19,7 @@ namespace Repositories.Repository
                 .ToListAsync();
         }
 
-        public async Task<Staff?> GetStaffByIdAsync(int id,bool trackchanges)
+        public async Task<Staff?> GetStaffByIdAsync(int id, bool trackchanges)
         {
             return await FindByCondition(s => s.StaffId == id, trackchanges)
                 .Include(s => s.StaffRoles)

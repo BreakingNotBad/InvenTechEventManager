@@ -1,11 +1,10 @@
-using Entities.Models;
 using Service.Contracts.DTOs.Staff;
 
 namespace Service.Contracts.IService
 {
     public interface IStaffService
     {
-        Task<IEnumerable<Staff>> GetStaffMembersAsync(
+        Task<IEnumerable<StaffDto>> GetStaffMembersAsync(
             string? fullName,
             string? status,
             string? role,
@@ -13,18 +12,9 @@ namespace Service.Contracts.IService
             DateTime? date,
             string? period
         );
-        Task<Staff?> GetStaffByIdAsync(int id);
-        Task<Staff> CreateStaffAsync(
-            CreateStaffDto staffDto,
-            Stream? avatarStream,
-            string? avatarFileName
-        );
-        Task UpdateStaffAsync(
-            int id,
-            UpdateStaffDto dto,
-            Stream? avatarStream,
-            string? avatarFileName
-        );
+        Task<StaffDto?> GetStaffByIdAsync(int id);
+        Task<StaffDto> CreateStaffAsync(CreateStaffDto staffDto);
+        Task UpdateStaffAsync(int id, UpdateStaffDto staffDto);
         Task DeleteStaffAsync(int id);
         Task SoftDeleteStaffAsync(int id, bool isDeleted);
     }

@@ -1,8 +1,9 @@
 ﻿using AutoMapper;
-using Entities.Models;
+using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using Presentation.Requests.Staff;
 using Service.Contracts.DTOs.Staff;
+using Service.Contracts.IService;
 using Service.Contracts.Manager;
 
 namespace Presentation.Controllers
@@ -12,12 +13,24 @@ namespace Presentation.Controllers
     public class StaffController : ControllerBase
     {
         private readonly IServiceManager _service;
+        private readonly IFileService _fileService;
         private readonly IMapper _mapper;
+        private readonly IValidator<CreateStaffRequest> _createValidator;
+        private readonly IValidator<UpdateStaffRequest> _updateValidator;
 
-        public StaffController(IServiceManager service, IMapper mapper)
+        public StaffController(
+            IServiceManager service,
+            IFileService fileService,
+            IMapper mapper,
+            IValidator<CreateStaffRequest> createValidator,
+            IValidator<UpdateStaffRequest> updateValidator
+        )
         {
             _service = service;
+            _fileService = fileService;
             _mapper = mapper;
+            _createValidator = createValidator;
+            _updateValidator = updateValidator;
         }
 
         [HttpGet]
@@ -50,49 +63,68 @@ namespace Presentation.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateStaff([FromForm] CreateStaffRequest request)
+        public async Task<IActionResult> CreateStaff([FromForm] CreateStaffRequest staffRequest)
         {
-            var staffDto = _mapper.Map<CreateStaffDto>(request);
+            // เรียก Validator (เช็คไฟล์)
+            await _createValidator.ValidateAndThrowAsync(staffRequest);
 
-            Stream? stream = null;
-            string? fileName = null;
+            string? savedAvatar = null;
 
-            if (request.AvatarFile != null)
+            // ถ้ามีไฟล์แนบมา ให้ Upload ที่นี่เลย
+            if (staffRequest.AvatarFile != null && staffRequest.AvatarFile.Length > 0)
             {
-                stream = request.AvatarFile.OpenReadStream();
-                fileName = request.AvatarFile.FileName;
-            }
+                // ใช้ using เพื่อให้มันปิด Stream อัตโนมัติเมื่อใช้เสร็จ (กันไฟล์ค้าง/กันลืมปิด)
+                using var stream = staffRequest.AvatarFile.OpenReadStream();
 
-            using (stream)
-            {
-                var resultStaff = await _service.Staff.CreateStaffAsync(staffDto, stream, fileName);
-
-                return CreatedAtAction(
-                    nameof(GetStaffById),
-                    new { id = resultStaff.StaffId },
-                    resultStaff
+                // สั่ง FileService ให้ Save ลง Disk
+                savedAvatar = await _fileService.SaveFileAsync(
+                    stream,
+                    staffRequest.AvatarFile.FileName,
+                    "Staff"
                 );
             }
+
+            // แปลงข้อมูลจาก Request เป็น Dto
+            var staffDto = _mapper.Map<CreateStaffDto>(staffRequest);
+            staffDto.Avatar = savedAvatar;
+
+            var createdStaff = await _service.Staff.CreateStaffAsync(staffDto);
+
+            return CreatedAtAction(
+                nameof(GetStaffById),
+                new { id = createdStaff.StaffId },
+                createdStaff
+            );
         }
 
         [HttpPut("{id:int}")]
-        public async Task<IActionResult> UpdateStaff(int id, [FromForm] UpdateStaffRequest request)
+        public async Task<IActionResult> UpdateStaff(
+            int id,
+            [FromForm] UpdateStaffRequest staffRequest
+        )
         {
-            var dto = _mapper.Map<UpdateStaffDto>(request);
+            await _updateValidator.ValidateAndThrowAsync(staffRequest);
 
-            Stream? stream = null;
-            string? fileName = null;
+            var staffDto = _mapper.Map<UpdateStaffDto>(staffRequest);
 
-            if (request.AvatarFile != null)
+            // ถ้ามีไฟล์ใหม่แนบมา ให้ Upload ที่นี่เลย
+            if (staffRequest.AvatarFile != null && staffRequest.AvatarFile.Length > 0)
             {
-                stream = request.AvatarFile.OpenReadStream();
-                fileName = request.AvatarFile.FileName;
+                // ใช้ using เพื่อให้มันปิด Stream อัตโนมัติเมื่อใช้เสร็จ (กันไฟล์ค้าง/กันลืมปิด)
+                using var stream = staffRequest.AvatarFile.OpenReadStream();
+
+                // ส่งให้ FileService บันทึก แล้วเอา Path กลับมา
+                string newAvatar = await _fileService.SaveFileAsync(
+                    stream,
+                    staffRequest.AvatarFile.FileName,
+                    "Staff"
+                );
+
+                // ยัด Path ใหม่ใส่ DTO
+                staffDto.Avatar = newAvatar;
             }
 
-            using (stream)
-            {
-                await _service.Staff.UpdateStaffAsync(id, dto, stream, fileName);
-            }
+            await _service.Staff.UpdateStaffAsync(id, staffDto);
 
             return NoContent();
         }
