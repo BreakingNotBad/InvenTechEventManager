@@ -2,30 +2,33 @@
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 
-public sealed class DomainExceptionHandler : IExceptionHandler
+namespace InventechEventManager.Exceptions
 {
-    public async ValueTask<bool> TryHandleAsync(
-        HttpContext httpContext,
-        Exception exception,
-        CancellationToken cancellationToken
-    )
+    public sealed class DomainExceptionHandler : IExceptionHandler
     {
-        // ถ้าเป็น NotFoundException ให้คืนค่า 404
-        if (exception is NotFoundException notFoundException)
+        public async ValueTask<bool> TryHandleAsync(
+            HttpContext httpContext,
+            Exception exception,
+            CancellationToken cancellationToken
+        )
         {
-            var problemDetails = new ProblemDetails
+            // ถ้าเป็น NotFoundException ให้คืนค่า 404
+            if (exception is NotFoundException notFoundException)
             {
-                Status = StatusCodes.Status404NotFound,
-                Title = "Not Found",
-                Detail = notFoundException.Message,
-            };
+                var problemDetails = new ProblemDetails
+                {
+                    Status = StatusCodes.Status404NotFound,
+                    Title = "Not Found",
+                    Detail = notFoundException.Message,
+                };
 
-            httpContext.Response.StatusCode = StatusCodes.Status404NotFound;
-            await httpContext.Response.WriteAsJsonAsync(problemDetails, cancellationToken);
+                httpContext.Response.StatusCode = StatusCodes.Status404NotFound;
+                await httpContext.Response.WriteAsJsonAsync(problemDetails, cancellationToken);
 
-            return true; // จัดการเสร็จแล้ว
+                return true; // จัดการเสร็จแล้ว
+            }
+
+            return false; // ถ้าไม่ใช่ ให้ส่งต่อ
         }
-
-        return false; // ถ้าไม่ใช่ ให้ส่งต่อ
     }
 }

@@ -3,6 +3,7 @@ using Contracts.IRepository.BaseManager;
 using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 using Service.Contracts.DTOs.Company;
+using Service.Contracts.DTOs.Staff;
 using Service.Contracts.IService;
 using Service.Contracts.Manager;
 using Service.Service;
@@ -29,7 +30,6 @@ namespace Service.Manager
         )
         {
             _eventService = new Lazy<IEventService>(() => new EventService(repo));
-            //_companyService = new Lazy<ICompanyService>(() => new CompanyService(repo, mapper));
             _companyService = new Lazy<ICompanyService>(() =>
             {
                 var createValidator = serviceProvider.GetRequiredService<
@@ -41,8 +41,21 @@ namespace Service.Manager
                 return new CompanyService(repo, mapper, createValidator, updateValidator);
             });
             _staffService = new Lazy<IStaffService>(() =>
-                new StaffService(repo, fileService, mapper)
-            );
+            {
+                var createValidator = serviceProvider.GetRequiredService<
+                    IValidator<CreateStaffDto>
+                >();
+                var updateValidator = serviceProvider.GetRequiredService<
+                    IValidator<UpdateStaffDto>
+                >();
+                return new StaffService(
+                    repo,
+                    fileService,
+                    mapper,
+                    createValidator,
+                    updateValidator
+                );
+            });
             _outsourceService = new Lazy<IOutsourceService>(() => new OutsourceService(repo));
             _equipmentService = new Lazy<IEquipmentService>(() => new EquipmentService(repo));
             _packageService = new Lazy<IPackageService>(() => new PackageService(repo));
