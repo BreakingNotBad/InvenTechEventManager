@@ -52,13 +52,13 @@ builder.Services.AddSwaggerGen(c =>
 });
 
 // แก้บรรทัดนี้ครับ (เดิมอาจจะมีแค่ AddControllers()) มาลบด้วยถ้าทำ DTO แล้ว
-//builder
-//    .Services.AddControllers()
-//    .AddJsonOptions(options =>
-//    {
-//        // สั่งให้ Ignore วงจรที่ซ้ำกัน
-//        options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
-//    });
+builder
+    .Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        // สั่งให้ Ignore วงจรที่ซ้ำกัน
+        options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+    });
 
 // CORS Service
 builder.Services.AddCors(options =>
