@@ -1,5 +1,8 @@
-﻿using Contracts.IRepository.BaseManager;
+﻿using AutoMapper;
+using Contracts.IRepository.BaseManager;
+using Entities.Exceptions;
 using Entities.Models;
+using FluentValidation;
 using Service.Contracts.DTOs.Outsource;
 using Service.Contracts.IService;
 
@@ -8,13 +11,23 @@ namespace Service.Service
     public class OutsourceService : IOutsourceService
     {
         private readonly IRepositoryManager _repo;
+        private readonly IMapper _mapper;
+        private readonly IValidator<CreateOutsourceDto> _createValidator;
+        private readonly IValidator<UpdateOutsourceDto> _updateValidator;
 
-        public OutsourceService(IRepositoryManager repo)
+        public OutsourceService(
+            IRepositoryManager repo,
+            IMapper mapper,
+            IValidator<CreateOutsourceDto> createValidator,
+            IValidator<UpdateOutsourceDto> updateValidator)
         {
             _repo = repo;
+            _mapper = mapper;
+            _createValidator = createValidator;
+            _updateValidator = updateValidator;
         }
 
-        public async Task<IEnumerable<Outsource>> GetOutsources(string? fullName)
+        public async Task<IEnumerable<OutsourceDto>> GetOutsources(string? fullName)
         {
             var outsourcesList = await _repo.Outsource.GetOutsourceAsyn();
             //  search
@@ -24,51 +37,57 @@ namespace Service.Service
                     o.FullName.ToLower().Contains(fullName.ToLower())
                 );
             }
-            return outsourcesList;
+            var outsourceResponse = _mapper.Map<IEnumerable<OutsourceDto>>(outsourcesList);
+            return outsourceResponse;
         }
 
-        public async Task<Outsource?> GetOutsourcesByIdAsync(int id)
+        public async Task<OutsourceDto?> GetOutsourcesByIdAsync(int id)
         {
-            return await _repo.Outsource.GetOutsourceByIdAsync(id,false);
-        }
-
-        public async Task<Outsource> CreateOutsourceAsync(CreateOutsourceDto dto)
-        {
-            var outsource = new Outsource
+            var ExistingOutsource = await _repo.Outsource.GetOutsourceByIdAsync(id,false);
+            if (ExistingOutsource == null)
             {
-                FullName = dto.FullName,
-                Email = dto.Email,
-                PhoneNumber = dto.PhoneNumber,
-                IsDeleted = false,
-                CreatedAt = DateTime.UtcNow,
-            };
-
-            _repo.Outsource.CreateOutsource(outsource);
-            await _repo.SaveAsync();
-            return outsource;
+                throw new NotFoundException(nameof(Outsource), id);
+            }
+            var outsourceResponse = _mapper.Map<OutsourceDto>(ExistingOutsource);
+            return outsourceResponse;
         }
 
-        public async Task UpdateOutsourceAsync(int id, UpdateOutsourceDto dto)
+        public async Task<OutsourceDto> CreateOutsourceAsync(CreateOutsourceDto OutsourceDto)
         {
+            await _createValidator.ValidateAndThrowAsync(OutsourceDto);
+
+            var NewOutsource = _mapper.Map<Outsource>(OutsourceDto);
+
+            _repo.Outsource.CreateOutsource(NewOutsource);
+            await _repo.SaveAsync();
+
+            var outsourceResponse = _mapper.Map<OutsourceDto>(NewOutsource);
+            return outsourceResponse;
+        }
+
+        public async Task<OutsourceDto> UpdateOutsourceAsync(int id, UpdateOutsourceDto OutsourceDto)
+        {
+            await _updateValidator.ValidateAndThrowAsync(OutsourceDto);
             var exinstingOutsource = await _repo.Outsource.GetOutsourceByIdAsync(id,true); 
 
             if (exinstingOutsource == null)
             {
-                throw new KeyNotFoundException($"Staff with id: {id} does not exist.");
+                throw new NotFoundException(nameof(Outsource), id);
             }
 
-            exinstingOutsource.FullName = dto.FullName;
-            exinstingOutsource.Email = dto.Email;
-            exinstingOutsource.PhoneNumber = dto.PhoneNumber;
+            _mapper.Map(OutsourceDto, exinstingOutsource);
             exinstingOutsource.UpdatedAt = DateTime.UtcNow;
 
-            if (dto.IsDeleted.HasValue)
+            if (OutsourceDto.IsDeleted.HasValue)
             {
-                exinstingOutsource.IsDeleted = dto.IsDeleted.Value;
+                exinstingOutsource.IsDeleted = OutsourceDto.IsDeleted.Value;
             }
 
             _repo.Outsource.UpdateOutsource(exinstingOutsource);
             await _repo.SaveAsync();
+
+            var outsourceResponse = _mapper.Map<OutsourceDto>(exinstingOutsource);
+            return outsourceResponse;
         }
 
         public async Task DeleteOutsourceAsync(int id)

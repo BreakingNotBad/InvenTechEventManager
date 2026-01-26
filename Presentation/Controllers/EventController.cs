@@ -1,5 +1,6 @@
 ﻿using Entities.Models;
 using Microsoft.AspNetCore.Mvc;
+using Service.Contracts.DTOs.Event;
 using Service.Contracts.Manager;
 
 namespace Presentation.Controllers
@@ -33,14 +34,10 @@ namespace Presentation.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateEvent([FromBody] Event eventEntity)
+        public async Task<IActionResult> CreateEvent([FromBody] CreateEventDto eventDto)
         {
-            await _service.Event.CreateEventAsync(eventEntity);
-            return CreatedAtAction(
-                nameof(GetEventById),
-                new { id = eventEntity.EventId },
-                eventEntity
-            );
+            await _service.Event.CreateEventAsync(eventDto);
+            return CreatedAtAction(nameof(GetEventById), new { id = eventDto.EventName }, eventDto);
         }
 
         [HttpDelete("{id:int}")]

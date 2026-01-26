@@ -11,6 +11,12 @@ namespace Service.Validators.Package
                 .NotEmpty().WithMessage("Package name is required.")
                 .MaximumLength(100).WithMessage("Package name must not exceed 100 characters.");
 
+            RuleFor(x => x.EquipmentSets)
+                .Must(list => list
+                    .GroupBy(x => x.EquipmentId)
+                    .All(g => g.Count() == 1))
+                .WithMessage("Duplicate EquipmentId is not allowed.");
+
             RuleForEach(x => x.EquipmentSets).SetValidator(new UpdateEquipmentSetValidator());
         }
     }

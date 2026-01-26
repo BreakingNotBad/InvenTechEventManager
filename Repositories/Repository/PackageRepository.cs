@@ -16,6 +16,7 @@ namespace Repositories.Repository
             return await FindAll(trackChanges: false)
                 .Include(e => e.EquipmentSets)
                     .ThenInclude(es => es.Equipment)
+                        .ThenInclude(c => c.Category)
                 .ToListAsync();
         }
 
@@ -24,6 +25,7 @@ namespace Repositories.Repository
             return await FindByCondition(e => e.PackageId == id, trackchange)
                 .Include(e => e.EquipmentSets)
                 .ThenInclude(eq => eq.Equipment)
+                    .ThenInclude(c => c.Category)
                 .FirstOrDefaultAsync();
         }
 

@@ -5,10 +5,10 @@ namespace Service.Contracts.IService
 {
     public interface IOutsourceService
     {
-        Task<IEnumerable<Outsource>> GetOutsources(string? fullName);
-        Task<Outsource?> GetOutsourcesByIdAsync(int id);
-        Task<Outsource> CreateOutsourceAsync(CreateOutsourceDto dto);
-        Task UpdateOutsourceAsync(int id, UpdateOutsourceDto dto);
+        Task<IEnumerable<OutsourceDto>> GetOutsources(string? fullName);
+        Task<OutsourceDto?> GetOutsourcesByIdAsync(int id);
+        Task<OutsourceDto> CreateOutsourceAsync(CreateOutsourceDto dto);
+        Task<OutsourceDto> UpdateOutsourceAsync(int id, UpdateOutsourceDto dto);
         Task DeleteOutsourceAsync(int id);
     }
 }

@@ -1,5 +1,8 @@
-﻿using Contracts.IRepository.BaseManager;
+﻿using AutoMapper;
+using Contracts.IRepository.BaseManager;
+using Entities.Exceptions;
 using Entities.Models;
+using FluentValidation;
 using Service.Contracts.DTOs.Equipment;
 using Service.Contracts.IService;
 
@@ -8,13 +11,23 @@ namespace Service.Service
     public class EquipmentService : IEquipmentService
     {
         private readonly IRepositoryManager _repo;
+        private readonly IMapper _mapper;
+        private readonly IValidator<CreateEquipmentDto> _createValidator;
+        private readonly IValidator<UpdateEquipmentDto> _updateValidator;
 
-        public EquipmentService(IRepositoryManager repo)
+        public EquipmentService(
+            IRepositoryManager repo,
+            IMapper mapper,
+            IValidator<CreateEquipmentDto> createValidator,
+            IValidator<UpdateEquipmentDto> updateValidator)
         {
             _repo = repo;
+            _mapper = mapper;
+            _createValidator = createValidator;
+            _updateValidator = updateValidator;
         }
 
-        public async Task<IEnumerable<Equipment>> GetEquipmentAsync(
+        public async Task<IEnumerable<EquipmentDto>> GetEquipmentAsync(
             string? equipmentName,
             string? category,
             bool? IsDeleted,
@@ -39,50 +52,55 @@ namespace Service.Service
                 e.Category.CategoryName.ToLower().Contains(category.ToLower())
                 );
             }
+            
+            var companyResponse = _mapper.Map<IEnumerable<EquipmentDto>>(equipmentList);
 
-            return equipmentList;
+            return companyResponse;
         }
 
-        public async Task<Equipment?> GetEquipmentByIdAsync(int id)
+        public async Task<EquipmentDto?> GetEquipmentByIdAsync(int id)
         {
-            return await _repo.Equipment.GetEquipmentByIdAsync(id,false);
-        }
-
-        public async Task<Equipment> CreateEquipmentAsync(CreateEquipmentDto dto)
-        {
-
-            var equipment = new Equipment
+            var existingEquipment = await _repo.Equipment.GetEquipmentByIdAsync(id,false);
+            if (existingEquipment == null)
             {
-                EquipmentName = dto.EquipmentName,
-                CategoryId = dto.CategoryId,
-                IsDeleted = false,
-                CreatedAt = DateTime.UtcNow,
-                UpdatedAt = DateTime.UtcNow,
-            };
+                throw new NotFoundException(nameof(Equipment), id);
+            }
+            var equipmentResponse = _mapper.Map<EquipmentDto>(existingEquipment);
+            return equipmentResponse;
+        }
 
-            _repo.Equipment.CreateEquipment(equipment);
+        public async Task<EquipmentDto> CreateEquipmentAsync(CreateEquipmentDto equipmentDto)
+        {
+            await _createValidator.ValidateAndThrowAsync(equipmentDto);
+
+            var NewEquipment = _mapper.Map<Equipment>(equipmentDto);
+
+            _repo.Equipment.CreateEquipment(NewEquipment);
             await _repo.SaveAsync();
 
-            return equipment;
+            var equipmentResponse = _mapper.Map<EquipmentDto>(NewEquipment);
+            return equipmentResponse;
         }
 
 
-        public async Task<Equipment> UpdateEquipmentAsync(int id, UpdateEquipmentDto dto)
+        public async Task<EquipmentDto> UpdateEquipmentAsync(int id, UpdateEquipmentDto equipmentDto)
         {
+            await _updateValidator.ValidateAndThrowAsync(equipmentDto);
+
             var existingEquipment = await _repo.Equipment.GetEquipmentByIdAsync(id,true);
             if (existingEquipment == null)
             {
-                throw new KeyNotFoundException($"Equipment with id {id} not found.");
+                throw new NotFoundException(nameof(Equipment), id);
             }
             // Update fields
-            existingEquipment.EquipmentName = dto.EquipmentName;
-            existingEquipment.CategoryId = dto.CategoryId;
-            existingEquipment.IsDeleted = dto.IsDeleted;
+            _mapper.Map(equipmentDto, existingEquipment);
             existingEquipment.UpdatedAt = DateTime.UtcNow;
 
             _repo.Equipment.UpdateEquipment(existingEquipment);
             await _repo.SaveAsync();
-            return existingEquipment;
+
+            var equipmentResponse = _mapper.Map<EquipmentDto>(existingEquipment);
+            return equipmentResponse;
         }
 
         public async Task DeleteEquipment(int id)

@@ -12,6 +12,6 @@ namespace Service.Contracts.DTOs.Staff
         public bool IsDeleted { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
-        public List<RoleDto>? Roles { get; set; }
+        public ICollection<RoleDto>? Roles { get; set; }
     }
 }

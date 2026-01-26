@@ -139,11 +139,9 @@ namespace Service.Service
 
             _repo.Staff.CreateStaff(newStaff);
             await _repo.SaveAsync();
+            var staff = await GetStaffByIdAsync(newStaff.StaffId);
 
-            // แปลงข้อมูลจาก Entity เป็น Dto
-            var staffResponse = _mapper.Map<StaffDto>(newStaff);
-
-            return staffResponse;
+            return staff!;
         }
 
         // UPDATE

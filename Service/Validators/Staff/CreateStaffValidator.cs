@@ -1,12 +1,16 @@
-﻿using FluentValidation;
+﻿using Contracts.IRepository.BaseManager;
+using FluentValidation;
 using Service.Contracts.DTOs.Staff;
 
 namespace Service.Validators.Staff
 {
     public class CreateStaffValidator : AbstractValidator<CreateStaffDto>
     {
-        public CreateStaffValidator()
+        private readonly IRepositoryManager _repo;
+        public CreateStaffValidator(IRepositoryManager repo)
         {
+            _repo = repo;
+
             RuleFor(x => x.FullName)
                 .NotEmpty()
                 .WithMessage("Full name is required")
@@ -27,7 +31,16 @@ namespace Service.Validators.Staff
                 .NotEmpty()
                 .WithMessage("At least one RoleId must be provided")
                 .NotNull()
-                .WithMessage("RoleIds cannot be null");
+                .WithMessage("RoleIds cannot be null")
+                .Must(roleIds => roleIds.Distinct().Count() == roleIds.Count)
+                .WithMessage("RoleIds must not contain duplicates")
+                .MustAsync(async (roleIds, cancellation) =>
+                {
+                    return await _repo.Role.RoleExistsAsync(roleIds, true);
+                })
+                .WithMessage("One or more RoleIds do not exist");
+
+
         }
     }
 }

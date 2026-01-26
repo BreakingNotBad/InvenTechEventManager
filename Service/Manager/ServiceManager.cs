@@ -3,6 +3,9 @@ using Contracts.IRepository.BaseManager;
 using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 using Service.Contracts.DTOs.Company;
+using Service.Contracts.DTOs.Equipment;
+using Service.Contracts.DTOs.Outsource;
+using Service.Contracts.DTOs.Package;
 using Service.Contracts.DTOs.Staff;
 using Service.Contracts.IService;
 using Service.Contracts.Manager;
@@ -56,9 +59,51 @@ namespace Service.Manager
                     updateValidator
                 );
             });
-            _outsourceService = new Lazy<IOutsourceService>(() => new OutsourceService(repo));
-            _equipmentService = new Lazy<IEquipmentService>(() => new EquipmentService(repo));
-            _packageService = new Lazy<IPackageService>(() => new PackageService(repo));
+            _outsourceService = new Lazy<IOutsourceService>(() =>
+            {
+                var createValidator = serviceProvider.GetRequiredService<
+                    IValidator<CreateOutsourceDto>
+                >();
+                var updateValidator = serviceProvider.GetRequiredService<
+                    IValidator<UpdateOutsourceDto>
+                >();
+                return new OutsourceService(
+                    repo,
+                    mapper,
+                    createValidator,
+                    updateValidator
+                );
+            });
+            _equipmentService = new Lazy<IEquipmentService>(() =>
+            {
+                var createValidator = serviceProvider.GetRequiredService<
+                    IValidator<CreateEquipmentDto>
+                >();
+                var updateValidator = serviceProvider.GetRequiredService<
+                    IValidator<UpdateEquipmentDto>
+                >();
+                return new EquipmentService(
+                    repo,
+                    mapper,
+                    createValidator,
+                    updateValidator
+                );
+            });
+            _packageService = new Lazy<IPackageService>(() =>
+            {
+                var createValidator = serviceProvider.GetRequiredService<
+                    IValidator<CreatePackageDto>
+                >();
+                var updateValidator = serviceProvider.GetRequiredService<
+                    IValidator<UpdatePackageDto>
+                >();
+                return new PackageService(
+                    repo,
+                    mapper,
+                    createValidator,
+                    updateValidator
+                );
+            });
             _roleService = new Lazy<IRoleService>(() => new RoleService(repo));
             _categoryService = new Lazy<ICategoryService>(() => new CategoryService(repo));
             _fileService = new Lazy<IFileService>(() => fileService);

@@ -1,4 +1,5 @@
 ﻿using Entities.Models;
+using Service.Contracts.DTOs.Event;
 
 namespace Service.Contracts.IService
 {
@@ -6,7 +7,7 @@ namespace Service.Contracts.IService
     {
         Task<IEnumerable<Event>> GetEventsAsync();
         Task<Event?> GetEventByIdAsync(int id);
-        Task CreateEventAsync(Event eventEntity);
+        Task CreateEventAsync(CreateEventDto eventDto);
         Task DeleteEvent(int id);
     }
 }
