@@ -10,6 +10,6 @@
         public bool? DeleteAvatar { get; set; }
 
         // ถ้าไม่ส่งมา = ไม่แก้ role
-        public List<int>? RoleIds { get; set; }
+        public List<int> StaffRoles { get; set; } = [];
     }
 }

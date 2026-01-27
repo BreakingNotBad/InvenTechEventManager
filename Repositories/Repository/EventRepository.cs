@@ -13,8 +13,6 @@ namespace Repositories.Repository
 
         public async Task<IEnumerable<Event>> GetEventsAsync()
         {
-            // ดึงทุก event จาก DB
-            //return await _context.Events.ToListAsync();
             return await FindAll(trackChanges: false)
                 .Include(e => e.Company)
                 .Include(e => e.Package)
@@ -32,8 +30,6 @@ namespace Repositories.Repository
 
         public async Task<Event?> GetEventByIdAsync(int id)
         {
-            //return await _context.Events
-            //    .FirstOrDefaultAsync(e => e.EventId == id);
             return await FindByCondition(e => e.EventId == id, trackChanges: false)
                     .Include(e => e.Company)
                     .Include(e => e.Package)

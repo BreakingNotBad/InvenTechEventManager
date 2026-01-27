@@ -10,6 +10,6 @@ namespace Presentation.Requests.Staff
         public IFormFile? AvatarFile { get; set; }
 
         // รับเป็น List ของ Int ตาม JSON
-        public List<int> RoleIds { get; set; } = new List<int>();
+        public List<int> StaffRoles { get; set; } = new List<int>();
     }
 }

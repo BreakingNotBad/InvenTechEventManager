@@ -23,7 +23,7 @@ namespace Service.Profiles
             // Get: Map จาก Entity -> DTO
             CreateMap<Package, PackageDto>()
                                 .ForMember(
-                    dest => dest.Equipments,
+                    dest => dest.EquipmentSets,
                     opt =>
                         opt.MapFrom(eq => eq.EquipmentSets)
                 );

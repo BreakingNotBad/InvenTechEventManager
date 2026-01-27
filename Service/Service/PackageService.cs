@@ -48,7 +48,7 @@ namespace Service
         public async Task<PackageDto> CreatePackageAsync(CreatePackageDto packageDto)
         {
             await _createValidator.ValidateAndThrowAsync(packageDto);
-            var NewPackage = _mapper.Map<Package>(packageDto);
+            var NewPackage = _mapper.Map<Package>(packageDto); 
 
             // สร้าง EquipmentSet
             foreach (var item in packageDto.EquipmentSets)
@@ -81,7 +81,7 @@ namespace Service
 
             var existingSets = existingPackage.EquipmentSets.ToList(); // รายชื่อของที่มีอยู่ตอนนี้ออกมาเก็บไว้ดู เพื่อจะได้เปรียบเทียบ เอาไว้ ลบ / แก้ / เพิ่ม
 
-            foreach (var set in existingSets) // ลูปเช็คว่าอันไหนต้องลบ
+            foreach (var set in existingSets) // ลูปเช็คว่าอันไหนต้องลบ 
             {
                 if (!packageDto.EquipmentSets.Any(d => d.EquipmentId == set.EquipmentId)) // ดูของเก่าทีละชิ้นถ้าชิ้นไหน ไม่อยู่ในรายการใหม่ ให้ลบ
                     existingPackage.EquipmentSets.Remove(set); // ลบออกจากรายการ

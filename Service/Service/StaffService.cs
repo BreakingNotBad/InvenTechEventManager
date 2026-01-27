@@ -129,17 +129,17 @@ namespace Service.Service
             newStaff.Avatar = staffDto.Avatar;
 
             // จัดการ Role
-            if (staffDto.RoleIds != null) // ถ้ามีการกำหนด RoleIds มา
+            if (staffDto.StaffRoles != null) // ถ้ามีการกำหนด RoleIds มา
             {
                 newStaff.StaffRoles = staffDto
-                    .RoleIds // รับ RoleIds จาก DTO
+                    .StaffRoles // รับ RoleIds จาก DTO
                     .Select(roleId => new StaffRole { RoleId = roleId }) // สร้าง StaffRole ใหม่สำหรับแต่ละ RoleId
                     .ToList();
             }
 
             _repo.Staff.CreateStaff(newStaff);
             await _repo.SaveAsync();
-            var staff = await GetStaffByIdAsync(newStaff.StaffId);
+            var staff = await GetStaffByIdAsync(newStaff.StaffId); // ดึงข้อมูลใหม่ที่ถูกสร้างขึ้นมา
 
             return staff!;
         }
@@ -181,10 +181,10 @@ namespace Service.Service
             }
 
             // Update Roles
-            if (staffDto.RoleIds != null)
+            if (staffDto.StaffRoles != null)
             {
                 existingStaff.StaffRoles.Clear(); // ลบของเก่า
-                foreach (var roleId in staffDto.RoleIds)
+                foreach (var roleId in staffDto.StaffRoles)
                 {
                     existingStaff.StaffRoles.Add(
                         new StaffRole { StaffId = existingStaff.StaffId, RoleId = roleId }

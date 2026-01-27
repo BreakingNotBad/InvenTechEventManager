@@ -1,12 +1,16 @@
-﻿using FluentValidation;
+﻿using Contracts.IRepository.BaseManager;
+using FluentValidation;
 using Service.Contracts.DTOs.Staff;
 
 namespace Service.Validators.Staff
 {
     public class UpdateStaffValidator : AbstractValidator<UpdateStaffDto>
     {
-        public UpdateStaffValidator()
+        private readonly IRepositoryManager _repo;
+        public UpdateStaffValidator(IRepositoryManager repo)
         {
+            _repo = repo;
+
             RuleFor(x => x.FullName)
                 .NotEmpty()
                 .WithMessage("staffFull name is required")
@@ -24,11 +28,18 @@ namespace Service.Validators.Staff
                 .WithMessage("Invalid phone number format.")
                 .MaximumLength(50).WithMessage("Phone number must not exceed 50 characters.");
 
-            RuleFor(x => x.RoleIds)
+            RuleFor(x => x.StaffRoles)
                 .NotEmpty()
                 .WithMessage("At least one RoleId must be provided")
                 .NotNull()
-                .WithMessage("RoleIds cannot be null");
+                .WithMessage("RoleIds cannot be null")
+                .Must(roleIds => roleIds.Distinct().Count() == roleIds.Count)
+                .WithMessage("RoleIds must not contain duplicates")
+                .MustAsync(async (roleIds, cancellation) =>
+                {
+                    return await _repo.Role.RoleExistsAsync(roleIds, true);
+                })
+                .WithMessage("One or more RoleIds do not exist");
         }
     }
 }

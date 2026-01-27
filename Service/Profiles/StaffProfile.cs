@@ -22,7 +22,7 @@ namespace Service.Profiles
             CreateMap<Staff, StaffDto>()
                 // Map: StaffRoles (List<StaffRole>) ---> Roles (List<RoleDto>)
                 .ForMember(
-                    dest => dest.Roles,
+                    dest => dest.StaffRoles,
                     opt =>
                         // 1. src.StaffRoles: เข้าไปที่ตารางกลาง
                         // 2. .Select(sr => sr.Role): เลือกเอาเฉพาะตัว "Role" ออกมา

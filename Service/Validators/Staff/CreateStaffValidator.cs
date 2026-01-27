@@ -28,7 +28,7 @@ namespace Service.Validators.Staff
                 .WithMessage("Invalid phone number format.")
                 .MaximumLength(50).WithMessage("Phone number must not exceed 50 characters.");
 
-            RuleFor(x => x.RoleIds)
+            RuleFor(x => x.StaffRoles)
                 .NotEmpty()
                 .WithMessage("At least one RoleId must be provided")
                 .NotNull()
