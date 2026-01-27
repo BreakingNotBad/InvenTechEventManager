@@ -15,8 +15,10 @@ namespace Service.Validators.Outsource
                 .MaximumLength(255).WithMessage("Email must not exceed 255 characters.");
 
             RuleFor(x => x.PhoneNumber)
-                .Matches(@"^\+?[1-9]\d{1,14}$").WithMessage("Invalid phone number format.")
+                .Matches(@"^0\d{9}$")
+                .WithMessage("Invalid phone number format.")
                 .MaximumLength(50).WithMessage("Phone number must not exceed 50 characters.");
+
         }
     }
 }

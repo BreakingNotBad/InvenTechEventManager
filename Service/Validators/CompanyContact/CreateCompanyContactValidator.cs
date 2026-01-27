@@ -21,7 +21,8 @@ namespace Service.Validators.CompanyContact
 
             RuleFor(x => x.PhoneNumber)
                 .Matches(@"^0\d{9}$")
-                .WithMessage("Phone number must be a valid Thai mobile number");
+                .WithMessage("Invalid phone number format.")
+                .MaximumLength(50).WithMessage("Phone number must not exceed 50 characters.");
 
             RuleFor(x => x.Position)
                 .MaximumLength(100)

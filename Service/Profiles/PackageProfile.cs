@@ -25,7 +25,7 @@ namespace Service.Profiles
                                 .ForMember(
                     dest => dest.Equipments,
                     opt =>
-                        opt.MapFrom(src => src.EquipmentSets.Select(sr => sr.Equipment).ToList())
+                        opt.MapFrom(eq => eq.EquipmentSets)
                 );
         }
     }
