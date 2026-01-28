@@ -18,6 +18,8 @@ namespace Service.Validators.Staff
                 .WithMessage("Full name must not exceed 255 characters");
 
             RuleFor(x => x.Email)
+                .NotEmpty()
+                .WithMessage("Email is required")
                 .EmailAddress()
                 .WithMessage("Invalid email format")
                 .MaximumLength(255)
