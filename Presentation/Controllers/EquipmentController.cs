@@ -2,6 +2,7 @@ using Entities.Models;
 using Microsoft.AspNetCore.Mvc;
 using Service.Contracts.DTOs.Equipment;
 using Service.Contracts.Manager;
+using Shared.RequestFeatures.Parameters;
 
 namespace Presentation.Controllers
 {
@@ -18,18 +19,9 @@ namespace Presentation.Controllers
 
         [HttpGet]
         public async Task<IActionResult> GetEquipment(
-            string? equipmentName, 
-            string? category,
-            bool? IsDeleted,
-            DateTime CreatedAt,
-            DateTime UpdatedAt)
+            [FromQuery] EquipmentParameter equipmentParameter)
         {
-            var items = await _service.Equipment.GetEquipmentAsync(
-                equipmentName, 
-                category,
-                IsDeleted,
-                CreatedAt,
-                UpdatedAt);
+            var items = await _service.Equipment.GetEquipmentAsync(equipmentParameter);
             return Ok(items);
         }
 

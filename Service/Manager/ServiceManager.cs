@@ -104,8 +104,8 @@ namespace Service.Manager
                     updateValidator
                 );
             });
-            _roleService = new Lazy<IRoleService>(() => new RoleService(repo));
-            _categoryService = new Lazy<ICategoryService>(() => new CategoryService(repo));
+            _roleService = new Lazy<IRoleService>(() => new RoleService(repo,mapper));
+            _categoryService = new Lazy<ICategoryService>(() => new CategoryService(repo, mapper));
             _fileService = new Lazy<IFileService>(() => fileService);
         }
 

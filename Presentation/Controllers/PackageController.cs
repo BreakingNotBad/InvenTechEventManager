@@ -2,6 +2,7 @@ using Entities.Models;
 using Microsoft.AspNetCore.Mvc;
 using Service.Contracts.DTOs.Package;
 using Service.Contracts.Manager;
+using Shared.RequestFeatures.Parameters;
 
 namespace Presentation.Controllers
 {
@@ -17,9 +18,10 @@ namespace Presentation.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetPackages()
+        public async Task<IActionResult> GetPackages(
+            [FromQuery] PackageParameter packageParameter)
         {
-            var items = await _service.Package.GetPackagesAsync();
+            var items = await _service.Package.GetPackagesAsync(packageParameter);
             return Ok(items);
         }
 

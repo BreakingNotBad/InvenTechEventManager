@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Service.Contracts.Manager;
+using Shared.RequestFeatures.Parameters;
 
 namespace Presentation.Controllers
 {
@@ -15,9 +16,9 @@ namespace Presentation.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetCategory()
+        public async Task<IActionResult> GetCategory([FromQuery] CategoryParameter categoryParameter)
         {
-            var categoryList = await _service.Category.GetCategoryByAsync();
+            var categoryList = await _service.Category.GetCategoryByAsync(categoryParameter);
             return Ok(categoryList);
         }
     }

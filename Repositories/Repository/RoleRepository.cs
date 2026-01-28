@@ -3,6 +3,7 @@ using Entities.Models;
 using Microsoft.EntityFrameworkCore;
 using Repositories.Data;
 using Repositories.Repository.BaseManager;
+using Shared.RequestFeatures.Parameters;
 
 namespace Repositories.Repository
 {
@@ -11,9 +12,17 @@ namespace Repositories.Repository
         public RoleRepository(RepositoryContext context)
             : base(context) { }
 
-        public async Task<IEnumerable<Role>> GetAllRoleAsync()
+        public async Task<IEnumerable<Role>> GetAllRoleAsync(RoleParameter roleParameter, bool trackChanges)
         {
-            return await FindAll(trackChanges: false).ToListAsync();
+            // 1. เริ่มต้น Query
+            var items = FindAll(trackChanges);
+
+            // 2. Filter: Search by RoleName
+            if (!string.IsNullOrWhiteSpace(roleParameter.RoleName))
+            {
+                items = items.Where(o => o.RoleName.ToLower().Contains(roleParameter.RoleName.ToLower()));
+            }
+            return await items.ToListAsync();
         }
 
         public async Task<bool> RoleExistsAsync(List<int> roleId, bool trackChanges)

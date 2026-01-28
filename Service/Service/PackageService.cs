@@ -6,6 +6,7 @@ using FluentValidation;
 using Service.Contracts;
 using Service.Contracts.DTOs.Package;
 using Service.Contracts.IService;
+using Shared.RequestFeatures.Parameters;
 
 namespace Service
 {
@@ -28,9 +29,9 @@ namespace Service
             _updateValidator = updateValidator;
         }
 
-        public async Task<IEnumerable<PackageDto>> GetPackagesAsync()
+        public async Task<IEnumerable<PackageDto>> GetPackagesAsync(PackageParameter packageParameter)
         {
-            var packages = await _repo.Package.GetPackagesAsync();
+            var packages = await _repo.Package.GetPackagesAsync(packageParameter,false);
             return _mapper.Map<IEnumerable<PackageDto>>(packages);
         }
 

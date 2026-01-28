@@ -5,6 +5,7 @@ using Entities.Models;
 using FluentValidation;
 using Service.Contracts.DTOs.Outsource;
 using Service.Contracts.IService;
+using Shared.RequestFeatures.Parameters;
 
 namespace Service.Service
 {
@@ -27,16 +28,10 @@ namespace Service.Service
             _updateValidator = updateValidator;
         }
 
-        public async Task<IEnumerable<OutsourceDto>> GetOutsources(string? fullName)
+        public async Task<IEnumerable<OutsourceDto>> GetOutsources(OutsourceParameter outsourceParameter)
         {
-            var outsourcesList = await _repo.Outsource.GetOutsourceAsyn();
-            //  search
-            if (!string.IsNullOrWhiteSpace(fullName))
-            {
-                outsourcesList = outsourcesList.Where(o =>
-                    o.FullName.ToLower().Contains(fullName.ToLower())
-                );
-            }
+            var outsourcesList = await _repo.Outsource.GetOutsourceAsyn(outsourceParameter,false);
+
             var outsourceResponse = _mapper.Map<IEnumerable<OutsourceDto>>(outsourcesList);
             return outsourceResponse;
         }

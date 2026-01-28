@@ -1,8 +1,9 @@
-using Contracts.IRepository;
+﻿using Contracts.IRepository;
 using Entities.Models;
 using Microsoft.EntityFrameworkCore;
 using Repositories.Data;
 using Repositories.Repository.BaseManager;
+using Shared.RequestFeatures.Parameters;
 
 namespace Repositories.Repository
 {
@@ -11,12 +12,22 @@ namespace Repositories.Repository
         public PackageRepository(RepositoryContext context)
             : base(context) { }
 
-        public async Task<IEnumerable<Package>> GetPackagesAsync()
+        public async Task<IEnumerable<Package>> GetPackagesAsync(PackageParameter packageParameter, bool trackChanges)
         {
-            return await FindAll(trackChanges: false)
+            // 1. เริ่มต้น Query
+            var items = FindAll(trackChanges);
+
+            // 2. Filter: Search by FullName
+            if (!string.IsNullOrWhiteSpace(packageParameter.PackageName))
+            {
+                items = items.Where(o => o.PackageName.ToLower().Contains(packageParameter.PackageName.ToLower()));
+            }
+
+            // 3. Execute Query 
+            return await items
                 .Include(e => e.EquipmentSets)
-                    .ThenInclude(es => es.Equipment)
-                        .ThenInclude(c => c.Category)
+                .ThenInclude(eq => eq.Equipment)
+                    .ThenInclude(c => c.Category)
                 .ToListAsync();
         }
 

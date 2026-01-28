@@ -5,6 +5,7 @@ using Entities.Models;
 using FluentValidation;
 using Service.Contracts.DTOs.Company;
 using Service.Contracts.IService;
+using Shared.RequestFeatures.Parameters;
 
 namespace Service.Service
 {
@@ -30,80 +31,10 @@ namespace Service.Service
 
         // GET ALL
         public async Task<IEnumerable<CompanyDto>> GetCompaniesAsync(
-            string? companyName,
-            string? companyContact,
-            string? Address,
-            decimal? Latitude,
-            decimal? Longitude,
-            bool? IsDeleted,
-            DateTime CreatedAt,
-            DateTime UpdatedAt
+            CompanyParameter parameters
         )
         {
-            var companiesList = await _repo.Company.GetCompaniesAsync();
-
-            // search companyName (ถ้ามีค่าชื่อ company ที่ผู้ใช้กรอกมาจริงๆ ไม่ใช่ null กับ ปล่อยว่าง จะผ่านเงื่อนไข เพื่อไปค้นหา companyName)
-            if (!string.IsNullOrWhiteSpace(companyName))
-            {
-                companiesList = companiesList.Where(c => // where companyName เพื่อกรองข้อมูลที่มีค่า companyName ที่เป็น null ออกไปก่อน
-                    c.CompanyName.ToLower().Contains(companyName.ToLower()) // และมาค้นหาชื่อ companyName ที่ตรงกับค่าที่ผู้ใช้กรอกเข้ามา (ไม่สนใจตัวพิมพ์เล็กพิมพ์ใหญ่)
-                );
-            }
-
-            // search companyContact (FullName, Email, PhoneNumber)
-            if (!string.IsNullOrWhiteSpace(companyContact)) // ถ้ามีค่าชื่อ contact ที่ผู้ใช้กรอกมาจริงๆ ไม่ใช่ null กับ ปล่อยว่าง จะผ่านเงื่อนไข เพื่อไปค้นหา companyContact
-            {
-                companiesList = companiesList.Where(c => // where companyContact เพื่อกรองข้อมูลที่มีค่า companyContact ที่เป็น null ออกไปก่อน
-                    c.CompanyContacts.Any(cc => // ตรวจสอบในตาราง CompanyContacts ว่ามีข้อมูลที่ตรงกับค่าที่ผู้ใช้กรอกเข้ามาหรือไม่
-                        (
-                            cc.FullName != null
-                            && // ตรวจสอบ FullName ไม่เป็น null
-                            cc.FullName.ToLower().Contains(companyContact.ToLower())
-                        ) //และมาค้นหาชื่อ FullName ที่ตรงกับค่าที่ผู้ใช้กรอกเข้ามา (ไม่สนใจตัวพิมพ์เล็กพิมพ์ใหญ่)
-                    )
-                );
-            }
-
-            // search Address
-            if (!string.IsNullOrWhiteSpace(Address))
-            {
-                companiesList = companiesList.Where(c =>
-                    c.Address != null && c.Address.ToLower().Contains(Address.ToLower())
-                );
-            }
-
-            //search Latitude
-            if (Latitude.HasValue)
-            {
-                companiesList = companiesList.Where(c => c.Latitude == Latitude);
-            }
-
-            //search Longitude
-            if (Longitude.HasValue)
-            {
-                companiesList = companiesList.Where(c => c.Longitude == Longitude);
-            }
-
-            // search IsDeleted
-            if (IsDeleted.HasValue)
-            {
-                companiesList = companiesList.Where(c => c.IsDeleted == IsDeleted.Value);
-            }
-
-            // search CreatedAt
-            if (CreatedAt != default(DateTime))
-            {
-                companiesList = companiesList.Where(c => c.CreatedAt.Date == CreatedAt.Date);
-            }
-
-            // search UpdatedAt
-            if (UpdatedAt != default(DateTime))
-            {
-                companiesList = companiesList.Where(c =>
-                    c.UpdatedAt.HasValue && c.UpdatedAt.Value.Date == UpdatedAt.Date
-                );
-            }
-
+            var companiesList = await _repo.Company.GetCompaniesAsync(parameters,false);
             // แปลงข้อมูลจาก Entity เป็น Dto
             var companyResponse = _mapper.Map<IEnumerable<CompanyDto>>(companiesList);
 

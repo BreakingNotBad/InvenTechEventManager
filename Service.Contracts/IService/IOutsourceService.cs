@@ -1,11 +1,12 @@
 using Entities.Models;
 using Service.Contracts.DTOs.Outsource;
+using Shared.RequestFeatures.Parameters;
 
 namespace Service.Contracts.IService
 {
     public interface IOutsourceService
     {
-        Task<IEnumerable<OutsourceDto>> GetOutsources(string? fullName);
+        Task<IEnumerable<OutsourceDto>> GetOutsources(OutsourceParameter outsourceParameter);
         Task<OutsourceDto?> GetOutsourcesByIdAsync(int id);
         Task<OutsourceDto> CreateOutsourceAsync(CreateOutsourceDto dto);
         Task<OutsourceDto> UpdateOutsourceAsync(int id, UpdateOutsourceDto dto);

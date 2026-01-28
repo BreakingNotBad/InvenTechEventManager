@@ -5,6 +5,7 @@ using Entities.Models;
 using FluentValidation;
 using Service.Contracts.DTOs.Equipment;
 using Service.Contracts.IService;
+using Shared.RequestFeatures.Parameters;
 
 namespace Service.Service
 {
@@ -28,31 +29,11 @@ namespace Service.Service
         }
 
         public async Task<IEnumerable<EquipmentDto>> GetEquipmentAsync(
-            string? equipmentName,
-            string? category,
-            bool? IsDeleted,
-            DateTime CreatedAt,
-            DateTime UpdatedAt
+            EquipmentParameter equipmentParameter
         )
         {
-            var equipmentList = await _repo.Equipment.GetEquipmentAsync();
+            var equipmentList = await _repo.Equipment.GetEquipmentAsync(equipmentParameter,false);
 
-            //  search
-            if (!string.IsNullOrWhiteSpace(equipmentName))
-            {
-                equipmentList = equipmentList.Where(e =>
-                    e.EquipmentName.ToLower().Contains(equipmentName.ToLower())
-                );
-            }
-
-            //  filter category
-            if (!string.IsNullOrWhiteSpace(category))
-            {
-                equipmentList = equipmentList.Where(e =>
-                e.Category.CategoryName.ToLower().Contains(category.ToLower())
-                );
-            }
-            
             var companyResponse = _mapper.Map<IEnumerable<EquipmentDto>>(equipmentList);
 
             return companyResponse;

@@ -1,18 +1,12 @@
 ﻿using Service.Contracts.DTOs.Company;
+using Shared.RequestFeatures.Parameters;
 
 namespace Service.Contracts.IService
 {
     public interface ICompanyService
     {
         Task<IEnumerable<CompanyDto>> GetCompaniesAsync(
-            string? companyName,
-            string? companyContact,
-            string? Address,
-            decimal? Latitude,
-            decimal? Longitude,
-            bool? IsDeleted,
-            DateTime CreatedAt,
-            DateTime UpdatedAt
+            CompanyParameter parameters
         );
         Task<CompanyDto?> GetCompanyByIdAsync(int id);
         Task<CompanyDto> CreateCompanyAsync(CreateCompanyDto companyDto);

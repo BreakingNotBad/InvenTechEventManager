@@ -5,6 +5,7 @@ using Entities.Models;
 using FluentValidation;
 using Service.Contracts.DTOs.Staff;
 using Service.Contracts.IService;
+using Shared.RequestFeatures.Parameters;
 
 namespace Service.Service
 {
@@ -32,69 +33,10 @@ namespace Service.Service
         }
 
         // GET ALL
-        public async Task<IEnumerable<StaffDto>> GetStaffMembersAsync(
-            string? fullName,
-            string? status,
-            string? role,
-            bool? available,
-            DateTime? date,
-            string? period
+        public async Task<IEnumerable<StaffDto>> GetStaffMembersAsync(StaffParameter staffParameter
         )
         {
-            var staffList = await _repo.Staff.GetStaffMembersAsync();
-
-            //  search
-            if (!string.IsNullOrWhiteSpace(fullName))
-            {
-                staffList = staffList.Where(s =>
-                    s.FullName?.ToLower().Contains(fullName.Trim().ToLower()) == true
-                );
-            }
-
-            //  filter role
-            if (!string.IsNullOrWhiteSpace(role))
-            {
-                staffList = staffList.Where(s =>
-                    s.StaffRoles.Any(r => r.Role.RoleName.Equals(role))
-                );
-            }
-
-            //  filter status (active / inactive)
-            if (!string.IsNullOrWhiteSpace(status))
-            {
-                status = status.Trim().ToLower();
-
-                if (status == "active" || status == "false")
-                {
-                    staffList = staffList.Where(s => !s.IsDeleted);
-                }
-                else if (status == "inactive" || status == "true")
-                {
-                    staffList = staffList.Where(s => s.IsDeleted);
-                }
-            }
-
-            //// filter available
-            //if (available.HasValue)
-            //{
-            //    staffList = staffList.Where(s => s.IsAvailable == available.Value);
-            //}
-
-            //  filter date / time_period
-            if (date.HasValue && !string.IsNullOrWhiteSpace(period))
-            {
-                var start = date.Value.Date;
-                DateTime end = period.ToLower() switch
-                {
-                    "day" => start.AddDays(1),
-                    "week" => start.AddDays(7),
-                    "month" => start.AddMonths(1),
-                    _ => start.AddDays(1),
-                };
-
-                staffList = staffList.Where(s => s.CreatedAt >= start && s.CreatedAt < end);
-            }
-
+            var staffList = await _repo.Staff.GetStaffMembersAsync(staffParameter,false);
             // แปลงข้อมูลจาก Entity เป็น Dto
             var staffResponse = _mapper.Map<IEnumerable<StaffDto>>(staffList);
 

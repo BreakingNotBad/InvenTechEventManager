@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Service.Contracts.DTOs.Company;
 using Service.Contracts.Manager;
+using Shared.RequestFeatures.Parameters;
 
 namespace Presentation.Controllers
 {
@@ -17,26 +18,12 @@ namespace Presentation.Controllers
 
         [HttpGet]
         public async Task<IActionResult> GetCompanies(
-            string? companyName,
-            string? companyContact,
-            string? Address,
-            decimal? Latitude,
-            decimal? Longitude,
-            bool? IsDeleted,
-            DateTime CreatedAt,
-            DateTime UpdatedAt
+            [FromQuery] CompanyParameter parameters
         )
         {
             Console.WriteLine("Hello woRld");
             var companiesList = await _service.Company.GetCompaniesAsync(
-                companyName,
-                companyContact,
-                Address,
-                Latitude,
-                Longitude,
-                IsDeleted,
-                CreatedAt,
-                UpdatedAt
+                parameters
             );
 
             return Ok(companiesList);

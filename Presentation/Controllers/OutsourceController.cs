@@ -2,6 +2,7 @@ using Entities.Models;
 using Microsoft.AspNetCore.Mvc;
 using Service.Contracts.DTOs.Outsource;
 using Service.Contracts.Manager;
+using Shared.RequestFeatures.Parameters;
 
 namespace Presentation.Controllers
 {
@@ -17,9 +18,9 @@ namespace Presentation.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetOutsources(string? fullName)
+        public async Task<IActionResult> GetOutsources([FromQuery ]OutsourceParameter outsourceParameter)
         {
-            var items = await _service.Outsource.GetOutsources(fullName);
+            var items = await _service.Outsource.GetOutsources(outsourceParameter);
             return Ok(items);
         }
 

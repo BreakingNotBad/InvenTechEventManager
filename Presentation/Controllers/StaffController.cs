@@ -5,6 +5,7 @@ using Presentation.Requests.Staff;
 using Service.Contracts.DTOs.Staff;
 using Service.Contracts.IService;
 using Service.Contracts.Manager;
+using Shared.RequestFeatures.Parameters;
 
 namespace Presentation.Controllers
 {
@@ -35,21 +36,10 @@ namespace Presentation.Controllers
 
         [HttpGet]
         public async Task<IActionResult> GetStaffMembers(
-            string? fullName,
-            string? status,
-            string? role,
-            DateTime? date,
-            bool? available,
-            string? period
+            [FromQuery] StaffParameter staffParameter
         )
         {
-            var staffList = await _service.Staff.GetStaffMembersAsync(
-                fullName,
-                status,
-                role,
-                available,
-                date,
-                period
+            var staffList = await _service.Staff.GetStaffMembersAsync(staffParameter
             );
 
             return Ok(staffList);
