@@ -1,32 +1,23 @@
 ﻿using AutoMapper;
 using Entities.Models;
 using Service.Contracts.DTOs.Package;
+
 namespace Service.Profiles
 {
     public class PackageProfile : Profile
     {
         public PackageProfile()
-        {   // Create: Map จาก DTO -> Entity
+        { // Create: Map จาก DTO -> Entity
             CreateMap<CreatePackageDto, Package>()
-                .ForMember(
-                    dest => dest.EquipmentSets,
-                    opt => opt.Ignore()
-                );
+                .ForMember(dest => dest.EquipmentSets, opt => opt.Ignore());
 
             // Update: Map จาก DTO -> Entity
             CreateMap<UpdatePackageDto, Package>()
-                .ForMember(
-                    dest => dest.EquipmentSets,
-                    opt => opt.Ignore()
-                );
+                .ForMember(dest => dest.EquipmentSets, opt => opt.Ignore());
 
             // Get: Map จาก Entity -> DTO
             CreateMap<Package, PackageDto>()
-                                .ForMember(
-                    dest => dest.EquipmentSets,
-                    opt =>
-                        opt.MapFrom(eq => eq.EquipmentSets)
-                );
+                .ForMember(dest => dest.EquipmentSets, opt => opt.MapFrom(eq => eq.EquipmentSets));
         }
     }
 }

@@ -12,7 +12,10 @@ namespace Repositories.Repository
         public EquipmentRepository(RepositoryContext context)
             : base(context) { }
 
-        public async Task<IEnumerable<Equipment>> GetEquipmentAsync(EquipmentParameter equipmentParameter, bool trackChanges)
+        public async Task<IEnumerable<Equipment>> GetEquipmentAsync(
+            EquipmentParameter equipmentParameter,
+            bool trackChanges
+        )
         {
             // 1. เตรียม Query (ยังไม่ยิง Database)
             var items = FindAll(trackChanges);
@@ -20,14 +23,19 @@ namespace Repositories.Repository
             // 2. Filter: EquipmentName
             if (!string.IsNullOrWhiteSpace(equipmentParameter.EquipmentName))
             {
-                items = items.Where(e => e.EquipmentName.ToLower().Contains(equipmentParameter.EquipmentName.ToLower()));
+                items = items.Where(e =>
+                    e.EquipmentName.ToLower().Contains(equipmentParameter.EquipmentName.ToLower())
+                );
             }
 
             // 3. Filter: Category (Relation)
             // EF Core ฉลาดพอที่จะ join ตารางให้เองเมื่อเราอ้างถึง e.Category.CategoryName ใน Where
             if (!string.IsNullOrWhiteSpace(equipmentParameter.Category))
             {
-                items = items.Where(e => e.Category.CategoryName.ToLower().Contains(equipmentParameter.Category.ToLower()));
+                items = items.Where(e =>
+                    e.Category.CategoryName.ToLower()
+                        .Contains(equipmentParameter.Category.ToLower())
+                );
             }
 
             // 4. Filter: IsDeleted
@@ -44,29 +52,30 @@ namespace Repositories.Repository
 
             if (equipmentParameter.UpdatedAt != default(DateTime))
             {
-                items = items.Where(e => e.UpdatedAt.HasValue && e.UpdatedAt.Value.Date == equipmentParameter.UpdatedAt.Date);
+                items = items.Where(e =>
+                    e.UpdatedAt.HasValue
+                    && e.UpdatedAt.Value.Date == equipmentParameter.UpdatedAt.Date
+                );
             }
 
             // 6. Execute Query
             // ใส่ Include เพื่อดึงข้อมูล Category ออกมาด้วย
-            return await items
-                .Include(e => e.Category)
-                .ToListAsync();
+            return await items.Include(e => e.Category).ToListAsync();
         }
 
-        public async Task<Equipment?> GetEquipmentByIdAsync(int id,bool trackchange)
+        public async Task<Equipment?> GetEquipmentByIdAsync(int id, bool trackchange)
         {
             return await FindByCondition(e => e.EquipmentId == id, trackchange)
                 .Include(e => e.Category)
                 .FirstOrDefaultAsync();
         }
+
         public async Task<bool> ExistsAsync(int equipmentId)
         {
-            return await FindByCondition(
-                e => e.EquipmentId == equipmentId,
-                trackChanges: false
-            ).AnyAsync();
+            return await FindByCondition(e => e.EquipmentId == equipmentId, trackChanges: false)
+                .AnyAsync();
         }
+
         public void CreateEquipment(Equipment equipment)
         {
             Create(equipment);

@@ -1,20 +1,26 @@
-﻿using Entities.Models;
+﻿using AutoMapper;
+using Entities.Models;
 using Service.Contracts.DTOs.EquipmentSet;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AutoMapper;   
+
 namespace Service.Profiles
 {
-    public class EquipmentSetProfile :Profile
+    public class EquipmentSetProfile : Profile
     {
         public EquipmentSetProfile()
         {
             CreateMap<EquipmentSet, EquipmentSetDto>()
-            .ForMember(d => d.EquipmentName, o => o.MapFrom(s => s.Equipment.EquipmentName))
-            .ForMember(d => d.Category, o => o.MapFrom(s => s.Equipment.Category));
+                // สั่งให้เอา EquipmentName จากตาราง Equipment
+                .ForMember(
+                    dest => dest.EquipmentName,
+                    opt => opt.MapFrom(src => src.Equipment.EquipmentName)
+                )
+                // สั่งให้เอา Category จากตาราง Equipment
+                .ForMember(dest => dest.Category, opt => opt.MapFrom(src => src.Equipment.Category))
+                // สั่งให้เอา IsDeleted จากตาราง Equipment
+                .ForMember(
+                    dest => dest.IsDeleted,
+                    opt => opt.MapFrom(src => src.Equipment.IsDeleted)
+                );
         }
     }
 }

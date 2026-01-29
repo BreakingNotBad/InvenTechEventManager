@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Shared.RequestFeatures.Enums;
 
 namespace Shared.RequestFeatures.Parameters
 {
     public class PackageParameter
     {
         public string? PackageName { get; set; }
+        public EquipmentStatusEnum EquipmentStatus { get; set; } = EquipmentStatusEnum.All;
     }
 }
