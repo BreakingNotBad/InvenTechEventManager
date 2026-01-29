@@ -8,6 +8,7 @@ namespace Contracts.IRepository
     {
         Task<IEnumerable<Equipment>> GetEquipmentAsync(EquipmentParameter equipmentParameter ,bool trackChanges);
         Task<Equipment?> GetEquipmentByIdAsync(int id, bool trackchange);
+        Task<bool> ExistsAsync(int equipmentId);
         void CreateEquipment(Equipment equipment);
         void UpdateEquipment(Equipment equipment);
         void DeleteEquipment(Equipment equipment);

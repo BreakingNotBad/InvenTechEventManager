@@ -60,7 +60,13 @@ namespace Repositories.Repository
                 .Include(e => e.Category)
                 .FirstOrDefaultAsync();
         }
-
+        public async Task<bool> ExistsAsync(int equipmentId)
+        {
+            return await FindByCondition(
+                e => e.EquipmentId == equipmentId,
+                trackChanges: false
+            ).AnyAsync();
+        }
         public void CreateEquipment(Equipment equipment)
         {
             Create(equipment);
