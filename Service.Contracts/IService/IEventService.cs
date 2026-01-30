@@ -1,13 +1,14 @@
 ﻿using Entities.Models;
 using Service.Contracts.DTOs.Event;
+using Shared.RequestFeatures.Parameters;
 
 namespace Service.Contracts.IService
 {
     public interface IEventService
     {
-        Task<IEnumerable<Event>> GetEventsAsync();
-        Task<Event?> GetEventByIdAsync(int id);
-        Task CreateEventAsync(CreateEventDto eventDto);
+        Task<IEnumerable<EventDto>> GetEventsAsync(EventParameter eventParameter);
+        Task<EventDto?> GetEventByIdAsync(int id);
+        Task <EventDto>CreateEventAsync(CreateEventDto eventDto);
         Task DeleteEvent(int id);
     }
 }

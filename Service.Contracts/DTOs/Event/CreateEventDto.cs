@@ -1,38 +1,37 @@
 ﻿using Entities.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Presentation.Requests.Event;
+using Service.Contracts.DTOs.CompanyContact;
 
 namespace Service.Contracts.DTOs.Event
 {
     public class CreateEventDto
     {
-        // Basic info
         public string EventName { get; set; } = null!;
         public EventType EventType { get; set; }
-
-        // Date & Time
         public DateOnly MeetingDate { get; set; }
         public TimeOnly RegistrationTime { get; set; }
         public TimeOnly StartTime { get; set; }
         public TimeOnly EndTime { get; set; }
         public TimePeriod Period { get; set; }
-
-        // Location
         public decimal Latitude { get; set; }
         public decimal Longitude { get; set; }
         public string? Note { get; set; }
-
-        // Relations (by Id only)
+        public int CreatedByStaffId { get; set; }
         public int CompanyId { get; set; }
         public int PackageId { get; set; }
 
-        // Staff ที่เข้าร่วม (optional)
-        public List<int>? StaffIds { get; set; }
+        // ไฟล์แนบที่ Save ลง Disk แล้ว (เก็บเป็น Path)
+        public List<EventAttachmentDto> Attachments { get; set; } = [];
+        public List<int> StaffIds { get; set; } = [];
+        public List<CreateEventExtraEquipmentDto> EventExtraEquipments { get; set; } = [];
+        public List<CreateEventOutsourceDto> EventOutsources { get; set; } = [];
+    }
 
-        // Extra equipment (optional)
-        public List<CreateEventExtraEquipmentDto>? ExtraEquipments { get; set; }
+    public class EventAttachmentDto
+    {
+        public string OriginalFileName { get; set; } = null!;
+        public string FilePath { get; set; } = null!;
+        public string? ContentType { get; set; }
+        public long FileSize { get; set; }
     }
 }

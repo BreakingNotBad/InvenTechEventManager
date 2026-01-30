@@ -1,30 +1,31 @@
 ﻿using Entities.Models;
 using Service.Contracts.DTOs.Company;
-using Service.Contracts.DTOs.Event;
+using Service.Contracts.DTOs.Outsource;
 using Service.Contracts.DTOs.Package;
 using Service.Contracts.DTOs.Staff;
-public class EventDto
+
+namespace Service.Contracts.DTOs.Event
 {
-    public int EventId { get; set; }
-    public string EventName { get; set; } = null!;
-    public EventType EventType { get; set; }
+    public class EventDto
+    {
+        public int EventId { get; set; }
+        public string EventName { get; set; } = null!;
+        public string EventType { get; set; } = null!;
+        public string Period { get; set; } = null!;
+        public DateOnly MeetingDate { get; set; }
+        public decimal Latitude { get; set; }
+        public decimal Longitude { get; set; }
+        public string? Note { get; set; }
 
-    public DateOnly MeetingDate { get; set; }
-    public TimeOnly RegistrationTime { get; set; }
-    public TimeOnly StartTime { get; set; }
-    public TimeOnly EndTime { get; set; }
-    public TimePeriod Period { get; set; }
 
-    public decimal Latitude { get; set; }
-    public decimal Longitude { get; set; }
-    public string? Note { get; set; }
+        public CompanyDto Company { get; set; } = null!;
+        public PackageDto Package { get; set; } = null!;
+        public StaffDto CreatedByStaff { get; set; } = null!;
 
-    // Related (read-friendly)
-    public CompanyDto Company { get; set; } = null!;
-    public PackageDto Package { get; set; } = null!;
-    public StaffDto CreatedBy { get; set; } = null!;
 
-    public List<StaffDto> Staffs { get; set; } = [];
-    public List<EventExtraEquipmentDto> ExtraEquipments { get; set; } = [];
-    public List<EventAttachmentDto> Attachments { get; set; } = [];
+        public ICollection<EventAttachmentDto> EventAttachments { get; set; } = [];
+        public ICollection<StaffDto> EventStaff { get; set; } = [];
+        public ICollection<EventOutsourceDto> EventOutsources { get; set; } = [];
+        public ICollection<EventExtraEquipmentDto> EventExtraEquipments { get; set; } = [];
+    }
 }
