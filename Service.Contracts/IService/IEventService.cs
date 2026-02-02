@@ -9,6 +9,7 @@ namespace Service.Contracts.IService
         Task<IEnumerable<EventDto>> GetEventsAsync(EventParameter eventParameter);
         Task<EventDto?> GetEventByIdAsync(int id);
         Task <EventDto>CreateEventAsync(CreateEventDto eventDto);
+        Task <EventDto>UpdateEventAsync(int id, UpdateEventDto eventDto);
         Task DeleteEvent(int id);
     }
 }

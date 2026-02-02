@@ -17,6 +17,8 @@ public class EventProfile : Profile
              .ForMember(dest => dest.EventAttachments, opt => opt.MapFrom(src => src.Attachments))
              .ForMember(dest => dest.EventStaff, opt => opt.Ignore());
 
+        CreateMap<UpdateEventDto, Event>();
+
         CreateMap<EventAttachmentDto, EventAttachment>();
 
         CreateMap<EventAttachment, EventAttachmentDto>();
@@ -28,6 +30,10 @@ public class EventProfile : Profile
         CreateMap<CreateEventOutsourceDto , EventOutsource>();
 
         CreateMap<EventOutsource, EventOutsourceDto>();
+
+        CreateMap<UpdateEventOutsourceDto , EventOutsource>();
+
+        CreateMap<UpdateEventExtraEquipmentDto , EventExtraEquipment>();
 
 
 

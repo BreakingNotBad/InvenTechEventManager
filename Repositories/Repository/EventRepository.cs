@@ -39,9 +39,9 @@ namespace Repositories.Repository
                 .ToListAsync();
         }
 
-        public async Task<Event?> GetEventByIdAsync(int id)
+        public async Task<Event?> GetEventByIdAsync(int id, bool trackChanges)
         {
-            return await FindByCondition(e => e.EventId == id, trackChanges: false)
+            return await FindByCondition(e => e.EventId == id, trackChanges)
                     .Include(e => e.Company)
                         .ThenInclude(cc => cc.CompanyContacts)
                         
@@ -82,6 +82,11 @@ namespace Repositories.Repository
         {
             Delete(eventEntity);
             await Task.CompletedTask;
+        }
+
+        public void UpdateEvent(Event eventEntity)
+        {
+            Update(eventEntity);
         }
     }
 }

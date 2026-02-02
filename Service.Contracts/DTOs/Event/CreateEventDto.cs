@@ -26,12 +26,4 @@ namespace Service.Contracts.DTOs.Event
         public List<CreateEventExtraEquipmentDto> EventExtraEquipments { get; set; } = [];
         public List<CreateEventOutsourceDto> EventOutsources { get; set; } = [];
     }
-
-    public class EventAttachmentDto
-    {
-        public string OriginalFileName { get; set; } = null!;
-        public string FilePath { get; set; } = null!;
-        public string? ContentType { get; set; }
-        public long FileSize { get; set; }
-    }
 }

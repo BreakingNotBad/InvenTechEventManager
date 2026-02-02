@@ -24,7 +24,7 @@ namespace Presentation.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetEvents([FromQuery]EventParameter eventParameter)
+        public async Task<IActionResult> GetEvents([FromQuery] EventParameter eventParameter)
         {
             var eventsList = await _service.Event.GetEventsAsync(eventParameter);
             return Ok(eventsList);
@@ -61,7 +61,7 @@ namespace Presentation.Controllers
                     });
                 }
             }
-            
+
 
             var eventDto = _mapper.Map<CreateEventDto>(eventRequest);
             eventDto.Attachments = attachments;
@@ -74,6 +74,44 @@ namespace Presentation.Controllers
                 createdEvent
             );
         }
+
+        [HttpPut("{id:int}")]
+        public async Task<IActionResult> UpdateEvent(
+            int id,
+            [FromForm] UpdateEventRequest updateEventRequest
+        )
+        {
+            var newAttachments = new List<EventAttachmentDto>();
+
+            if (updateEventRequest.NewAttachmentFiles != null && updateEventRequest.NewAttachmentFiles.Any())
+            {
+                foreach (var file in updateEventRequest.NewAttachmentFiles)
+                {
+                    using var stream = file.OpenReadStream();
+                    var path = await _fileService.SaveFileAsync(
+                        stream,
+                        file.FileName,
+                        "Events"
+                    );
+
+                    newAttachments.Add(new EventAttachmentDto
+                    {
+                        OriginalFileName = file.FileName,
+                        FilePath = path,
+                        ContentType = file.ContentType,
+                        FileSize = file.Length
+                    });
+                }
+            }
+
+            var dto = _mapper.Map<UpdateEventDto>(updateEventRequest);
+            dto.NewAttachments = newAttachments;
+
+            await _service.Event.UpdateEventAsync(id, dto);
+
+            return NoContent();
+        }
+
 
         [HttpDelete("{id:int}")]
         public async Task<IActionResult> DeleteEvent(int id)

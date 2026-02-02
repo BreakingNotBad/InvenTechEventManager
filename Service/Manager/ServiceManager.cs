@@ -32,7 +32,7 @@ namespace Service.Manager
             IServiceProvider serviceProvider
         )
         {
-            _eventService = new Lazy<IEventService>(() => new EventService(repo,mapper));
+            _eventService = new Lazy<IEventService>(() => new EventService(repo,mapper,fileService));
             _companyService = new Lazy<ICompanyService>(() =>
             {
                 var createValidator = serviceProvider.GetRequiredService<

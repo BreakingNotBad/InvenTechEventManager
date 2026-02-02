@@ -21,5 +21,7 @@ public class UpdateEventDto
 
     // แทนความสัมพันธ์ด้วย Id
     public List<int>? StaffIds { get; set; }
-    public List<UpdateEventExtraEquipmentDto>? ExtraEquipments { get; set; }
+    public List<UpdateEventExtraEquipmentDto>? EventExtraEquipments { get; set; }
+    public List<UpdateEventOutsourceDto>? EventOutsources { get; set; }
+    public List<EventAttachmentDto>? NewAttachments { get; set; }
 }
