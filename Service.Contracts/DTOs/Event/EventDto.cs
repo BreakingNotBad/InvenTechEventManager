@@ -13,6 +13,9 @@ namespace Service.Contracts.DTOs.Event
         public string EventType { get; set; } = null!;
         public string Period { get; set; } = null!;
         public DateOnly MeetingDate { get; set; }
+        public TimeOnly RegistrationTime { get; set; }
+        public TimeOnly StartTime { get; set; }
+        public TimeOnly EndTime { get; set; }
         public decimal Latitude { get; set; }
         public decimal Longitude { get; set; }
         public string? Note { get; set; }

@@ -5,7 +5,7 @@ namespace Presentation.Requests.Event
 {
     public class CreateEventRequest
     {
-        public string EventName { get; set; } = null!;
+        public string? EventName { get; set; }
         public int EventType { get; set; } // Map จาก Enum ในรูปแบบ int
         public DateOnly? MeetingDate { get; set; }
         public TimeOnly? RegistrationTime { get; set; }

@@ -2,6 +2,7 @@
 using Contracts.IRepository.BaseManager;
 using Entities.Exceptions;
 using Entities.Models;
+using FluentValidation;
 using Service.Contracts.DTOs.Event;
 using Service.Contracts.IService;
 using Shared.RequestFeatures.Parameters;
@@ -12,12 +13,21 @@ namespace Service.Service
         private readonly IRepositoryManager _repo;
         private readonly IMapper _mapper;
         private readonly IFileService _fileService;
+        private readonly IValidator<CreateEventDto> _createValidator;
+        private readonly IValidator<UpdateEventDto> _updateValidator;
 
-        public EventService(IRepositoryManager repo, IMapper mapper, IFileService fileService)
+        public EventService(
+            IRepositoryManager repo, 
+            IMapper mapper, 
+            IFileService fileService,
+            IValidator<CreateEventDto> createValidator,
+            IValidator<UpdateEventDto> updateValidator)
         {
             _repo = repo;
             _mapper = mapper;
             _fileService = fileService;
+            _createValidator = createValidator;
+            _updateValidator = updateValidator;
         }
 
         public async Task<IEnumerable<EventDto>> GetEventsAsync(EventParameter eventParameter)
@@ -38,19 +48,21 @@ namespace Service.Service
             var EventResponse = _mapper.Map<EventDto>(events);
             return EventResponse;
         }
-
+        // Create Event
         public async Task<EventDto> CreateEventAsync(CreateEventDto eventDto)
         {
-            var eventEntity = _mapper.Map<Event>(eventDto);
+            await _createValidator.ValidateAndThrowAsync(eventDto);
+
+            var eventEntity = _mapper.Map<Event>(eventDto); // map จาก dto ไป entity
             // create staffevent
-            if (eventDto.StaffIds != null && eventDto.StaffIds.Any())
+            if (eventDto.StaffIds != null)
             {
                 eventEntity.EventStaff = eventDto.StaffIds
                     .Select(id => new EventStaff { StaffId = id })
                     .ToList();
             }
             // create outsource (Outsource สามารถมีได้หลาย role มั้ย?)
-            if (eventDto.EventOutsources != null && eventDto.EventOutsources.Any())
+            if (eventDto.EventOutsources != null)
             {
                 eventEntity.EventOutsources = eventDto.EventOutsources
                     .Select(x => new EventOutsource
@@ -81,8 +93,11 @@ namespace Service.Service
             var eventResponse = _mapper.Map<EventDto>(createdEvent);
             return eventResponse;
         }
+        // Update Event
         public async Task<EventDto> UpdateEventAsync(int id, UpdateEventDto eventDto)
         {
+            await _updateValidator.ValidateAndThrowAsync(eventDto);
+
             var existingEvent = await _repo.Event.GetEventByIdAsync(id,true);
 
             if (existingEvent == null)
@@ -92,17 +107,17 @@ namespace Service.Service
             _mapper.Map(eventDto, existingEvent);
 
             // Update Attachment
-            if(eventDto.NewAttachments != null)
+            if(eventDto.NewAttachments != null)// ถ้ามีการส่งไฟล์มาใหม่
             {
-                foreach(var attachment in existingEvent.EventAttachments.ToList())
+                foreach(var attachment in existingEvent.EventAttachments.ToList())// ลบไฟล์เก่า
                 {
-                    await _fileService.DeleteFileAsync(attachment.FilePath);
-                    existingEvent.EventAttachments.Remove(attachment);
+                    await _fileService.DeleteFileAsync(attachment.FilePath);// ลบไฟล์จาก storage
+                    existingEvent.EventAttachments.Remove(attachment);// ลบไฟล์จาก database
                 }
 
-                foreach(var dto in eventDto.NewAttachments)
+                foreach(var dto in eventDto.NewAttachments)// เพิ่มไฟล์ใหม่
                 {
-                    existingEvent.EventAttachments.Add(new EventAttachment
+                    existingEvent.EventAttachments.Add(new EventAttachment// เพิ่มไฟล์ใหม่ ใน database
                     {
                         OriginalFileName = dto.OriginalFileName,
                         FilePath = dto.FilePath,
@@ -112,17 +127,38 @@ namespace Service.Service
                 }
             }
             // Update EventStaff
-            if (eventDto.StaffIds != null)
-            {
-                existingEvent.EventStaff.Clear();//<<<ไว้มาแก้ logic ตรงนี้อีกที
+            if (eventDto.StaffIds != null)// ถ้ามีการส่ง staff มา
+            {   // staff ใหม่
+                    var newStaffIds = eventDto.StaffIds.ToList();
 
-                foreach (var staffId in eventDto.StaffIds)
-                {
-                    existingEvent.EventStaff.Add(new EventStaff
-                    {
-                        StaffId = staffId
-                    });
-                }
+                    // staff เดิม
+                    var existingStaffIds = existingEvent.EventStaff
+                        .Select(es => es.StaffId)
+                        .ToList();
+
+                    // remove staff
+                    var staffToRemove = existingEvent.EventStaff
+                        .Where(es => !newStaffIds.Contains(es.StaffId))
+                        .ToList();
+
+                    foreach (var staffEvent in staffToRemove)
+                    {   // ลบออกจาก EventStaff
+                        existingEvent.EventStaff.Remove(staffEvent);
+                    }
+
+                    // add staff
+                    var staffToAdd = newStaffIds
+                        .Where(id => !existingStaffIds.Contains(id))
+                        .ToList();
+
+                    foreach (var staffId in staffToAdd)
+                    {   // เพิ่มเข้าไปใน EventStaff
+                        existingEvent.EventStaff.Add(new EventStaff
+                        {
+                            StaffId = staffId
+                        });
+                    }
+
             }
             // Update EventOutsources (Outsource สามารถมีได้หลาย role มั้ย?)
             if (eventDto.EventOutsources != null)

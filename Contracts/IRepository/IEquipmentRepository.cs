@@ -9,6 +9,7 @@ namespace Contracts.IRepository
         Task<IEnumerable<Equipment>> GetEquipmentAsync(EquipmentParameter equipmentParameter ,bool trackChanges);
         Task<Equipment?> GetEquipmentByIdAsync(int id, bool trackchange);
         Task<bool> ExistsAsync(int equipmentId);
+        Task<bool> AllEquipmentIdsExistAsync(IEnumerable<int> equipmentIds);
         void CreateEquipment(Equipment equipment);
         void UpdateEquipment(Equipment equipment);
         void DeleteEquipment(Equipment equipment);

@@ -33,7 +33,24 @@ namespace Repositories.Repository
             return await FindByCondition(e => e.OutsourceId == id, trackchange)
                 .FirstOrDefaultAsync();
         }
+        public async Task<bool> AllOutsourceIdsExistAsync(IEnumerable<int> OutsourceId)
+        {
+            if (OutsourceId == null)
+                return true;
 
+            var ids = OutsourceId.Distinct().ToList();
+            if (!ids.Any())
+                return true;
+
+            var countInDb = await FindByCondition(
+                    s => ids.Contains(s.OutsourceId) && !s.IsDeleted,
+                    trackChanges: false
+                )
+                .CountAsync();
+
+            // ถ้าจำนวนใน DB เท่ากับจำนวนที่ส่งมา = มีอยู่จริงทั้งหมด
+            return countInDb == ids.Count;
+        }
         public void CreateOutsource(Outsource outsource)
         {
             Create(outsource);

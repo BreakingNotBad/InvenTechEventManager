@@ -8,6 +8,7 @@ namespace Contracts.IRepository
     {
         Task<IEnumerable<Outsource>> GetOutsourceAsyn(OutsourceParameter outsourceParameter, bool trackChanges);
         Task<Outsource?> GetOutsourceByIdAsync(int id, bool trackchange);
+        Task<bool> AllOutsourceIdsExistAsync(IEnumerable<int> OutsourceId);
         void CreateOutsource(Outsource outsource);
         void UpdateOutsource(Outsource outsource);
         void DeleteOutsource(Outsource outsource);

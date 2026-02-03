@@ -4,6 +4,7 @@ using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 using Service.Contracts.DTOs.Company;
 using Service.Contracts.DTOs.Equipment;
+using Service.Contracts.DTOs.Event;
 using Service.Contracts.DTOs.Outsource;
 using Service.Contracts.DTOs.Package;
 using Service.Contracts.DTOs.Staff;
@@ -32,7 +33,22 @@ namespace Service.Manager
             IServiceProvider serviceProvider
         )
         {
-            _eventService = new Lazy<IEventService>(() => new EventService(repo,mapper,fileService));
+            _eventService = new Lazy<IEventService>(() =>
+            {
+                var createValidator = serviceProvider.GetRequiredService<
+                    IValidator<CreateEventDto>
+                >();
+                var updateValidator = serviceProvider.GetRequiredService<
+                    IValidator<UpdateEventDto>
+                >();
+                return new EventService(
+                    repo,
+                    mapper,
+                    fileService,
+                    createValidator,
+                    updateValidator
+                );
+            });
             _companyService = new Lazy<ICompanyService>(() =>
             {
                 var createValidator = serviceProvider.GetRequiredService<

@@ -100,6 +100,25 @@ namespace Repositories.Repository
                 .ToListAsync();
         }
 
+        public async Task<bool> AllStaffIdsExistAsync(IEnumerable<int> staffIds)
+        {
+            if (staffIds == null)
+                return true;
+
+            var ids = staffIds.Distinct().ToList();
+            if (!ids.Any())
+                return true;
+
+            var countInDb = await FindByCondition(
+                    s => ids.Contains(s.StaffId) && !s.IsDeleted,
+                    trackChanges: false
+                )
+                .CountAsync();
+
+            // ถ้าจำนวนใน DB เท่ากับจำนวนที่ส่งมา = มีอยู่จริงทั้งหมด
+            return countInDb == ids.Count;
+        }
+
         public void CreateStaff(Staff staff)
         {
             Create(staff);

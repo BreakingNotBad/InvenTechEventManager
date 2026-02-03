@@ -76,6 +76,29 @@ namespace Repositories.Repository
                 .AnyAsync();
         }
 
+        public async Task<bool> AllEquipmentIdsExistAsync(IEnumerable<int> equipmentIds)
+        {
+            if (equipmentIds == null)
+                return true;
+
+            var ids = equipmentIds
+                .Distinct()
+                .ToList();
+
+            if (!ids.Any())
+                return true;
+
+            var countInDb = await FindByCondition(
+                    e => ids.Contains(e.EquipmentId) && !e.IsDeleted,
+                    trackChanges: false
+                )
+                .CountAsync();
+
+            // ถ้าจำนวนที่พบใน DB เท่ากับจำนวนที่ส่งมา
+            // แปลว่ามีอยู่จริงทั้งหมด
+            return countInDb == ids.Count;
+        }
+
         public void CreateEquipment(Equipment equipment)
         {
             Create(equipment);

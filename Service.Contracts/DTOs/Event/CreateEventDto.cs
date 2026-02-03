@@ -6,7 +6,7 @@ namespace Service.Contracts.DTOs.Event
 {
     public class CreateEventDto
     {
-        public string EventName { get; set; } = null!;
+        public string? EventName { get; set; }
         public EventType EventType { get; set; }
         public DateOnly MeetingDate { get; set; }
         public TimeOnly RegistrationTime { get; set; }

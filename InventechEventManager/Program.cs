@@ -12,6 +12,7 @@ using Service.Contracts.Manager;
 using Service.Manager;
 using Service.Service;
 using Service.Validators.Company;
+using Service.Validators.Event;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -33,6 +34,8 @@ builder.Services.AddAutoMapper(cfg =>
 // Fluent Validation
 builder.Services.AddValidatorsFromAssemblyContaining<CreateCompanyValidator>();
 builder.Services.AddValidatorsFromAssemblyContaining<CreateStaffRequestValidator>();
+builder.Services.AddValidatorsFromAssemblyContaining<CreateEventValidator>();
+builder.Services.AddValidatorsFromAssemblyContaining<UpdateEventValidator>();
 
 // ช่วยจัดการ Format มาตรฐาน
 builder.Services.AddProblemDetails();
