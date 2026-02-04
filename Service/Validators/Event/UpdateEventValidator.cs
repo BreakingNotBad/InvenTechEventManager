@@ -25,7 +25,9 @@ namespace Service.Validators.Event
 
 
             RuleFor(x => x.MeetingDate)
-                .GreaterThanOrEqualTo(DateOnly.FromDateTime(DateTime.Now))
+                .NotNull()
+                .WithMessage("Meeting date is required")
+                .GreaterThanOrEqualTo(DateOnly.FromDateTime(DateTime.Today))
                 .WithMessage("Meeting date must not be in the past");
 
             RuleFor(x => x.RegistrationTime)
