@@ -13,6 +13,8 @@ using Service.Manager;
 using Service.Service;
 using Service.Validators.Company;
 using Service.Validators.Event;
+using System.Globalization;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -74,6 +76,11 @@ builder.Services.AddCors(options =>
         }
     );
 });
+
+var culture = new CultureInfo("en-US");
+CultureInfo.DefaultThreadCurrentCulture = culture;
+CultureInfo.DefaultThreadCurrentUICulture = culture;
+
 
 var app = builder.Build();
 

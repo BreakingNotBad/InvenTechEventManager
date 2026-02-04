@@ -25,11 +25,10 @@ namespace Service.Validators.Event
             RuleFor(x => x.CompanyId)
                 .GreaterThan(0).WithMessage("Company is required");
 
-            RuleFor(x => x.PackageId)
-                .GreaterThan(0).WithMessage("Package is required");
-
             RuleFor(x => x.MeetingDate)
-                .GreaterThanOrEqualTo(DateOnly.FromDateTime(DateTime.Now))
+                .NotNull()
+                .WithMessage("Meeting date is required")
+                .GreaterThanOrEqualTo(DateOnly.FromDateTime(DateTime.Today))
                 .WithMessage("Meeting date must not be in the past");
 
             RuleFor(x => x.RegistrationTime)
@@ -42,11 +41,11 @@ namespace Service.Validators.Event
 
             RuleFor(x => x.EndTime)
                 .NotEmpty()
-                .WithMessage("End time is required");
-
-            RuleFor(x => x)
-                .Must(x => x.StartTime < x.EndTime)
-                .WithMessage("Start time must be before end time");
+                .WithMessage("End time is required")
+                .Must((x, endTime) => x.StartTime != default)
+                .WithMessage("Please select start time first")
+                .Must((x, endTime) => endTime > x.StartTime)
+                .WithMessage("End time must be after start time");
 
             RuleFor(x => x.StaffIds)
                 .NotNull()

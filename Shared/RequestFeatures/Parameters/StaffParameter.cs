@@ -13,6 +13,6 @@ namespace Shared.RequestFeatures.Parameters
         public string? Role { get; set; }
         public bool? Available { get; set; }
         public DateTime? Date { get; set; }
-        public string? Period { get; set; } // day, week, month
+        public string? Period { get; set; } 
     }
 }
