@@ -16,6 +16,8 @@ namespace Presentation.Profiles
             
             CreateMap<CreateEventExtraEquipmentRequest, CreateEventExtraEquipmentDto>();
 
+            CreateMap<CreateEventStaffRequest, CreateEventStaffDto>();
+
             CreateMap<CreateEventOutsourceRequest, CreateEventOutsourceDto>();
             //--
             CreateMap<UpdateEventRequest, UpdateEventDto>();
@@ -23,6 +25,8 @@ namespace Presentation.Profiles
             CreateMap<UpdateEventExtraEquipmentRequest, UpdateEventExtraEquipmentDto>();
 
             CreateMap<UpdateEventOutsourceRequest, UpdateEventOutsourceDto>();
+
+            CreateMap<UpdateEventStaffRequest, UpdateEventStaffDto>();
         }
     }
 }

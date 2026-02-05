@@ -54,11 +54,15 @@ namespace Service.Service
             await _createValidator.ValidateAndThrowAsync(eventDto);
 
             var eventEntity = _mapper.Map<Event>(eventDto); // map จาก dto ไป entity
-            // create staffevent
-            if (eventDto.StaffIds != null)
+                                                            // create staffevent
+            if (eventDto.EventStaffs != null)
             {
-                eventEntity.EventStaff = eventDto.StaffIds
-                    .Select(id => new EventStaff { StaffId = id })
+                eventEntity.EventStaff = eventDto.EventStaffs
+                    .Select(x => new EventStaff
+                    {
+                        StaffId = x.StaffId,
+                        RoleId = x.RoleId
+                    })
                     .ToList();
             }
             // create outsource (Outsource สามารถมีได้หลาย role มั้ย?)
@@ -74,7 +78,7 @@ namespace Service.Service
             }
 
             // create extraEquipment
-            if (eventDto.EventExtraEquipments != null);
+            if (eventDto.EventExtraEquipments != null)
             {
                 eventEntity.EventExtraEquipments = eventDto.EventExtraEquipments
                     .Select(x => new EventExtraEquipment
@@ -127,38 +131,35 @@ namespace Service.Service
                 }
             }
             // Update EventStaff
-            if (eventDto.StaffIds != null)// ถ้ามีการส่ง staff มา
-            {   // staff ใหม่
-                    var newStaffIds = eventDto.StaffIds.ToList();
+            if (eventDto.EventStaffs != null)
+            {
+                var newList = eventDto.EventStaffs;
 
-                    // staff เดิม
-                    var existingStaffIds = existingEvent.EventStaff
-                        .Select(es => es.StaffId)
-                        .ToList();
+                // REMOVE
+                var toRemove = existingEvent.EventStaff
+                    .Where(es => !newList.Any(n =>
+                        n.StaffId == es.StaffId &&
+                        n.RoleId == es.RoleId))
+                    .ToList();
 
-                    // remove staff
-                    var staffToRemove = existingEvent.EventStaff
-                        .Where(es => !newStaffIds.Contains(es.StaffId))
-                        .ToList();
+                foreach (var item in toRemove)
+                    existingEvent.EventStaff.Remove(item);
 
-                    foreach (var staffEvent in staffToRemove)
-                    {   // ลบออกจาก EventStaff
-                        existingEvent.EventStaff.Remove(staffEvent);
-                    }
+                // ADD
+                var toAdd = newList
+                    .Where(n => !existingEvent.EventStaff.Any(es =>
+                        es.StaffId == n.StaffId &&
+                        es.RoleId == n.RoleId))
+                    .ToList();
 
-                    // add staff
-                    var staffToAdd = newStaffIds
-                        .Where(id => !existingStaffIds.Contains(id))
-                        .ToList();
-
-                    foreach (var staffId in staffToAdd)
-                    {   // เพิ่มเข้าไปใน EventStaff
-                        existingEvent.EventStaff.Add(new EventStaff
-                        {
-                            StaffId = staffId
-                        });
-                    }
-
+                foreach (var item in toAdd)
+                {
+                    existingEvent.EventStaff.Add(new EventStaff
+                    {
+                        StaffId = item.StaffId,
+                        RoleId = item.RoleId
+                    });
+                }
             }
             // Update EventOutsources (Outsource สามารถมีได้หลาย role มั้ย?)
             if (eventDto.EventOutsources != null)

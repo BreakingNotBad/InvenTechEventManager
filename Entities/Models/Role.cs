@@ -10,5 +10,6 @@ namespace Entities.Models
         // Navigation properties
         public ICollection<StaffRole> StaffRoles { get; set; } = [];
         public ICollection<EventOutsource>? EventOutsources { get; set; } = [];
+        public ICollection<EventStaff>? EventStaff { get; set; } = [];
     }
 }

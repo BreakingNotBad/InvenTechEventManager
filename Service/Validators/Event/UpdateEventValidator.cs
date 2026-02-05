@@ -47,20 +47,29 @@ namespace Service.Validators.Event
                 .WithMessage("End time must be after start time");
 
 
-            RuleFor(x => x.StaffIds)
+            RuleFor(x => x.EventStaffs)
                 .NotNull()
-                .WithMessage("StaffIds is required")
+                .WithMessage("Event staff is required")
                 .NotEmpty()
-                .WithMessage("At least one staff is required");
+                .WithMessage("At least one staff is required in event");
 
-            RuleFor(x => x.StaffIds)
-                .Must(ids => ids.Distinct().Count() == ids.Count)
-                .WithMessage("Duplicate staff is not allowed");
+            RuleFor(x => x.EventStaffs)
+                .Must(list =>
+                    list.Select(x => new { x.StaffId, x.RoleId })
+                        .Distinct().Count() == list.Count)
+                .WithMessage("Duplicate staff role is not allowed");
 
-            RuleFor(x => x.StaffIds)
-                .MustAsync(async (ids, ct) =>
-                    await _repo.Staff.AllStaffIdsExistAsync(ids))
+            RuleFor(x => x.EventStaffs)
+                .MustAsync(async (list, ct) =>
+                    await _repo.Staff.AllStaffIdsExistAsync(
+                        list.Select(x => x.StaffId)))
                 .WithMessage("One or more staff do not exist");
+
+            RuleFor(x => x.EventStaffs)
+                .MustAsync(async (list, ct) =>
+                    await _repo.Role.AllRoleIdsExistAsync(
+                        list.Select(x => x.RoleId)))
+                .WithMessage("One or more role do not exist");
 
             RuleForEach(x => x.EventExtraEquipments).SetValidator(new UpdateEventExtraEquipmentValidator());
             RuleFor(x => x.EventExtraEquipments)
@@ -89,12 +98,11 @@ namespace Service.Validators.Event
                             list.Select(o => o.OutsourceId)))
                     .WithMessage("One or more outsource do not exist");
 
-
-                //RuleFor(x => x.EventOutsources!)
-                //    .MustAsync(async (list, ct) =>
-                //        await _repo.Role.AllRoleIdsExistAsync(
-                //            list.Select(o => o.RoleId)))
-                //    .WithMessage("One or more roles do not exist");
+            RuleFor(x => x.EventOutsources)
+                .MustAsync(async (list, ct) =>
+                    await _repo.Role.AllRoleIdsExistAsync(
+                        list.Select(x => x.RoleId)))
+                .WithMessage("One or more role do not exist");
 
         }
     }

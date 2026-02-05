@@ -8,5 +8,6 @@ namespace Contracts.IRepository
     {
         Task<IEnumerable<Role>> GetAllRoleAsync(RoleParameter roleParameter, bool trackChanges);
         Task<bool> RoleExistsAsync(List<int> roleId, bool trackChanges);
+        Task<bool> AllRoleIdsExistAsync(IEnumerable<int> roleIds);
     }
 }

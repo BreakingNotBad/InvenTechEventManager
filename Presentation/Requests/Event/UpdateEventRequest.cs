@@ -23,7 +23,7 @@ namespace Presentation.Requests.Event
         public int? PackageId { get; set; }
 
         public List<IFormFile>? NewAttachmentFiles { get; set; }
-        public List<int>? StaffIds { get; set; } = [];
+        public List<UpdateEventStaffRequest> EventStaffs { get; set; } = [];
         public List<UpdateEventExtraEquipmentRequest>? EventExtraEquipments { get; set; } = [];
         public List<UpdateEventOutsourceRequest>? EventOutsources { get; set; } = [];
     }

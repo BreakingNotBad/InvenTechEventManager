@@ -37,5 +37,24 @@ namespace Repositories.Repository
                 .CountAsync();
             return count == uniqueRoleId.Count;
         }
+
+        public async Task<bool> AllRoleIdsExistAsync(IEnumerable<int> roleIds)
+        {
+            if (roleIds == null)
+                return false;
+
+            var ids = roleIds.Distinct().ToList();
+
+            if (!ids.Any())
+                return false;
+
+            var count = await FindByCondition(
+                    r => ids.Contains(r.RoleId),
+                    trackChanges: false)
+                .CountAsync();
+
+            return count == ids.Count;
+        }
+
     }
 }

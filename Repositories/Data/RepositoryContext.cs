@@ -87,6 +87,12 @@ namespace Repositories.Data
                     .WithMany(s => s.EventStaff)
                     .HasForeignKey(x => x.StaffId)
                     .OnDelete(DeleteBehavior.NoAction); // "ลบ Staff ทิ้ง" (โดยที่เขายังมีชื่อผูกอยู่ในงาน) -> Database จะ Error (ห้ามลบ)
+
+                entity
+                    .HasOne(x => x.Role)
+                    .WithMany(r => r.EventStaff)
+                    .HasForeignKey(x => x.RoleId)
+                    .OnDelete(DeleteBehavior.Restrict);
             });
 
             // Event นี้ ใครเป็นคนกดสร้าง

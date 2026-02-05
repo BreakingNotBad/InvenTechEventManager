@@ -14,5 +14,9 @@ namespace Entities.Models
 
         [ForeignKey(nameof(StaffId))]
         public Staff Staff { get; set; } = null!;
+        public int RoleId { get; set; }
+
+        [ForeignKey(nameof(RoleId))]
+        public Role Role { get; set; } = null!;
     }
 }
