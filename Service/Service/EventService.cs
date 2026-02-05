@@ -135,75 +135,99 @@ namespace Service.Service
             {
                 var newList = eventDto.EventStaffs;
 
+                // ADD or UPDATE
+                foreach (var dto in newList)
+                {
+                    var existing = existingEvent.EventStaff
+                        .FirstOrDefault(x => x.StaffId == dto.StaffId);
+
+                    if (existing != null)
+                    {
+                        existing.RoleId = dto.RoleId;
+                    }
+                    else
+                    {
+                        existingEvent.EventStaff.Add(new EventStaff
+                        {
+                            StaffId = dto.StaffId,
+                            RoleId = dto.RoleId
+                        });
+                    }
+                }
+
                 // REMOVE
                 var toRemove = existingEvent.EventStaff
-                    .Where(es => !newList.Any(n =>
-                        n.StaffId == es.StaffId &&
-                        n.RoleId == es.RoleId))
+                    .Where(x => !newList.Any(n => n.StaffId == x.StaffId))
                     .ToList();
 
                 foreach (var item in toRemove)
                     existingEvent.EventStaff.Remove(item);
-
-                // ADD
-                var toAdd = newList
-                    .Where(n => !existingEvent.EventStaff.Any(es =>
-                        es.StaffId == n.StaffId &&
-                        es.RoleId == n.RoleId))
-                    .ToList();
-
-                foreach (var item in toAdd)
-                {
-                    existingEvent.EventStaff.Add(new EventStaff
-                    {
-                        StaffId = item.StaffId,
-                        RoleId = item.RoleId
-                    });
-                }
             }
-            // Update EventOutsources (Outsource สามารถมีได้หลาย role มั้ย?)
+            // Update EventOutsources
             if (eventDto.EventOutsources != null)
             {
-                foreach(var dto in existingEvent.EventOutsources)
+                var newList = eventDto.EventOutsources;
+
+                // ADD or UPDATE
+                foreach (var dto in newList)
                 {
-                    var exitsingOutsource = existingEvent.EventOutsources
+                    var existing = existingEvent.EventOutsources
                         .FirstOrDefault(x => x.OutsourceId == dto.OutsourceId);
 
-                    if(exitsingOutsource != null)
+                    if (existing != null)
                     {
-                        exitsingOutsource.RoleId = dto.RoleId;
+                        existing.RoleId = dto.RoleId;
                     }
                     else
                     {
                         existingEvent.EventOutsources.Add(new EventOutsource
                         {
                             OutsourceId = dto.OutsourceId,
-                            RoleId = dto.RoleId,
+                            RoleId = dto.RoleId
                         });
                     }
                 }
+
+                // REMOVE
+                var toRemove = existingEvent.EventOutsources
+                    .Where(x => !newList.Any(n => n.OutsourceId == x.OutsourceId))
+                    .ToList();
+
+                foreach (var item in toRemove)
+                    existingEvent.EventOutsources.Remove(item);
             }
             // Update ExtraEquipment
             if (eventDto.EventExtraEquipments != null)
             {
-                foreach(var dto in existingEvent.EventExtraEquipments)
-                {
-                    var existingExtraEquipment = existingEvent.EventExtraEquipments
-                        .FirstOrDefault(x => x?.EquipmentId == dto.EquipmentId);
+                var newList = eventDto.EventExtraEquipments;
 
-                    if(existingExtraEquipment != null)
+                // ADD or UPDATE
+                foreach (var dto in newList)
+                {
+                    var existing = existingEvent.EventExtraEquipments
+                        .FirstOrDefault(x => x.EquipmentId == dto.EquipmentId);
+
+                    if (existing != null)
                     {
-                        existingExtraEquipment.Quantity = dto.Quantity;
+                        existing.Quantity = dto.Quantity;
                     }
                     else
                     {
                         existingEvent.EventExtraEquipments.Add(new EventExtraEquipment
                         {
                             EquipmentId = dto.EquipmentId,
-                            Quantity = dto.Quantity,
+                            Quantity = dto.Quantity
                         });
                     }
                 }
+
+                // REMOVE
+                var toRemove = existingEvent.EventExtraEquipments
+                    .Where(x => !newList.Any(n => n.EquipmentId == x.EquipmentId))
+                    .ToList();
+
+                foreach (var item in toRemove)
+                    existingEvent.EventExtraEquipments.Remove(item);
             }
             _repo.Event.UpdateEvent(existingEvent);
             await _repo.SaveAsync();

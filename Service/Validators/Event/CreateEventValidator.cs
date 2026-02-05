@@ -83,22 +83,29 @@ namespace Service.Validators.Event
                         list.Select(e => e.EquipmentId)))
                 .WithMessage("One or more equipment do not exist");
 
-            RuleForEach(x => x.EventOutsources).SetValidator(new CreateEventOutsourceValidator());
-            RuleFor(x => x.EventOutsources)
-                .Must(list =>
-                    list.Select(o => o.OutsourceId).Distinct().Count() == list.Count)
-                .WithMessage("Duplicate outsource is not allowed");
-            RuleFor(x => x.EventOutsources)
-                .MustAsync(async (list, ct) =>
-                    await _repo.Outsource.AllOutsourceIdsExistAsync(
-                        list.Select(o => o.OutsourceId)))
-                .WithMessage("One or more outsource do not exist");
+            When(x => x.EventOutsources != null && x.EventOutsources.Any(), () =>
+            {
+                RuleForEach(x => x.EventOutsources)
+                    .SetValidator(new CreateEventOutsourceValidator());
 
-            RuleFor(x => x.EventOutsources)
-                .MustAsync(async (list, ct) =>
-                    await _repo.Role.AllRoleIdsExistAsync(
-                        list.Select(x => x.RoleId)))
-                .WithMessage("One or more role do not exist");
+                RuleFor(x => x.EventOutsources)
+                    .Must(list =>
+                        list.Select(o => o.OutsourceId)
+                            .Distinct().Count() == list.Count)
+                    .WithMessage("Duplicate outsource is not allowed");
+
+                RuleFor(x => x.EventOutsources)
+                    .MustAsync(async (list, ct) =>
+                        await _repo.Outsource.AllOutsourceIdsExistAsync(
+                            list.Select(o => o.OutsourceId)))
+                    .WithMessage("One or more outsource do not exist");
+
+                RuleFor(x => x.EventOutsources)
+                    .MustAsync(async (list, ct) =>
+                        await _repo.Role.AllRoleIdsExistAsync(
+                            list.Select(o => o.RoleId)))
+                    .WithMessage("One or more role do not exist");
+            });
         }
     }
 }

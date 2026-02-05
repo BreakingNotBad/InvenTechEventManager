@@ -124,6 +124,9 @@ namespace Repositories.Repository
                             .ThenInclude(s => s.StaffRoles)
                                 .ThenInclude(sr => sr.Role)
 
+                    .Include(e => e.EventStaff)
+                        .ThenInclude(es => es.Role)
+
                     .Include(e => e.EventOutsources)
                         .ThenInclude(os => os.Outsource)
 
