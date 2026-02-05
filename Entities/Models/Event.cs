@@ -11,9 +11,9 @@ namespace Entities.Models
 
     public enum EventType
     {
-        Online=1,
+        Offline=1,
         Hybrid=2,
-        Offline=3,
+        Online=3,
     }
 
     public class Event : BaseEntity
