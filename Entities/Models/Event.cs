@@ -5,15 +5,15 @@ namespace Entities.Models
 {
     public enum TimePeriod
     {
-        Morning,
-        Afternoon,
+        Morning=1,
+        Afternoon=2,
     }
 
     public enum EventType
     {
-        Online,
-        Hybrid,
-        Offline,
+        Online=1,
+        Hybrid=2,
+        Offline=3,
     }
 
     public class Event : BaseEntity
