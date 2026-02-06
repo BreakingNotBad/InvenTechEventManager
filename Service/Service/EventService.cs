@@ -55,9 +55,9 @@ namespace Service.Service
 
             var eventEntity = _mapper.Map<Event>(eventDto); // map จาก dto ไป entity
                                                             // create staffevent
-            if (eventDto.EventStaffs != null)
+            if (eventDto.EventStaff != null)
             {
-                eventEntity.EventStaff = eventDto.EventStaffs
+                eventEntity.EventStaff = eventDto.EventStaff
                     .Select(x => new EventStaff
                     {
                         StaffId = x.StaffId,

@@ -30,7 +30,8 @@ public class EventProfile : Profile
 
         CreateMap<UpdateEventStaffDto, EventStaff>();
 
-        CreateMap<EventStaff, EventStaffDto>();
+        CreateMap<EventStaff, EventStaffDto>()
+            .ForMember(d => d.EventRole,opt => opt.MapFrom(s => s.Role));
 
         CreateMap<CreateEventOutsourceDto , EventOutsource>();
 

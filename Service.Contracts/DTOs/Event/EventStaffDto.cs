@@ -11,6 +11,6 @@ namespace Service.Contracts.DTOs.Event
     public class EventStaffDto
     {
         public StaffDto Staff { get; set; } = null!;
-        public RoleDto Role { get; set; } = null!;
+        public RoleDto EventRole  { get; set; } = null!;
     }
 }

@@ -36,7 +36,11 @@ namespace Service.Validators.Event
 
             RuleFor(x => x.StartTime)
                 .NotEmpty()
-                .WithMessage("Start time is required");
+                .WithMessage("Start time is required")
+                .Must((x, startTime) => x.RegistrationTime != default)
+                .WithMessage("Please select registration time first")
+                .Must((x, startTime) => startTime > x.RegistrationTime)
+                .WithMessage("Start time must be after registration time");
 
             RuleFor(x => x.EndTime)
                 .NotEmpty()
