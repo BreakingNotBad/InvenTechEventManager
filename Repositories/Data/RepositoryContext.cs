@@ -30,7 +30,7 @@ namespace Repositories.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             // แปลง Enum เป็น String (Morning, Afternoon)
-            modelBuilder.Entity<Event>().Property(x => x.Period).HasConversion<string>();
+
 
             // Composite Keys
             modelBuilder.Entity<EquipmentSet>().HasKey(x => new { x.PackageId, x.EquipmentId });
