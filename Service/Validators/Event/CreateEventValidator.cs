@@ -32,23 +32,31 @@ namespace Service.Validators.Event
                 .WithMessage("Meeting date must not be in the past");
 
             RuleFor(x => x.RegistrationTime)
-                .NotEmpty()
+                .NotNull()
                 .WithMessage("Registration time is required");
 
             RuleFor(x => x.StartTime)
-                .NotEmpty()
+                .NotNull()
                 .WithMessage("Start time is required")
-                .Must((x, startTime) => x.RegistrationTime != default)
+                .Must((x, startTime) => x.RegistrationTime.HasValue)
                 .WithMessage("Please select registration time first")
-                .Must((x, startTime) => startTime > x.RegistrationTime)
+                .Must((x, startTime) =>
+                    startTime.HasValue &&
+                    x.RegistrationTime.HasValue &&
+                    startTime.Value > x.RegistrationTime.Value
+                )
                 .WithMessage("Start time must be after registration time");
 
             RuleFor(x => x.EndTime)
-                .NotEmpty()
+                .NotNull()
                 .WithMessage("End time is required")
-                .Must((x, endTime) => x.StartTime != default)
+                .Must((x, endTime) => x.StartTime.HasValue)
                 .WithMessage("Please select start time first")
-                .Must((x, endTime) => endTime > x.StartTime)
+                .Must((x, endTime) =>
+                    endTime.HasValue &&
+                    x.StartTime.HasValue &&
+                    endTime.Value > x.StartTime.Value
+                )
                 .WithMessage("End time must be after start time");
 
             RuleFor(x => x.EventStaff)
@@ -61,7 +69,7 @@ namespace Service.Validators.Event
                 .Must(list =>
                     list.Select(x => new { x.StaffId, x.RoleId })
                         .Distinct().Count() == list.Count)
-                .WithMessage("Duplicate staff role is not allowed");
+                .WithMessage("Duplicate staff is not allowed");
 
             RuleFor(x => x.EventStaff)
                 .MustAsync(async (list, ct) =>

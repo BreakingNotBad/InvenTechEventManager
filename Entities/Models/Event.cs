@@ -45,10 +45,10 @@ namespace Entities.Models
         public Company Company { get; set; } = null!;
 
         // Package
-        public int PackageId { get; set; }
+        public int? PackageId { get; set; }
 
         [ForeignKey(nameof(PackageId))]
-        public Package Package { get; set; } = null!;
+        public Package? Package { get; set; }
 
         // Navigation Properties
         public ICollection<EventAttachment> EventAttachments { get; set; } = [];

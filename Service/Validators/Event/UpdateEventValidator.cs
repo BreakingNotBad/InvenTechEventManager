@@ -61,7 +61,7 @@ namespace Service.Validators.Event
                 .Must(list =>
                     list.Select(x => new { x.StaffId, x.RoleId })
                         .Distinct().Count() == list.Count)
-                .WithMessage("Duplicate staff role is not allowed");
+                .WithMessage("Duplicate staff is not allowed");
 
             RuleFor(x => x.EventStaffs)
                 .MustAsync(async (list, ct) =>

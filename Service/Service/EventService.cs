@@ -53,6 +53,11 @@ namespace Service.Service
         {
             await _createValidator.ValidateAndThrowAsync(eventDto);
 
+            if (eventDto.PackageId == 0)
+            {
+                eventDto.PackageId = null;
+            }
+
             var eventEntity = _mapper.Map<Event>(eventDto); // map จาก dto ไป entity
                                                             // create staffevent
             if (eventDto.EventStaff != null)
@@ -101,6 +106,11 @@ namespace Service.Service
         public async Task<EventDto> UpdateEventAsync(int id, UpdateEventDto eventDto)
         {
             await _updateValidator.ValidateAndThrowAsync(eventDto);
+
+            if (eventDto.PackageId == 0) // ถ้า PackageId เป็น 0 ให้ตั้งค่าเป็น null
+            {
+                eventDto.PackageId = null;
+            }
 
             var existingEvent = await _repo.Event.GetEventByIdAsync(id,true);
 
