@@ -53,7 +53,7 @@ namespace Service.Service
         {
             await _createValidator.ValidateAndThrowAsync(eventDto);
 
-            if (eventDto.PackageId == 0)
+            if (eventDto.PackageId == 0)// ถ้า PackageId เป็น 0 ให้ตั้งค่าเป็น null
             {
                 eventDto.PackageId = null;
             }

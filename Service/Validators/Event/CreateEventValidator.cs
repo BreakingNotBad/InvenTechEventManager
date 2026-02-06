@@ -32,31 +32,23 @@ namespace Service.Validators.Event
                 .WithMessage("Meeting date must not be in the past");
 
             RuleFor(x => x.RegistrationTime)
-                .NotNull()
+                .NotEmpty()
                 .WithMessage("Registration time is required");
 
             RuleFor(x => x.StartTime)
-                .NotNull()
+                .NotEmpty()
                 .WithMessage("Start time is required")
-                .Must((x, startTime) => x.RegistrationTime.HasValue)
+                .Must((x, startTime) => x.RegistrationTime != default)
                 .WithMessage("Please select registration time first")
-                .Must((x, startTime) =>
-                    startTime.HasValue &&
-                    x.RegistrationTime.HasValue &&
-                    startTime.Value > x.RegistrationTime.Value
-                )
+                .Must((x, startTime) => startTime > x.RegistrationTime)
                 .WithMessage("Start time must be after registration time");
 
             RuleFor(x => x.EndTime)
-                .NotNull()
+                .NotEmpty()
                 .WithMessage("End time is required")
-                .Must((x, endTime) => x.StartTime.HasValue)
+                .Must((x, endTime) => x.StartTime != default)
                 .WithMessage("Please select start time first")
-                .Must((x, endTime) =>
-                    endTime.HasValue &&
-                    x.StartTime.HasValue &&
-                    endTime.Value > x.StartTime.Value
-                )
+                .Must((x, endTime) => endTime > x.StartTime)
                 .WithMessage("End time must be after start time");
 
             RuleFor(x => x.EventStaff)
