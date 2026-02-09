@@ -25,5 +25,6 @@ namespace Service.Contracts.DTOs.Event
         public List<CreateEventStaffDto> EventStaff { get; set; } = [];
         public List<CreateEventExtraEquipmentDto> EventExtraEquipments { get; set; } = [];
         public List<CreateEventOutsourceDto> EventOutsources { get; set; } = [];
+        public bool ForceAssign { get; set; } = false;
     }
 }

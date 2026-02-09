@@ -53,13 +53,62 @@ namespace Service.Service
         {
             await _createValidator.ValidateAndThrowAsync(eventDto);
 
+            // ================= STAFF =================
+            foreach (var staff in eventDto.EventStaff)
+            {
+                var conflictEvent =
+                    await _repo.Event.GetConflictEventByStaffAsync(
+                        staff.StaffId,
+                        eventDto.MeetingDate!.Value,
+                        eventDto.Period);
+
+                if (conflictEvent != null)
+                {
+                    if (!eventDto.ForceAssign)
+                        throw new ValidationException(
+                            $"StaffId {staff.StaffId} already has event in this period");
+
+                    //  ลบ Staff ออกจาก Event เก่า
+                    var removeItem = conflictEvent.EventStaff
+                        .First(x => x.StaffId == staff.StaffId);
+
+                    conflictEvent.EventStaff.Remove(removeItem);
+                    _repo.Event.UpdateEvent(conflictEvent);
+                }
+            }
+
+            // ================= OUTSOURCE =================
+            foreach (var os in eventDto.EventOutsources)
+            {
+                var conflictEvent =
+                    await _repo.Event.GetConflictEventByOutsourceAsync(
+                        os.OutsourceId,
+                        eventDto.MeetingDate!.Value,
+                        eventDto.Period);
+
+                if (conflictEvent != null)
+                {
+                    if (!eventDto.ForceAssign)
+                        throw new ValidationException(
+                            $"OutsourceId {os.OutsourceId} already has event in this period");
+
+                    //  ลบ Outsource ออกจาก Event เก่า
+                    var removeItem = conflictEvent.EventOutsources
+                        .First(x => x.OutsourceId == os.OutsourceId);
+
+                    conflictEvent.EventOutsources.Remove(removeItem);
+                    _repo.Event.UpdateEvent(conflictEvent);
+                }
+            }
+
+
             if (eventDto.PackageId == 0)// ถ้า PackageId เป็น 0 ให้ตั้งค่าเป็น null
             {
                 eventDto.PackageId = null;
             }
 
             var eventEntity = _mapper.Map<Event>(eventDto); // map จาก dto ไป entity
-                                                            // create staffevent
+
             if (eventDto.EventStaff != null)
             {
                 eventEntity.EventStaff = eventDto.EventStaff
@@ -70,7 +119,7 @@ namespace Service.Service
                     })
                     .ToList();
             }
-            // create outsource (Outsource สามารถมีได้หลาย role มั้ย?)
+            // create outsource 
             if (eventDto.EventOutsources != null)
             {
                 eventEntity.EventOutsources = eventDto.EventOutsources
@@ -94,6 +143,8 @@ namespace Service.Service
                     .ToList();
             }
 
+
+
             _repo.Event.Create(eventEntity);
             await _repo.SaveAsync();
 
@@ -113,6 +164,56 @@ namespace Service.Service
             }
 
             var existingEvent = await _repo.Event.GetEventByIdAsync(id,true);
+
+            // เลือกเช็คว่าพนักงานหรือนอกบริษัทว่างไหม
+            foreach (var staff in eventDto.EventStaff)
+            {
+                var conflictEvent =
+                    await _repo.Event.GetConflictEventByStaffAsync(
+                        staff.StaffId,
+                        existingEvent.MeetingDate,
+                        existingEvent.Period,
+                        existingEvent.EventId);
+
+                if (conflictEvent != null)
+                {
+                    if (!eventDto.ForceAssign)
+                        throw new ValidationException(
+                            $"StaffId {staff.StaffId} already has event in this period");
+
+                    var removeItem = conflictEvent.EventStaff
+                        .First(x => x.StaffId == staff.StaffId);
+
+                    conflictEvent.EventStaff.Remove(removeItem);
+                    _repo.Event.UpdateEvent(conflictEvent);
+                }
+            }
+
+
+            foreach (var os in eventDto.EventOutsources)
+            {
+                var conflictEvent =
+                    await _repo.Event.GetConflictEventByOutsourceAsync(
+                        os.OutsourceId,
+                        existingEvent.MeetingDate,
+                        existingEvent.Period,
+                        existingEvent.EventId);
+
+                if (conflictEvent != null)
+                {
+                    if (!eventDto.ForceAssign)
+                        throw new ValidationException(
+                            $"OutsourceId {os.OutsourceId} already has event in this period");
+
+                    var removeItem = conflictEvent.EventOutsources
+                        .First(x => x.OutsourceId == os.OutsourceId);
+
+                    conflictEvent.EventOutsources.Remove(removeItem);
+                    _repo.Event.UpdateEvent(conflictEvent);
+                }
+            }
+
+
 
             if (existingEvent == null)
             {
@@ -141,9 +242,9 @@ namespace Service.Service
                 }
             }
             // Update EventStaff
-            if (eventDto.EventStaffs != null)
+            if (eventDto.EventStaff != null)
             {
-                var newList = eventDto.EventStaffs;
+                var newList = eventDto.EventStaff;
 
                 // ADD or UPDATE
                 foreach (var dto in newList)
@@ -244,6 +345,59 @@ namespace Service.Service
             var eventResponse = _mapper.Map<EventDto>(existingEvent);
             return eventResponse;
         }
+
+        public async Task<AvailabilityResponseDto> CheckAvailabilityAsync(
+            CheckAvailabilityRequestDto request)
+        {
+            if (request.StaffId != null)
+            {
+                bool available = request.EventId.HasValue
+                    ? await _repo.Event.IsStaffAvailableAsync(
+                            request.StaffId.Value,
+                            request.MeetingDate,
+                            request.Period,
+                            request.EventId.Value)
+                    : await _repo.Event.IsStaffAvailableAsync(
+                            request.StaffId.Value,
+                            request.MeetingDate,
+                            request.Period);
+
+                return new AvailabilityResponseDto
+                {
+                    IsAvailable = available,
+                    Message = available
+                        ? "Staff is available"
+                        : "Staff already has event in this period"
+                };
+            }
+
+
+            if (request.OutsourceId != null)
+            {
+                bool available = request.EventId.HasValue
+                    ? await _repo.Event.IsOutsourceAvailableAsync(
+                            request.OutsourceId.Value,
+                            request.MeetingDate,
+                            request.Period,
+                            request.EventId.Value)
+                    : await _repo.Event.IsOutsourceAvailableAsync(
+                            request.OutsourceId.Value,
+                            request.MeetingDate,
+                            request.Period);
+
+                return new AvailabilityResponseDto
+                {
+                    IsAvailable = available,
+                    Message = available
+                        ? "Outsource is available"
+                        : "Outsource already has event in this period"
+                };
+            }
+
+            throw new ArgumentException("StaffId or OutsourceId is required");
+        }
+
+
         public async Task DeleteEvent(int id)
         {
             var existingEvent = await _repo.Event.GetEventByIdAsync(id, true);

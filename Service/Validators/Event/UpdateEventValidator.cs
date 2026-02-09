@@ -51,25 +51,25 @@ namespace Service.Validators.Event
                 .WithMessage("End time must be after start time");
 
 
-            RuleFor(x => x.EventStaffs)
+            RuleFor(x => x.EventStaff)
                 .NotNull()
                 .WithMessage("Event staff is required")
                 .NotEmpty()
                 .WithMessage("At least one staff is required in event");
 
-            RuleFor(x => x.EventStaffs)
+            RuleFor(x => x.EventStaff)
                 .Must(list =>
                     list.Select(x => new { x.StaffId, x.RoleId })
                         .Distinct().Count() == list.Count)
                 .WithMessage("Duplicate staff is not allowed");
 
-            RuleFor(x => x.EventStaffs)
+            RuleFor(x => x.EventStaff)
                 .MustAsync(async (list, ct) =>
                     await _repo.Staff.AllStaffIdsExistAsync(
                         list.Select(x => x.StaffId)))
                 .WithMessage("One or more staff do not exist");
 
-            RuleFor(x => x.EventStaffs)
+            RuleFor(x => x.EventStaff)
                 .MustAsync(async (list, ct) =>
                     await _repo.Role.AllRoleIdsExistAsync(
                         list.Select(x => x.RoleId)))

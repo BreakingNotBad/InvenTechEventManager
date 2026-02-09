@@ -83,7 +83,7 @@ namespace Presentation.Controllers
         {
             var newAttachments = new List<EventAttachmentDto>();
 
-            if (updateEventRequest.NewAttachmentFiles != null && updateEventRequest.NewAttachmentFiles.Any())
+            if (updateEventRequest.NewAttachmentFiles != null)
             {
                 foreach (var file in updateEventRequest.NewAttachmentFiles)
                 {
@@ -112,6 +112,13 @@ namespace Presentation.Controllers
             return NoContent();
         }
 
+        [HttpPost("check-availability")]
+        public async Task<IActionResult> CheckAvailability(
+            [FromBody] CheckAvailabilityRequestDto request)
+        {
+            var result = await _service.Event.CheckAvailabilityAsync(request);
+            return Ok(result);
+        }
 
         [HttpDelete("{id:int}")]
         public async Task<IActionResult> DeleteEvent(int id)

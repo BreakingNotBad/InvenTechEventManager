@@ -8,15 +8,15 @@ namespace Shared.RequestFeatures.Enums
 {
         public enum TimePeriod
         {
-            Morning=0,
-            Afternoon=1,
+            Morning=1,
+            Afternoon=2,
         }
 
         public enum EventType
         {
-            Online=0,
-            Hybrid=1,
-            Offline=2,
+            Online=1,
+            Hybrid=2,
+            Offline=3,
         }
     
 }

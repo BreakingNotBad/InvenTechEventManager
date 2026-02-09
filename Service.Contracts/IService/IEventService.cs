@@ -11,5 +11,11 @@ namespace Service.Contracts.IService
         Task <EventDto>CreateEventAsync(CreateEventDto eventDto);
         Task <EventDto>UpdateEventAsync(int id, UpdateEventDto eventDto);
         Task DeleteEvent(int id);
+
+        Task<AvailabilityResponseDto> CheckAvailabilityAsync(
+            CheckAvailabilityRequestDto request);
+
+
+
     }
 }
