@@ -234,7 +234,7 @@ namespace Repositories.Repository
             DateOnly date,
             TimePeriod period)
         {
-            return await FindAll(true)
+            return await FindAll(true) 
                 .Include(e => e.EventStaff)
                 .FirstOrDefaultAsync(e =>
                     e.MeetingDate == date &&

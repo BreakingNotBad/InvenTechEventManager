@@ -53,21 +53,17 @@ namespace Service.Service
         {
             await _createValidator.ValidateAndThrowAsync(eventDto);
 
-            // ================= STAFF =================
+            // ตรวจสอบ Staff
             foreach (var staff in eventDto.EventStaff)
             {
                 var conflictEvent =
-                    await _repo.Event.GetConflictEventByStaffAsync(
+                    await _repo.Event.GetConflictEventByStaffAsync( // ตรวจสอบว่าพนักงานมีงานในช่วงเวลานี้หรือไม่
                         staff.StaffId,
                         eventDto.MeetingDate!.Value,
                         eventDto.Period);
 
-                if (conflictEvent != null)
+                if (conflictEvent != null) // พบ Event ที่ขัดแย้ง
                 {
-                    if (!eventDto.ForceAssign)
-                        throw new ValidationException(
-                            $"StaffId {staff.StaffId} already has event in this period");
-
                     //  ลบ Staff ออกจาก Event เก่า
                     var removeItem = conflictEvent.EventStaff
                         .First(x => x.StaffId == staff.StaffId);
@@ -77,7 +73,7 @@ namespace Service.Service
                 }
             }
 
-            // ================= OUTSOURCE =================
+            // ตรวจสอบ Outsource
             foreach (var os in eventDto.EventOutsources)
             {
                 var conflictEvent =
@@ -88,10 +84,6 @@ namespace Service.Service
 
                 if (conflictEvent != null)
                 {
-                    if (!eventDto.ForceAssign)
-                        throw new ValidationException(
-                            $"OutsourceId {os.OutsourceId} already has event in this period");
-
                     //  ลบ Outsource ออกจาก Event เก่า
                     var removeItem = conflictEvent.EventOutsources
                         .First(x => x.OutsourceId == os.OutsourceId);
@@ -165,7 +157,7 @@ namespace Service.Service
 
             var existingEvent = await _repo.Event.GetEventByIdAsync(id,true);
 
-            // เลือกเช็คว่าพนักงานหรือนอกบริษัทว่างไหม
+            // ตรวจสอบ Staff
             foreach (var staff in eventDto.EventStaff)
             {
                 var conflictEvent =
@@ -177,10 +169,6 @@ namespace Service.Service
 
                 if (conflictEvent != null)
                 {
-                    if (!eventDto.ForceAssign)
-                        throw new ValidationException(
-                            $"StaffId {staff.StaffId} already has event in this period");
-
                     var removeItem = conflictEvent.EventStaff
                         .First(x => x.StaffId == staff.StaffId);
 
@@ -189,7 +177,7 @@ namespace Service.Service
                 }
             }
 
-
+            // ตรวจสอบ Outsource
             foreach (var os in eventDto.EventOutsources)
             {
                 var conflictEvent =
@@ -201,10 +189,6 @@ namespace Service.Service
 
                 if (conflictEvent != null)
                 {
-                    if (!eventDto.ForceAssign)
-                        throw new ValidationException(
-                            $"OutsourceId {os.OutsourceId} already has event in this period");
-
                     var removeItem = conflictEvent.EventOutsources
                         .First(x => x.OutsourceId == os.OutsourceId);
 

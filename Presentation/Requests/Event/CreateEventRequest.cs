@@ -24,6 +24,5 @@ namespace Presentation.Requests.Event
         public List<CreateEventStaffRequest> EventStaff { get; set; } = [];
         public List<CreateEventExtraEquipmentRequest>? EventExtraEquipments { get; set; } = [];
         public List<CreateEventOutsourceRequest>? EventOutsources { get; set; } = [];
-        public bool ForceAssign { get; set; } = false;
     }
 }
