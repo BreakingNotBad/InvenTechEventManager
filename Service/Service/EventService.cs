@@ -221,8 +221,21 @@ namespace Service.Service
             }
             _mapper.Map(eventDto, existingEvent);
 
+            if (eventDto.DeleteAttachmentIds != null)
+            {
+                var attachmentsToDelete = existingEvent.EventAttachments
+                    .Where(a => eventDto.DeleteAttachmentIds.Contains(a.EventAttachmentId))
+                    .ToList();
+
+                foreach (var attachment in attachmentsToDelete)
+                {
+                    await _fileService.DeleteFileAsync(attachment.FilePath); // ลบจาก storage
+                    existingEvent.EventAttachments.Remove(attachment);       // ลบจาก DB
+                }
+            }
+
             // Update Attachment
-            if(eventDto.NewAttachments != null)// ถ้ามีการส่งไฟล์มาใหม่
+            if (eventDto.NewAttachments != null)// ถ้ามีการส่งไฟล์มาใหม่
             {
                 foreach(var attachment in existingEvent.EventAttachments.ToList())// ลบไฟล์เก่า
                 {

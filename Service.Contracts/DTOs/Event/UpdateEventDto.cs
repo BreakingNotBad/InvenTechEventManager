@@ -23,5 +23,6 @@ public class UpdateEventDto
     public List<UpdateEventExtraEquipmentDto>? EventExtraEquipments { get; set; }
     public List<UpdateEventOutsourceDto>? EventOutsources { get; set; }
     public List<EventAttachmentDto>? NewAttachments { get; set; }
+    public List<int>? DeleteAttachmentIds { get; set; }
     public bool ForceAssign { get; set; } = false;
 }
