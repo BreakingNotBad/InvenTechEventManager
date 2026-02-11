@@ -10,9 +10,10 @@ public class UpdateEventDto
     public TimeOnly? StartTime { get; set; }
     public TimeOnly? EndTime { get; set; }
     public TimePeriod? Period { get; set; }
-
+    public EventStatus EventStatus { get; set; }
     public decimal? Latitude { get; set; }
     public decimal? Longitude { get; set; }
+    public string? Address { get; set; }
     public string? Note { get; set; }
 
     public int? CompanyId { get; set; }

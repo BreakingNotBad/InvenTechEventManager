@@ -16,8 +16,10 @@ namespace Presentation.Requests.Event
         public TimeOnly? StartTime { get; set; }
         public TimeOnly? EndTime { get; set; }
         public int? Period { get; set; }
+        public int? EventStatus { get; set; }
         public decimal? Latitude { get; set; }
         public decimal? Longitude { get; set; }
+        public string? Address { get; set; }
         public string? Note { get; set; }
         public int? CompanyId { get; set; }
         public int? PackageId { get; set; }

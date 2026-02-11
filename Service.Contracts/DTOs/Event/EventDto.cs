@@ -9,6 +9,7 @@ namespace Service.Contracts.DTOs.Event
     public class EventDto
     {
         public int EventId { get; set; }
+        public string EventStatus { get; set; } = null!;
         public string EventName { get; set; } = null!;
         public string EventType { get; set; } = null!;
         public string Period { get; set; } = null!;
@@ -18,6 +19,7 @@ namespace Service.Contracts.DTOs.Event
         public TimeOnly EndTime { get; set; }
         public decimal Latitude { get; set; }
         public decimal Longitude { get; set; }
+        public string? Address { get; set; }
         public string? Note { get; set; }
 
 

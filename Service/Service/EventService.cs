@@ -197,8 +197,6 @@ namespace Service.Service
                 }
             }
 
-
-
             if (existingEvent == null)
             {
                 throw new NotFoundException(nameof(Event), id);

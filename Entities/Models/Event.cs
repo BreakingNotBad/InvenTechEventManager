@@ -16,6 +16,12 @@ namespace Entities.Models
         Online=3,
     }
 
+    public enum EventStatus
+    {
+        Pending=1,
+        Complete=2
+    }
+
     public class Event : BaseEntity
     {
         public int EventId { get; set; }
@@ -26,8 +32,10 @@ namespace Entities.Models
         public required TimeOnly StartTime { get; set; }
         public required TimeOnly EndTime { get; set; }
         public required TimePeriod Period { get; set; }
+        public required EventStatus EventStatus { get; set; }
         public decimal Latitude { get; set; }
         public decimal Longitude { get; set; }
+        public string? Address { get; set; }
         public string? Note { get; set; }
 
         // --- Relations ---
