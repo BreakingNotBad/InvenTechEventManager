@@ -33,12 +33,54 @@ namespace Service.Service
         }
 
         // GET ALL
-        public async Task<IEnumerable<StaffDto>> GetStaffMembersAsync(StaffParameter staffParameter
-        )
+        public async Task<IEnumerable<StaffDto>> GetStaffMembersAsync(StaffParameter staffParameter)
         {
-            var staffList = await _repo.Staff.GetStaffMembersAsync(staffParameter,false);
+            var staffList = await _repo.Staff.GetStaffMembersAsync(
+                staffParameter,
+                trackChanges: false
+            );
+
             // แปลงข้อมูลจาก Entity เป็น Dto
             var staffResponse = _mapper.Map<IEnumerable<StaffDto>>(staffList);
+
+            // ถ้ามีการส่ง Date/Period มา แสดงว่าต้องใส่ Status ("Available", "WorkingToday", "Unavailable")
+            if (staffParameter.Date.HasValue && staffParameter.Period.HasValue)
+            {
+                var checkPeriod = staffParameter.Period.Value;
+
+                foreach (var staff in staffResponse)
+                {
+                    // หา Entity เพื่อเอาข้อมูล EventStaff ที่ Repo ดึงมาให้
+                    var staffEntity = staffList.First(s => s.StaffId == staff.StaffId);
+
+                    // ดึง Event ที่พนักงานคนนี้ทำงานอยู่
+                    var workingEvents =
+                        staffEntity.EventStaff?.Select(es => es.Event).ToList() ?? [];
+
+                    bool isUnavailable = false;
+                    bool hasJobToday = workingEvents.Count > 0;
+
+                    if (hasJobToday)
+                    {
+                        // เช็คว่าชนช่วงเวลาไหม
+                        isUnavailable = workingEvents.Any(e => e.Period == checkPeriod);
+                    }
+
+                    // ใส่ Status
+                    if (isUnavailable)
+                    {
+                        staff.Status = "Unavailable"; // ไม่ว่าง: มีงานชนช่วง Morning/Afternoon ที่เลือก
+                    }
+                    else if (hasJobToday)
+                    {
+                        staff.Status = "WorkingToday"; // มีงานวันนี้: แต่ว่างในช่วงเวลาที่เลือก
+                    }
+                    else
+                    {
+                        staff.Status = "Available"; // ว่าง: วันนี้ไม่มีงานที่ถูกมอบหมายเลย
+                    }
+                }
+            }
 
             return staffResponse;
         }

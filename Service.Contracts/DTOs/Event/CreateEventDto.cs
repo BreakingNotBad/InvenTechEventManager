@@ -1,6 +1,6 @@
 ﻿using Entities.Models;
 using Presentation.Requests.Event;
-using Service.Contracts.DTOs.CompanyContact;
+using Shared.RequestFeatures.Enums;
 
 namespace Service.Contracts.DTOs.Event
 {

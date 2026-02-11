@@ -1,5 +1,6 @@
 ﻿using Entities.Models;
 using Service.Contracts.DTOs.Event;
+using Shared.RequestFeatures.Enums;
 
 public class UpdateEventDto
 {

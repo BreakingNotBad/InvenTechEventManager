@@ -2,11 +2,8 @@
 
 namespace Shared.RequestFeatures.Parameters
 {
-    public class StaffParameter
+    public class CheckStaffStatusParameter
     {
-        public string? FullName { get; set; }
-        public string? Status { get; set; } // active, inactive
-        public string? Role { get; set; }
         public DateOnly? Date { get; set; }
         public TimePeriod? Period { get; set; }
     }

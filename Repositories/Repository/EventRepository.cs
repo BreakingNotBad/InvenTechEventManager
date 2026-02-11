@@ -3,6 +3,7 @@ using Entities.Models;
 using Microsoft.EntityFrameworkCore;
 using Repositories.Data;
 using Repositories.Repository.BaseManager;
+using Shared.RequestFeatures.Enums;
 using Shared.RequestFeatures.Parameters;
 
 namespace Repositories.Repository
@@ -22,7 +23,7 @@ namespace Repositories.Repository
             if (!string.IsNullOrWhiteSpace(eventParameter.EventName))
             {
                 var keyword = eventParameter.EventName.ToLower();
-                query = query.Where(e =>e.EventName.ToLower().Contains(keyword));
+                query = query.Where(e => e.EventName.ToLower().Contains(keyword));
             }
 
             // EventType
@@ -51,7 +52,7 @@ namespace Repositories.Repository
             if (!string.IsNullOrWhiteSpace(eventParameter.CompanyName))
             {
                 var companyName = eventParameter.CompanyName.ToLower();
-                query = query.Where(e =>e.Company.CompanyName.ToLower().Contains(companyName));
+                query = query.Where(e => e.Company.CompanyName.ToLower().Contains(companyName));
             }
 
             // FullName (Staff หรือ Outsource)
@@ -60,9 +61,9 @@ namespace Repositories.Repository
                 var name = eventParameter.FullName.ToLower();
 
                 query = query.Where(e =>
-                    e.EventStaff.Any(es =>(es.Staff.FullName).ToLower().Contains(name))
+                    e.EventStaff.Any(es => (es.Staff.FullName).ToLower().Contains(name))
                     ||
-                    e.EventOutsources.Any(os =>(os.Outsource.FullName).ToLower().Contains(name))
+                    e.EventOutsources.Any(os => (os.Outsource.FullName).ToLower().Contains(name))
                 );
             }
 
@@ -107,7 +108,7 @@ namespace Repositories.Repository
             return await FindByCondition(e => e.EventId == id, trackChanges)
                     .Include(e => e.Company)
                         .ThenInclude(cc => cc.CompanyContacts)
-                        
+
                     .Include(e => e.Package)
                     .ThenInclude(p => p.EquipmentSets)
                         .ThenInclude(es => es.Equipment)
@@ -234,7 +235,7 @@ namespace Repositories.Repository
             DateOnly date,
             TimePeriod period)
         {
-            return await FindAll(true) 
+            return await FindAll(true)
                 .Include(e => e.EventStaff)
                 .FirstOrDefaultAsync(e =>
                     e.MeetingDate == date &&

@@ -7,7 +7,7 @@ namespace Contracts.IRepository
     public interface IStaffRepository : IRepositoryBase<Staff>
     {
         Task<IEnumerable<Staff>> GetStaffMembersAsync(StaffParameter staffParameter, bool trackChanges);
-        Task<Staff?> GetStaffByIdAsync(int id,bool trackchange);
+        Task<Staff?> GetStaffByIdAsync(int id, bool trackchange);
         Task<IEnumerable<Staff>> GetStaffByEventIdAsync(int eventId);
         Task<bool> AllStaffIdsExistAsync(IEnumerable<int> staffIds);
         void CreateStaff(Staff staff);

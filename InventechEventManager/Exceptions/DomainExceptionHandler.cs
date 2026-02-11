@@ -12,7 +12,7 @@ namespace InventechEventManager.Exceptions
             CancellationToken cancellationToken
         )
         {
-            // ถ้าเป็น NotFoundException ให้คืนค่า 404
+            // จัดการ 404 Not Found
             if (exception is NotFoundException notFoundException)
             {
                 var problemDetails = new ProblemDetails
@@ -25,10 +25,26 @@ namespace InventechEventManager.Exceptions
                 httpContext.Response.StatusCode = StatusCodes.Status404NotFound;
                 await httpContext.Response.WriteAsJsonAsync(problemDetails, cancellationToken);
 
-                return true; // จัดการเสร็จแล้ว
+                return true;
             }
 
-            return false; // ถ้าไม่ใช่ ให้ส่งต่อ
+            // จัดการ 400 Bad Request
+            if (exception is BadRequestException badRequestException)
+            {
+                var problemDetails = new ProblemDetails
+                {
+                    Status = StatusCodes.Status400BadRequest,
+                    Title = "Bad Request",
+                    Detail = badRequestException.Message,
+                };
+
+                httpContext.Response.StatusCode = StatusCodes.Status400BadRequest;
+                await httpContext.Response.WriteAsJsonAsync(problemDetails, cancellationToken);
+
+                return true;
+            }
+
+            return false; // ถ้าไม่ใช่ทั้งคู่ ส่งไปให้ GlobalExceptionHandler จัดการต่อ (500)
         }
     }
 }

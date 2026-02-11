@@ -12,7 +12,10 @@ namespace Repositories.Repository
         public StaffRepository(RepositoryContext context)
             : base(context) { }
 
-        public async Task<IEnumerable<Staff>> GetStaffMembersAsync(StaffParameter staffParameter, bool trackChanges)
+        public async Task<IEnumerable<Staff>> GetStaffMembersAsync(
+            StaffParameter staffParameter,
+            bool trackChanges
+        )
         {
             // 1. เริ่มต้น Query
             var staffList = FindAll(trackChanges);
@@ -47,42 +50,20 @@ namespace Repositories.Repository
                 }
             }
 
-            // 5. Filter: Available
-            if (staffParameter.Available.HasValue)
+            // 5. Filter: Availability
+            if (staffParameter.Date.HasValue)
             {
-                // สมมติว่ามี field IsAvailable หรือ Logic ที่ตรงกัน
-                // staffList = staffList.Where(s => s.IsAvailable == parameters.Available.Value);
+                staffList = staffList
+                    .Include(s =>
+                        s.EventStaff!.Where(es => es.Event.MeetingDate == staffParameter.Date.Value)
+                    )
+                        .ThenInclude(es => es.Event);
             }
 
-            // 6. Filter: Date & Period
-            if (staffParameter.Date.HasValue && !string.IsNullOrWhiteSpace(staffParameter.Period))
-            {
-                var start = staffParameter.Date.Value.Date;
-                DateTime end;
-
-                // คำนวณช่วงเวลา
-                switch (staffParameter.Period.ToLower())
-                {
-                    case "week":
-                        end = start.AddDays(7);
-                        break;
-                    case "month":
-                        end = start.AddMonths(1);
-                        break;
-                    case "day":
-                    default:
-                        end = start.AddDays(1);
-                        break;
-                }
-
-                // กรองช่วงเวลา (CreatedAt >= start AND CreatedAt < end)
-                staffList = staffList.Where(s => s.CreatedAt >= start && s.CreatedAt < end);
-            }
-
-            // 7. Execute Query + Include Data
+            // 6. Execute Query + Include Data
             return await staffList
                 .Include(s => s.StaffRoles)
-                .ThenInclude(sr => sr.Role)
+                    .ThenInclude(sr => sr.Role)
                 .ToListAsync();
         }
 

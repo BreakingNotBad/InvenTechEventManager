@@ -1,25 +1,13 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using Entities.Common;
+using Shared.RequestFeatures.Enums;
 
 namespace Entities.Models
 {
-    public enum TimePeriod
-    {
-        Morning=1,
-        Afternoon=2,
-    }
-
-    public enum EventType
-    {
-        Offline=1,
-        Hybrid=2,
-        Online=3,
-    }
-
     public enum EventStatus
     {
-        Pending=1,
-        Complete=2
+        Pending = 1,
+        Complete = 2
     }
 
     public class Event : BaseEntity

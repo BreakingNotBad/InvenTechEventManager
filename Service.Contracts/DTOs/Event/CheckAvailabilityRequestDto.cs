@@ -1,4 +1,5 @@
 ﻿using Entities.Models;
+using Shared.RequestFeatures.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;

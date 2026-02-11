@@ -1,13 +1,14 @@
 ﻿using Contracts.IRepository.BaseManager;
 using Entities.Models;
+using Shared.RequestFeatures.Enums;
 using Shared.RequestFeatures.Parameters;
 
 namespace Contracts.IRepository;
 
 public interface IEventRepository : IRepositoryBase<Event>
 {
-    Task<IEnumerable<Event>> GetEventsAsync(EventParameter eventParameter ,bool trackChanges);
-    Task<Event?> GetEventByIdAsync(int id,bool trackChanges);
+    Task<IEnumerable<Event>> GetEventsAsync(EventParameter eventParameter, bool trackChanges);
+    Task<Event?> GetEventByIdAsync(int id, bool trackChanges);
 
     Task<bool> IsStaffAvailableAsync(
         int staffId,
