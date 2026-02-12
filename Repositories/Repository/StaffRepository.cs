@@ -36,18 +36,10 @@ namespace Repositories.Repository
                 );
             }
 
-            // 4. Filter: Status (Active/Inactive -> IsDeleted)
-            if (!string.IsNullOrWhiteSpace(staffParameter.Status))
+            // 4. Filter: IsDeleted
+            if (staffParameter.IsDeleted.HasValue)
             {
-                var status = staffParameter.Status.Trim().ToLower();
-                if (status == "active" || status == "false")
-                {
-                    staffList = staffList.Where(s => !s.IsDeleted);
-                }
-                else if (status == "inactive" || status == "true")
-                {
-                    staffList = staffList.Where(s => s.IsDeleted);
-                }
+                staffList = staffList.Where(s => s.IsDeleted == staffParameter.IsDeleted.Value);
             }
 
             // 5. Filter: Availability
