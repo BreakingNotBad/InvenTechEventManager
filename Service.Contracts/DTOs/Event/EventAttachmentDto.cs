@@ -8,6 +8,7 @@ namespace Service.Contracts.DTOs.Event
 {
     public class EventAttachmentDto
     {
+        public int EventAttachmentId { get; set; }
         public string OriginalFileName { get; set; } = null!;
         public string FilePath { get; set; } = null!;
         public string? ContentType { get; set; }
