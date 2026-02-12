@@ -219,12 +219,6 @@ namespace Service.Service
             // Update Attachment
             if (eventDto.NewAttachments != null)// ถ้ามีการส่งไฟล์มาใหม่
             {
-                foreach(var attachment in existingEvent.EventAttachments.ToList())// ลบไฟล์เก่า
-                {
-                    await _fileService.DeleteFileAsync(attachment.FilePath);// ลบไฟล์จาก storage
-                    existingEvent.EventAttachments.Remove(attachment);// ลบไฟล์จาก database
-                }
-
                 foreach(var dto in eventDto.NewAttachments)// เพิ่มไฟล์ใหม่
                 {
                     existingEvent.EventAttachments.Add(new EventAttachment// เพิ่มไฟล์ใหม่ ใน database
