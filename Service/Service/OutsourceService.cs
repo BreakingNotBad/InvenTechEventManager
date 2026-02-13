@@ -30,11 +30,51 @@ namespace Service.Service
 
         public async Task<IEnumerable<OutsourceDto>> GetOutsources(OutsourceParameter outsourceParameter)
         {
-            var outsourcesList = await _repo.Outsource.GetOutsourceAsyn(outsourceParameter,false);
+            var outsourcesList =
+                await _repo.Outsource.GetOutsourceAsyn(outsourceParameter, false);
 
             var outsourceResponse = _mapper.Map<IEnumerable<OutsourceDto>>(outsourcesList);
+
+            // ถ้ามีการส่ง Date/Period มา → ต้องคำนวณ Status
+            if (outsourceParameter.Date.HasValue && outsourceParameter.Period.HasValue)
+            {
+                var checkPeriod = outsourceParameter.Period.Value;
+
+                foreach (var outsource in outsourceResponse)
+                {
+                    // หา Entity
+                    var outsourceEntity = outsourcesList.First(o => o.OutsourceId == outsource.OutsourceId);
+
+                    // ดึง Event ที่ outsource คนนี้ทำงานอยู่
+                    var workingEvents = outsourceEntity.EventOutsources?.Select(eo => eo.Event).ToList() ?? [];
+
+                    bool isUnavailable = false;
+                    bool hasJobToday = workingEvents.Count > 0;
+
+                    if (hasJobToday)
+                    {
+                        isUnavailable =
+                            workingEvents.Any(e => e.Period == checkPeriod);
+                    }
+
+                    if (isUnavailable)
+                    {
+                        outsource.Status = "Unavailable";
+                    }
+                    else if (hasJobToday)
+                    {
+                        outsource.Status = "WorkingToday";
+                    }
+                    else
+                    {
+                        outsource.Status = "Available";
+                    }
+                }
+            }
+
             return outsourceResponse;
         }
+
 
         public async Task<OutsourceDto?> GetOutsourcesByIdAsync(int id)
         {

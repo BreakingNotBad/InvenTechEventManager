@@ -41,12 +41,12 @@ namespace Repositories.Repository
                 query = query.Where(e => (int)e.Period == periodValue);
             }
 
-            //// Status
-            //if (!string.IsNullOrWhiteSpace(eventParameter.Status))
-            //{
-            //    var status = eventParameter.Status.ToLower();
-            //    query = query.Where(e => e.Status.ToLower() == status);
-            //}
+            // Status
+            if (!string.IsNullOrWhiteSpace(eventParameter.Status))
+            {
+                var status = eventParameter.Status.ToLower();
+                query = query.Where(e => e.EventStatus.ToString().ToLower().Contains(status));
+            }
 
             // CompanyName
             if (!string.IsNullOrWhiteSpace(eventParameter.CompanyName))
