@@ -21,6 +21,7 @@ public class UpdateEventDto
     public int? PackageId { get; set; }
 
     // แทนความสัมพันธ์ด้วย Id
+    public List<UpdateEventRoleRequirementDto> Requirements { get; set; } = [];
     public List<UpdateEventStaffDto>? EventStaff { get; set; } = [];
     public List<UpdateEventExtraEquipmentDto>? EventExtraEquipments { get; set; }
     public List<UpdateEventOutsourceDto>? EventOutsources { get; set; }

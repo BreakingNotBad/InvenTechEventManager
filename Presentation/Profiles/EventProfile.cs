@@ -27,6 +27,10 @@ namespace Presentation.Profiles
             CreateMap<UpdateEventOutsourceRequest, UpdateEventOutsourceDto>();
 
             CreateMap<UpdateEventStaffRequest, UpdateEventStaffDto>();
+
+            CreateMap<CreateEventRoleRequirementRequest, CreateEventRoleRequirementDto>();
+
+            CreateMap<UpdateEventRoleRequirementRequest, UpdateEventRoleRequirementDto>();
         }
     }
 }

@@ -23,6 +23,7 @@ namespace Presentation.Requests.Event
 
 
         public List<IFormFile>? AttachmentFiles { get; set; }
+        public List<CreateEventRoleRequirementRequest> Requirements { get; set; } = [];
         public List<CreateEventStaffRequest> EventStaff { get; set; } = [];
         public List<CreateEventExtraEquipmentRequest>? EventExtraEquipments { get; set; } = [];
         public List<CreateEventOutsourceRequest>? EventOutsources { get; set; } = [];

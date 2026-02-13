@@ -24,6 +24,7 @@ namespace Service.Contracts.DTOs.Event
 
         // ไฟล์แนบที่ Save ลง Disk แล้ว (เก็บเป็น Path)
         public List<EventAttachmentDto>? Attachments { get; set; } = [];
+        public List<CreateEventRoleRequirementDto> Requirements { get; set; } = [];
         public List<CreateEventStaffDto> EventStaff { get; set; } = [];
         public List<CreateEventExtraEquipmentDto> EventExtraEquipments { get; set; } = [];
         public List<CreateEventOutsourceDto> EventOutsources { get; set; } = [];

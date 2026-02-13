@@ -1,11 +1,12 @@
-﻿using System;
+﻿using Contracts.IRepository.BaseManager;
+using Entities.Models;
+using FluentValidation;
+using Service.Contracts.DTOs.Event;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using FluentValidation;
-using Contracts.IRepository.BaseManager;
-using Service.Contracts.DTOs.Event;
 namespace Service.Validators.Event
 {
     public class UpdateEventValidator : AbstractValidator<UpdateEventDto>
@@ -112,6 +113,46 @@ namespace Service.Validators.Event
                     .WithMessage("One or more role do not exist");
             });
 
+            RuleFor(x => x.Requirements)
+                .NotEmpty();
+
+            RuleFor(x => x.Requirements)
+                .Must(r => r.All(x => x.Quantity > 0));
+
+            RuleFor(x => x)
+                .Must(x =>
+                {
+                    var staffRoles = x.Requirements
+                        .Where(r => r.SourceType == WorkerSourceType.InternalStaff)
+                        .Select(r => r.RoleId)
+                        .ToHashSet();
+
+                    var outsourceRoles = x.Requirements
+                        .Where(r => r.SourceType == WorkerSourceType.Outsource)
+                        .Select(r => r.RoleId)
+                        .ToHashSet();
+
+                    return x.EventStaff.All(s => staffRoles.Contains(s.RoleId))
+                        && x.EventOutsources.All(o => outsourceRoles.Contains(o.RoleId));
+                })
+                .WithMessage("Assigned role does not exist in requirement");
+
+            RuleFor(x => x)
+                .Must(x =>
+                {
+                    foreach (var req in x.Requirements)
+                    {
+                        int current = req.SourceType == WorkerSourceType.InternalStaff
+                            ? x.EventStaff.Count(s => s.RoleId == req.RoleId)
+                            : x.EventOutsources.Count(o => o.RoleId == req.RoleId);
+
+                        if (current > req.Quantity)
+                            return false;
+                    }
+
+                    return true;
+                })
+                .WithMessage("Assigned people exceed required quantity");
         }
     }
 }

@@ -26,10 +26,23 @@ namespace Repositories.Data
         public DbSet<Category> Categories { get; set; } = null!;
         public DbSet<Package> Packages { get; set; } = null!;
         public DbSet<EventAttachment> EventAttachments { get; set; } = null!;
+        public DbSet<EventRoleRequirement> EventRoleRequirements { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            // แปลง Enum เป็น String (Morning, Afternoon)
+            modelBuilder.Entity<EventRoleRequirement>(entity =>
+            {
+                entity.HasKey(x => new { x.EventId, x.RoleId, x.SourceType });
+
+                entity.HasOne(x => x.Event)
+                      .WithMany(e => e.RoleRequirements)
+                      .HasForeignKey(x => x.EventId);
+
+                entity.HasOne(x => x.Role)
+                      .WithMany()
+                      .HasForeignKey(x => x.RoleId);
+            });
 
 
             // Composite Keys

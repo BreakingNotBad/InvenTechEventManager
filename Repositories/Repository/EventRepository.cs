@@ -82,6 +82,9 @@ namespace Repositories.Repository
 
                 .Include(e => e.EventAttachments)
 
+                .Include(e => e.RoleRequirements)
+                    .ThenInclude(rr => rr.Role)
+
                 .Include(e => e.EventStaff)
                     .ThenInclude(es => es.Staff)
                         .ThenInclude(s => s.StaffRoles)
@@ -119,6 +122,9 @@ namespace Repositories.Repository
                             .ThenInclude(sr => sr.Role)
 
                     .Include(e => e.EventAttachments)
+
+                    .Include(e => e.RoleRequirements)
+                        .ThenInclude(rr => rr.Role)
 
                     .Include(e => e.EventStaff)
                         .ThenInclude(es => es.Staff)

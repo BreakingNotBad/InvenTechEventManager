@@ -10,7 +10,8 @@ public class EventProfile : Profile
 
         CreateMap<Event, EventDto>()
             .ForMember(dest => dest.EventType, opt => opt.MapFrom(src => src.EventType.ToString())).ForMember(dest => dest.EventStaff,opt => opt.MapFrom(src => src.EventStaff))
-            .ForMember(dest => dest.EventAttachments, opt => opt.MapFrom(src => src.EventAttachments));
+            .ForMember(dest => dest.EventAttachments, opt => opt.MapFrom(src => src.EventAttachments))
+            .ForMember(dest => dest.Requirements,opt => opt.MapFrom(src => src.RoleRequirements));
 
         CreateMap<CreateEventDto, Event>()
              .ForMember(dest => dest.EventAttachments, opt => opt.MapFrom(src => src.Attachments))
@@ -40,6 +41,12 @@ public class EventProfile : Profile
         CreateMap<UpdateEventOutsourceDto , EventOutsource>();
 
         CreateMap<UpdateEventExtraEquipmentDto , EventExtraEquipment>();
+
+        CreateMap<CreateEventRoleRequirementDto , EventRoleRequirement>();
+
+        CreateMap<UpdateEventRoleRequirementDto , EventRoleRequirement>();
+
+        CreateMap<EventRoleRequirement, EventRoleRequirementDto>();
 
 
 

@@ -29,6 +29,7 @@ namespace Service.Contracts.DTOs.Event
 
 
         public ICollection<EventAttachmentDto> EventAttachments { get; set; } = [];
+        public ICollection<EventRoleRequirementDto> Requirements { get; set; } = [];
         public ICollection<EventStaffDto> EventStaff { get; set; } = [];
         public ICollection<EventOutsourceDto> EventOutsources { get; set; } = [];
         public ICollection<EventExtraEquipmentDto> EventExtraEquipments { get; set; } = [];

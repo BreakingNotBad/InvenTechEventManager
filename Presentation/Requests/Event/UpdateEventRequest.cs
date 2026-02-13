@@ -26,6 +26,7 @@ namespace Presentation.Requests.Event
 
         public List<IFormFile>? NewAttachmentFiles { get; set; }
         public List<int>? DeleteAttachmentIds { get; set; }
+        public List<UpdateEventRoleRequirementRequest> Requirements { get; set; } = [];
         public List<UpdateEventStaffRequest> EventStaff { get; set; } = [];
         public List<UpdateEventExtraEquipmentRequest>? EventExtraEquipments { get; set; } = [];
         public List<UpdateEventOutsourceRequest>? EventOutsources { get; set; } = [];

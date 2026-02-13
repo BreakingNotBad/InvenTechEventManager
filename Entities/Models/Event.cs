@@ -51,5 +51,6 @@ namespace Entities.Models
         public ICollection<EventStaff> EventStaff { get; set; } = [];
         public ICollection<EventOutsource> EventOutsources { get; set; } = [];
         public ICollection<EventExtraEquipment> EventExtraEquipments { get; set; } = [];
+        public ICollection<EventRoleRequirement> RoleRequirements { get; set; } = [];
     }
 }

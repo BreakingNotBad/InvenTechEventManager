@@ -101,6 +101,7 @@ namespace Service.Service
 
             var eventEntity = _mapper.Map<Event>(eventDto); // map จาก dto ไป entity
 
+            // create EventStaff
             if (eventDto.EventStaff != null)
             {
                 eventEntity.EventStaff = eventDto.EventStaff
@@ -135,6 +136,20 @@ namespace Service.Service
                     .ToList();
             }
 
+            eventEntity.RoleRequirements = eventDto.Requirements
+                .Select(r => new EventRoleRequirement
+                {
+                    RoleId = r.RoleId,
+                    Quantity = r.Quantity,
+                    SourceType = r.SourceType
+
+                }).ToList();
+
+            eventEntity.EventStatus =
+                CalculateEventStatus(
+                    eventEntity.RoleRequirements.ToList(),
+                    eventEntity.EventStaff.ToList(),
+                    eventEntity.EventOutsources.ToList());
 
 
             _repo.Event.Create(eventEntity);
@@ -330,6 +345,13 @@ namespace Service.Service
                     existingEvent.EventExtraEquipments.Remove(item);
             }
             _repo.Event.UpdateEvent(existingEvent);
+
+            existingEvent.EventStatus =
+                CalculateEventStatus(
+                    existingEvent.RoleRequirements.ToList(),
+                    existingEvent.EventStaff.ToList(),
+                    existingEvent.EventOutsources.ToList());
+
             await _repo.SaveAsync();
             var eventResponse = _mapper.Map<EventDto>(existingEvent);
             return eventResponse;
@@ -397,5 +419,26 @@ namespace Service.Service
             _repo.Event.DeleteEvent(existingEvent);
             await _repo.SaveAsync();
         }
+
+
+        // คำนวณสถานะของงานอีเวนต์
+        private EventStatus CalculateEventStatus(
+            List<EventRoleRequirement> requirements,
+            List<EventStaff> staffs,
+            List<EventOutsource> outsources)
+        {
+            foreach (var req in requirements)
+            {
+                int current = req.SourceType == WorkerSourceType.InternalStaff
+                    ? staffs.Count(s => s.RoleId == req.RoleId)
+                    : outsources.Count(o => o.RoleId == req.RoleId);
+
+                if (current < req.Quantity)
+                    return EventStatus.Pending;
+            }
+
+            return EventStatus.Complete;
+        }
+
     }
 }
