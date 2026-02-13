@@ -255,6 +255,42 @@ namespace Service.Service
                 }
             }
 
+            // Update Requirements
+            if (eventDto.Requirements != null)
+            {
+                var newList = eventDto.Requirements;
+
+                // ADD or UPDATE
+                foreach (var dto in newList)
+                {
+                    var existing = existingEvent.RoleRequirements
+                        .FirstOrDefault(x => x.RoleId == dto.RoleId);
+
+                    if (existing != null)
+                    {
+                        existing.Quantity = dto.Quantity;
+                        existing.SourceType = dto.SourceType;
+                    }
+                    else
+                    {
+                        existingEvent.RoleRequirements.Add(new EventRoleRequirement
+                        {
+                            RoleId = dto.RoleId,
+                            Quantity = dto.Quantity,
+                            SourceType = dto.SourceType
+                        });
+                    }
+                }
+
+                // REMOVE
+                var toRemove = existingEvent.RoleRequirements
+                    .Where(x => !newList.Any(n => n.RoleId == x.RoleId))
+                    .ToList();
+
+                foreach (var item in toRemove)
+                    existingEvent.RoleRequirements.Remove(item);
+            }
+
             // Update Attachment
             if (eventDto.NewAttachments != null)// ถ้ามีการส่งไฟล์มาใหม่
             {
