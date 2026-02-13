@@ -22,6 +22,15 @@ namespace Repositories.Repository
             {
                 items = items.Where(o => o.FullName.ToLower().Contains(outsourceParameter.FullName.ToLower()));
             }
+            
+            if (outsourceParameter.Date.HasValue)
+            {
+                items = items
+                    .Include(s =>
+                        s.EventOutsources!.Where(es => es.Event.MeetingDate == outsourceParameter.Date.Value)
+                    )
+                        .ThenInclude(es => es.Event);
+            }
 
             // 3. Execute Query พร้อมเรียงลำดับ (ควรเรียงเสมอเพื่อให้ข้อมูลไม่กระโดด)
             return await items

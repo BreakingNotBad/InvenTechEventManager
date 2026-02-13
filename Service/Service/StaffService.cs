@@ -73,7 +73,7 @@ namespace Service.Service
                     }
                     else if (hasJobToday)
                     {
-                        staff.Status = "WorkingToday"; // มีงานวันนี้: แต่ว่างในช่วงเวลาที่เลือก
+                        staff.Status = "Working"; // มีงานวันนี้: แต่ว่างในช่วงเวลาที่เลือก
                     }
                     else
                     {

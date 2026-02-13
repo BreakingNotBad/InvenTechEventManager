@@ -63,7 +63,7 @@ namespace Service.Service
                     }
                     else if (hasJobToday)
                     {
-                        outsource.Status = "WorkingToday";
+                        outsource.Status = "Working";
                     }
                     else
                     {
