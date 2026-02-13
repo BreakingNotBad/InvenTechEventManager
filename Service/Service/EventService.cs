@@ -344,15 +344,17 @@ namespace Service.Service
                 foreach (var item in toRemove)
                     existingEvent.EventExtraEquipments.Remove(item);
             }
-            _repo.Event.UpdateEvent(existingEvent);
-
+            // คำนวณสถานะใหม่
             existingEvent.EventStatus =
                 CalculateEventStatus(
                     existingEvent.RoleRequirements.ToList(),
                     existingEvent.EventStaff.ToList(),
                     existingEvent.EventOutsources.ToList());
 
+            // update + save รอบเดียว
+            _repo.Event.UpdateEvent(existingEvent);
             await _repo.SaveAsync();
+
             var eventResponse = _mapper.Map<EventDto>(existingEvent);
             return eventResponse;
         }

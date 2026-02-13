@@ -17,7 +17,8 @@ public class EventProfile : Profile
              .ForMember(dest => dest.EventAttachments, opt => opt.MapFrom(src => src.Attachments))
              .ForMember(dest => dest.EventStaff, opt => opt.Ignore());
 
-        CreateMap<UpdateEventDto, Event>();
+        CreateMap<UpdateEventDto, Event>()
+            .ForMember(dest => dest.RoleRequirements, opt => opt.Ignore());
 
         CreateMap<EventAttachmentDto, EventAttachment>();
 
