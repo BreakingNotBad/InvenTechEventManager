@@ -260,35 +260,42 @@ namespace Service.Service
             {
                 var newList = eventDto.Requirements;
 
-                // ADD or UPDATE
-                foreach (var dto in newList)
-                {
-                    var existing = existingEvent.RoleRequirements
-                        .FirstOrDefault(x => x.RoleId == dto.RoleId);
-
-                    if (existing != null)
-                    {
-                        existing.Quantity = dto.Quantity;
-                        existing.SourceType = dto.SourceType;
-                    }
-                    else
-                    {
-                        existingEvent.RoleRequirements.Add(new EventRoleRequirement
-                        {
-                            RoleId = dto.RoleId,
-                            Quantity = dto.Quantity,
-                            SourceType = dto.SourceType
-                        });
-                    }
-                }
-
-                // REMOVE
+                // ลบของเก่าที่ไม่มีอยู่ใน request
                 var toRemove = existingEvent.RoleRequirements
-                    .Where(x => !newList.Any(n => n.RoleId == x.RoleId))
+                    .Where(old =>
+                        !newList.Any(n =>
+                            n.RoleId == old.RoleId &&
+                            n.SourceType == old.SourceType))
                     .ToList();
 
                 foreach (var item in toRemove)
                     existingEvent.RoleRequirements.Remove(item);
+
+                // Add ใหม่ หรือ Update Quantity
+                foreach (var dto in newList)
+                {
+                    var existing = existingEvent.RoleRequirements
+                        .FirstOrDefault(x =>
+                            x.RoleId == dto.RoleId &&
+                            x.SourceType == dto.SourceType);
+
+                    if (existing != null)
+                    {
+                        // อัปเดตได้เฉพาะ Quantity
+                        existing.Quantity = dto.Quantity;
+                    }
+                    else
+                    {
+                        // ต้อง Add ใหม่
+                        existingEvent.RoleRequirements.Add(
+                            new EventRoleRequirement
+                            {
+                                RoleId = dto.RoleId,
+                                SourceType = dto.SourceType,
+                                Quantity = dto.Quantity
+                            });
+                    }
+                }
             }
 
             // Update Attachment
