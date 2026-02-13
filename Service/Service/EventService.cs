@@ -69,7 +69,13 @@ namespace Service.Service
                         .First(x => x.StaffId == staff.StaffId);
 
                     conflictEvent.EventStaff.Remove(removeItem);
+                    conflictEvent.EventStatus =
+                        CalculateEventStatus(
+                            conflictEvent.RoleRequirements.ToList(),
+                            conflictEvent.EventStaff.ToList(),
+                            conflictEvent.EventOutsources.ToList());
                     _repo.Event.UpdateEvent(conflictEvent);
+                    await _repo.SaveAsync();
                 }
             }
 
@@ -89,7 +95,13 @@ namespace Service.Service
                         .First(x => x.OutsourceId == os.OutsourceId);
 
                     conflictEvent.EventOutsources.Remove(removeItem);
+                    conflictEvent.EventStatus =
+                        CalculateEventStatus(
+                            conflictEvent.RoleRequirements.ToList(),
+                            conflictEvent.EventStaff.ToList(),
+                            conflictEvent.EventOutsources.ToList());
                     _repo.Event.UpdateEvent(conflictEvent);
+                    await _repo.SaveAsync();
                 }
             }
 
@@ -188,7 +200,13 @@ namespace Service.Service
                         .First(x => x.StaffId == staff.StaffId);
 
                     conflictEvent.EventStaff.Remove(removeItem);
+                    conflictEvent.EventStatus =
+                        CalculateEventStatus(
+                            conflictEvent.RoleRequirements.ToList(),
+                            conflictEvent.EventStaff.ToList(),
+                            conflictEvent.EventOutsources.ToList());
                     _repo.Event.UpdateEvent(conflictEvent);
+                    await _repo.SaveAsync();
                 }
             }
 
@@ -208,7 +226,13 @@ namespace Service.Service
                         .First(x => x.OutsourceId == os.OutsourceId);
 
                     conflictEvent.EventOutsources.Remove(removeItem);
+                    conflictEvent.EventStatus =
+                        CalculateEventStatus(
+                            conflictEvent.RoleRequirements.ToList(),
+                            conflictEvent.EventStaff.ToList(),
+                            conflictEvent.EventOutsources.ToList());
                     _repo.Event.UpdateEvent(conflictEvent);
+                    await _repo.SaveAsync();
                 }
             }
 
@@ -429,6 +453,9 @@ namespace Service.Service
             List<EventStaff> staffs,
             List<EventOutsource> outsources)
         {
+            if (requirements == null || !requirements.Any())
+                return EventStatus.Pending; 
+
             foreach (var req in requirements)
             {
                 int current = req.SourceType == WorkerSourceType.InternalStaff
@@ -441,6 +468,7 @@ namespace Service.Service
 
             return EventStatus.Complete;
         }
+
 
     }
 }

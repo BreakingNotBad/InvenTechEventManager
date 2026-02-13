@@ -47,7 +47,8 @@ public class EventProfile : Profile
 
         CreateMap<UpdateEventRoleRequirementDto , EventRoleRequirement>();
 
-        CreateMap<EventRoleRequirement, EventRoleRequirementDto>();
+        CreateMap<EventRoleRequirement, EventRoleRequirementDto>()
+            .ForMember(d => d.RoleName,opt => opt.MapFrom(s => s.Role.RoleName));
 
 
 

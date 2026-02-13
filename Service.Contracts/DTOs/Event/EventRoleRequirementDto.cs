@@ -10,6 +10,7 @@ namespace Service.Contracts.DTOs.Event
     public class EventRoleRequirementDto
     {
         public int RoleId { get; set; }
+        public string? RoleName { get; set; }
         public int Quantity { get; set; }
         public WorkerSourceType SourceType { get; set; }
     }
