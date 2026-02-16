@@ -44,9 +44,9 @@ namespace Service.Service
             var staffResponse = _mapper.Map<IEnumerable<StaffDto>>(staffList);
 
             // ถ้ามีการส่ง Date/Period มา แสดงว่าต้องใส่ Status ("Available", "WorkingToday", "Unavailable")
-            if (staffParameter.Date.HasValue && staffParameter.Period.HasValue)
+            if (staffParameter.Date.HasValue)
             {
-                var checkPeriod = staffParameter.Period.Value;
+                var checkPeriod = staffParameter.Period.HasValue;
 
                 foreach (var staff in staffResponse)
                 {
@@ -60,10 +60,11 @@ namespace Service.Service
                     bool isUnavailable = false;
                     bool hasJobToday = workingEvents.Count > 0;
 
-                    if (hasJobToday)
+
+                    if (hasJobToday && checkPeriod)
                     {
                         // เช็คว่าชนช่วงเวลาไหม
-                        isUnavailable = workingEvents.Any(e => e.Period == checkPeriod);
+                        isUnavailable = workingEvents.Any(e => e.Period == staffParameter.Period!.Value);
                     }
 
                     // ใส่ Status
