@@ -147,94 +147,94 @@ namespace Repositories.Repository
         }
 
         // เช็คว่าพนักงานว่างหรือไม่ (สร้างงานใหม่)
-        public async Task<bool> IsStaffAvailableAsync(
-            int staffId,
-            DateOnly date,
-            TimePeriod period)
-        {
-            return !await FindAll(false)
-                .AnyAsync(e =>
-                    e.MeetingDate == date &&
-                    e.Period == period &&
-                    e.EventStaff.Any(es => es.StaffId == staffId)
-                );
-        }
+        //public async Task<bool> IsStaffAvailableAsync(
+        //    int staffId,
+        //    DateOnly date,
+        //    TimePeriod period)
+        //{
+        //    return !await FindAll(false)
+        //        .AnyAsync(e =>
+        //            e.MeetingDate == date &&
+        //            e.Period == period &&
+        //            e.EventStaff.Any(es => es.StaffId == staffId)
+        //        );
+        //}
 
-        public async Task<bool> IsOutsourceAvailableAsync(
-            int outsourceId,
-            DateOnly date,
-            TimePeriod period)
-        {
-            return !await FindAll(false)
-                .AnyAsync(e =>
-                    e.MeetingDate == date &&
-                    e.Period == period &&
-                    e.EventOutsources.Any(os => os.OutsourceId == outsourceId)
-                );
-        }
+        //public async Task<bool> IsOutsourceAvailableAsync(
+        //    int outsourceId,
+        //    DateOnly date,
+        //    TimePeriod period)
+        //{
+        //    return !await FindAll(false)
+        //        .AnyAsync(e =>
+        //            e.MeetingDate == date &&
+        //            e.Period == period &&
+        //            e.EventOutsources.Any(os => os.OutsourceId == outsourceId)
+        //        );
+        //}
 
 
         // เช็คว่าพนักงานว่างหรือไม่ (แก้ไขงาน โดยไม่เอางานตัวเองไปคิด)
-        public async Task<bool> IsStaffAvailableAsync(
-            int staffId,
-            DateOnly date,
-            TimePeriod period,
-            int excludeEventId)
-        {
-            return !await FindAll(false)
-                .AnyAsync(e =>
-                    e.EventId != excludeEventId &&
-                    e.MeetingDate == date &&
-                    e.Period == period &&
-                    e.EventStaff.Any(es => es.StaffId == staffId)
-                );
-        }
+        //public async Task<bool> IsStaffAvailableAsync(
+        //    int staffId,
+        //    DateOnly date,
+        //    TimePeriod period,
+        //    int excludeEventId)
+        //{
+        //    return !await FindAll(false)
+        //        .AnyAsync(e =>
+        //            e.EventId != excludeEventId &&
+        //            e.MeetingDate == date &&
+        //            e.Period == period &&
+        //            e.EventStaff.Any(es => es.StaffId == staffId)
+        //        );
+        //}
 
-        public async Task<bool> IsOutsourceAvailableAsync(
-            int outsourceId,
-            DateOnly date,
-            TimePeriod period,
-            int excludeEventId)
-        {
-            return !await FindAll(false)
-                .AnyAsync(e =>
-                    e.EventId != excludeEventId &&
-                    e.MeetingDate == date &&
-                    e.Period == period &&
-                    e.EventOutsources.Any(os => os.OutsourceId == outsourceId)
-                );
-        }
+        //public async Task<bool> IsOutsourceAvailableAsync(
+        //    int outsourceId,
+        //    DateOnly date,
+        //    TimePeriod period,
+        //    int excludeEventId)
+        //{
+        //    return !await FindAll(false)
+        //        .AnyAsync(e =>
+        //            e.EventId != excludeEventId &&
+        //            e.MeetingDate == date &&
+        //            e.Period == period &&
+        //            e.EventOutsources.Any(os => os.OutsourceId == outsourceId)
+        //        );
+        //}
 
-        public async Task<bool> CheckAvailabilityAsync(
-            int? staffId,
-            int? outsourceId,
-            DateOnly meetingDate,
-            TimePeriod period,
-            int? excludeEventId)
-        {
-            var query = FindAll(false)
-                .Where(e =>
-                    e.MeetingDate == meetingDate &&
-                    e.Period == period);
+        //public async Task<bool> CheckAvailabilityAsync(
+        //    int? staffId,
+        //    int? outsourceId,
+        //    DateOnly meetingDate,
+        //    TimePeriod period,
+        //    int? excludeEventId)
+        //{
+        //    var query = FindAll(false)
+        //        .Where(e =>
+        //            e.MeetingDate == meetingDate &&
+        //            e.Period == period);
 
-            if (excludeEventId.HasValue)
-                query = query.Where(e => e.EventId != excludeEventId.Value);
+        //    if (excludeEventId.HasValue)
+        //        query = query.Where(e => e.EventId != excludeEventId.Value);
 
-            if (staffId.HasValue)
-            {
-                query = query.Where(e =>
-                    e.EventStaff.Any(es => es.StaffId == staffId.Value));
-            }
+        //    if (staffId.HasValue)
+        //    {
+        //        query = query.Where(e =>
+        //            e.EventStaff.Any(es => es.StaffId == staffId.Value));
+        //    }
 
-            if (outsourceId.HasValue)
-            {
-                query = query.Where(e =>
-                    e.EventOutsources.Any(os => os.OutsourceId == outsourceId.Value));
-            }
+        //    if (outsourceId.HasValue)
+        //    {
+        //        query = query.Where(e =>
+        //            e.EventOutsources.Any(os => os.OutsourceId == outsourceId.Value));
+        //    }
 
-            // ถ้ามี event ซ้ำ = ไม่ว่าง
-            return !await query.AnyAsync();
-        }
+        //    // ถ้ามี event ซ้ำ = ไม่ว่าง
+        //    return !await query.AnyAsync();
+        //}
 
         public async Task<Event?> GetConflictEventByStaffAsync(
             int staffId,

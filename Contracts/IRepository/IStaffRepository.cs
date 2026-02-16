@@ -10,6 +10,7 @@ namespace Contracts.IRepository
         Task<Staff?> GetStaffByIdAsync(int id, bool trackchange);
         Task<IEnumerable<Staff>> GetStaffByEventIdAsync(int eventId);
         Task<bool> AllStaffIdsExistAsync(IEnumerable<int> staffIds);
+        Task<Staff?> GetStaffForLoginAsync(string email);
         void CreateStaff(Staff staff);
         void UpdateStaff(Staff staff);
         void DeleteStaff(Staff staff);

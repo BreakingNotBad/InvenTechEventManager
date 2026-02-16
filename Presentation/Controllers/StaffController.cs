@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using FluentValidation;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Presentation.Requests.Staff;
 using Service.Contracts.DTOs.Staff;

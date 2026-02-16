@@ -27,6 +27,8 @@ namespace Repositories.Data
         public DbSet<Package> Packages { get; set; } = null!;
         public DbSet<EventAttachment> EventAttachments { get; set; } = null!;
         public DbSet<EventRoleRequirement> EventRoleRequirements { get; set; }
+        public DbSet<RefreshToken> RefreshTokens { get; set; } = null!;
+
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

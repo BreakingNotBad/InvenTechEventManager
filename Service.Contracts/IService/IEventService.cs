@@ -12,8 +12,8 @@ namespace Service.Contracts.IService
         Task <EventDto>UpdateEventAsync(int id, UpdateEventDto eventDto);
         Task DeleteEvent(int id);
 
-        Task<AvailabilityResponseDto> CheckAvailabilityAsync(
-            CheckAvailabilityRequestDto request);
+        //Task<AvailabilityResponseDto> CheckAvailabilityAsync(
+        //    CheckAvailabilityRequestDto request);
 
 
 

@@ -1,10 +1,11 @@
-﻿using Entities.Models;
+﻿using AutoMapper;
+using Entities.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Presentation.Requests.Event;
 using Service.Contracts.DTOs.Event;
 using Service.Contracts.IService;
 using Service.Contracts.Manager;
-using AutoMapper;
 using Shared.RequestFeatures.Parameters;
 namespace Presentation.Controllers
 {
@@ -24,6 +25,7 @@ namespace Presentation.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> GetEvents([FromQuery] EventParameter eventParameter)
         {
             var eventsList = await _service.Event.GetEventsAsync(eventParameter);
@@ -31,6 +33,7 @@ namespace Presentation.Controllers
         }
 
         [HttpGet("{id:int}")]
+        [Authorize]
         public async Task<IActionResult> GetEventById(int id)
         {
             var ev = await _service.Event.GetEventByIdAsync(id);
@@ -41,6 +44,7 @@ namespace Presentation.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> CreateEvent([FromForm] CreateEventRequest eventRequest)
         {
             var attachments = new List<EventAttachmentDto>();
@@ -76,6 +80,7 @@ namespace Presentation.Controllers
         }
 
         [HttpPut("{id:int}")]
+        [Authorize]
         public async Task<IActionResult> UpdateEvent(
             int id,
             [FromForm] UpdateEventRequest updateEventRequest
@@ -112,15 +117,16 @@ namespace Presentation.Controllers
             return NoContent();
         }
 
-        [HttpPost("check-availability")]
-        public async Task<IActionResult> CheckAvailability(
-            [FromBody] CheckAvailabilityRequestDto request)
-        {
-            var result = await _service.Event.CheckAvailabilityAsync(request);
-            return Ok(result);
-        }
+        //[HttpPost("check-availability")]
+        //public async Task<IActionResult> CheckAvailability(
+        //    [FromBody] CheckAvailabilityRequestDto request)
+        //{
+        //    var result = await _service.Event.CheckAvailabilityAsync(request);
+        //    return Ok(result);
+        //}
 
         [HttpDelete("{id:int}")]
+        [Authorize]
         public async Task<IActionResult> DeleteEvent(int id)
         {
             await _service.Event.DeleteEvent(id);

@@ -10,35 +10,35 @@ public interface IEventRepository : IRepositoryBase<Event>
     Task<IEnumerable<Event>> GetEventsAsync(EventParameter eventParameter, bool trackChanges);
     Task<Event?> GetEventByIdAsync(int id, bool trackChanges);
 
-    Task<bool> IsStaffAvailableAsync(
-        int staffId,
-        DateOnly date,
-        TimePeriod period);
+    //Task<bool> IsStaffAvailableAsync(
+    //    int staffId,
+    //    DateOnly date,
+    //    TimePeriod period);
 
-    Task<bool> IsOutsourceAvailableAsync(
-        int outsourceId,
-        DateOnly date,
-        TimePeriod period);
+    //Task<bool> IsOutsourceAvailableAsync(
+    //    int outsourceId,
+    //    DateOnly date,
+    //    TimePeriod period);
 
     // สำหรับ Update (exclude ตัวเอง)
-    Task<bool> IsStaffAvailableAsync(
-        int staffId,
-        DateOnly date,
-        TimePeriod period,
-        int excludeEventId);
+    //Task<bool> IsStaffAvailableAsync(
+    //    int staffId,
+    //    DateOnly date,
+    //    TimePeriod period,
+    //    int excludeEventId);
 
-    Task<bool> IsOutsourceAvailableAsync(
-        int outsourceId,
-        DateOnly date,
-        TimePeriod period,
-        int excludeEventId);
+    //Task<bool> IsOutsourceAvailableAsync(
+    //    int outsourceId,
+    //    DateOnly date,
+    //    TimePeriod period,
+    //    int excludeEventId);
 
-    Task<bool> CheckAvailabilityAsync(
-        int? staffId,
-        int? outsourceId,
-        DateOnly meetingDate,
-        TimePeriod period,
-        int? excludeEventId);
+    //Task<bool> CheckAvailabilityAsync(
+    //    int? staffId,
+    //    int? outsourceId,
+    //    DateOnly meetingDate,
+    //    TimePeriod period,
+    //    int? excludeEventId);
 
     Task<Event?> GetConflictEventByStaffAsync(
         int staffId,

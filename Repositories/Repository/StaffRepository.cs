@@ -92,6 +92,19 @@ namespace Repositories.Repository
             return countInDb == ids.Count;
         }
 
+        public async Task<Staff?> GetStaffForLoginAsync(string email)
+        {
+            return await FindByCondition(s =>
+                    s.Email == email &&
+                    !s.IsDeleted,
+                    false)
+                .Include(s => s.StaffRoles)
+                    .ThenInclude(sr => sr.Role)
+                .Include(s => s.StaffPermissions)
+                    .ThenInclude(sp => sp.Permission)
+                .FirstOrDefaultAsync();
+        }
+
         public void CreateStaff(Staff staff)
         {
             Create(staff);

@@ -426,56 +426,56 @@ namespace Service.Service
             return eventResponse;
         }
 
-        public async Task<AvailabilityResponseDto> CheckAvailabilityAsync(
-            CheckAvailabilityRequestDto request)
-        {
-            if (request.StaffId != null)
-            {
-                bool available = request.EventId.HasValue
-                    ? await _repo.Event.IsStaffAvailableAsync(
-                            request.StaffId.Value,
-                            request.MeetingDate,
-                            request.Period,
-                            request.EventId.Value)
-                    : await _repo.Event.IsStaffAvailableAsync(
-                            request.StaffId.Value,
-                            request.MeetingDate,
-                            request.Period);
+        //public async Task<AvailabilityResponseDto> CheckAvailabilityAsync(
+        //    CheckAvailabilityRequestDto request)
+        //{
+        //    if (request.StaffId != null)
+        //    {
+        //        bool available = request.EventId.HasValue
+        //            ? await _repo.Event.IsStaffAvailableAsync(
+        //                    request.StaffId.Value,
+        //                    request.MeetingDate,
+        //                    request.Period,
+        //                    request.EventId.Value)
+        //            : await _repo.Event.IsStaffAvailableAsync(
+        //                    request.StaffId.Value,
+        //                    request.MeetingDate,
+        //                    request.Period);
 
-                return new AvailabilityResponseDto
-                {
-                    IsAvailable = available,
-                    Message = available
-                        ? "Staff is available"
-                        : "Staff already has event in this period"
-                };
-            }
+        //        return new AvailabilityResponseDto
+        //        {
+        //            IsAvailable = available,
+        //            Message = available
+        //                ? "Staff is available"
+        //                : "Staff already has event in this period"
+        //        };
+        //    }
 
 
-            if (request.OutsourceId != null)
-            {
-                bool available = request.EventId.HasValue
-                    ? await _repo.Event.IsOutsourceAvailableAsync(
-                            request.OutsourceId.Value,
-                            request.MeetingDate,
-                            request.Period,
-                            request.EventId.Value)
-                    : await _repo.Event.IsOutsourceAvailableAsync(
-                            request.OutsourceId.Value,
-                            request.MeetingDate,
-                            request.Period);
+        //    if (request.OutsourceId != null)
+        //    {
+        //        bool available = request.EventId.HasValue
+        //            ? await _repo.Event.IsOutsourceAvailableAsync(
+        //                    request.OutsourceId.Value,
+        //                    request.MeetingDate,
+        //                    request.Period,
+        //                    request.EventId.Value)
+        //            : await _repo.Event.IsOutsourceAvailableAsync(
+        //                    request.OutsourceId.Value,
+        //                    request.MeetingDate,
+        //                    request.Period);
 
-                return new AvailabilityResponseDto
-                {
-                    IsAvailable = available,
-                    Message = available
-                        ? "Outsource is available"
-                        : "Outsource already has event in this period"
-                };
-            }
+        //        return new AvailabilityResponseDto
+        //        {
+        //            IsAvailable = available,
+        //            Message = available
+        //                ? "Outsource is available"
+        //                : "Outsource already has event in this period"
+        //        };
+        //    }
 
-            throw new ArgumentException("StaffId or OutsourceId is required");
-        }
+        //    throw new ArgumentException("StaffId or OutsourceId is required");
+        //}
 
 
         public async Task DeleteEvent(int id)

@@ -1,8 +1,9 @@
-﻿using System.Text.Json.Serialization;
-using Contracts.IRepository.BaseManager;
+﻿using Contracts.IRepository.BaseManager;
 using FluentValidation;
 using InventechEventManager.Exceptions;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Presentation.Validators;
 using Repositories.Data;
 using Repositories.Repository.BaseManager;
@@ -14,6 +15,8 @@ using Service.Service;
 using Service.Validators.Company;
 using Service.Validators.Event;
 using System.Globalization;
+using System.Text;
+using System.Text.Json.Serialization;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -26,6 +29,29 @@ builder.Services.AddSwaggerGen(c =>
     c.CustomSchemaIds(type => type.FullName);
 });
 
+// Auth Service
+builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services
+.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+.AddJwtBearer(opt =>
+{
+    opt.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+
+        ValidIssuer = builder.Configuration["JwtSettings:Issuer"],
+        ValidAudience = builder.Configuration["JwtSettings:Audience"],
+        IssuerSigningKey =
+            new SymmetricSecurityKey(
+                Encoding.UTF8.GetBytes(
+                    builder.Configuration["JwtSettings:Key"]!
+                )
+            )
+    };
+});
 // DI
 builder.Services.AddScoped<IRepositoryManager, RepositoryManager>();
 builder.Services.AddScoped<IServiceManager, ServiceManager>();
@@ -59,6 +85,30 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new() { Title = "InventechEvent API", Version = "v1" });
+    c.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.Models.OpenApiSecurityScheme
+    {
+        Name = "Authorization",
+        Type = Microsoft.OpenApi.Models.SecuritySchemeType.Http,
+        Scheme = "Bearer",
+        BearerFormat = "JWT",
+        In = Microsoft.OpenApi.Models.ParameterLocation.Header,
+        Description = "Enter: Bearer {your JWT token}"
+
+    });
+    c.AddSecurityRequirement(new Microsoft.OpenApi.Models.OpenApiSecurityRequirement
+    {
+        {
+            new Microsoft.OpenApi.Models.OpenApiSecurityScheme
+            {
+                Reference = new Microsoft.OpenApi.Models.OpenApiReference
+                {
+                    Type = Microsoft.OpenApi.Models.ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            new string[] {}
+        }
+    });
 });
 
 // แก้บรรทัดนี้ครับ (เดิมอาจจะมีแค่ AddControllers()) มาลบด้วยถ้าทำ DTO แล้ว
@@ -106,11 +156,13 @@ if (app.Environment.IsDevelopment())
     });
 }
 
+
 app.UseHttpsRedirection();
 
 // เรียกใช้งาน CORS
 app.UseCors("AllowFrontend");
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.UseStaticFiles();

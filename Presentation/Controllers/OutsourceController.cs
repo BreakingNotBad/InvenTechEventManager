@@ -1,4 +1,5 @@
 using Entities.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Service.Contracts.DTOs.Outsource;
 using Service.Contracts.Manager;

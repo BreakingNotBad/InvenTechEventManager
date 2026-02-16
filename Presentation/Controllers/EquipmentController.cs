@@ -1,4 +1,5 @@
 using Entities.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Service.Contracts.DTOs.Equipment;
 using Service.Contracts.Manager;
@@ -36,6 +37,7 @@ namespace Presentation.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> CreateEquipment(CreateEquipmentDto dto)
         {
             var createEquipment = await _service.Equipment.CreateEquipmentAsync(dto);
@@ -48,6 +50,7 @@ namespace Presentation.Controllers
         }
 
         [HttpPut("{id:int}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdateEquipment(int id, UpdateEquipmentDto dto)
         {
             await _service.Equipment.UpdateEquipmentAsync(id, dto);
@@ -55,6 +58,7 @@ namespace Presentation.Controllers
         }
 
         [HttpDelete("{id:int}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteEquipment(int id)
         {
             await _service.Equipment.DeleteEquipment(id);

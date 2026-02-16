@@ -11,6 +11,7 @@
         IPackageRepository Package { get; }
         IRoleRepository Role { get; }
         ICategoryRepository Category { get; }
+        IRefreshTokenRepository RefreshToken { get; }
         Task SaveAsync();
     }
 }
