@@ -158,9 +158,10 @@ public class AuthService : IAuthService
     {
         var claims = new List<Claim>
         {
-            new Claim("StaffId", staff.StaffId.ToString()),
-            new Claim("FullName", staff.FullName),
-            new Claim("Email", staff.Email)
+            new Claim("staffId", staff.StaffId.ToString()),
+            new Claim("fullName", staff.FullName),
+            new Claim("email", staff.Email),
+            new Claim("avatar", staff.Avatar ?? "")
         };
 
         foreach (var r in staff.StaffRoles)
