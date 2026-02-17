@@ -2,6 +2,8 @@
 using Entities.Models;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using Service.Contracts.DTOs;
+using Service.Contracts.DTOs.Auth;
 using Service.Contracts.IService;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -12,11 +14,13 @@ public class AuthService : IAuthService
 {
     private readonly IRepositoryManager _repo;
     private readonly IConfiguration _config;
+    private readonly IEmailService _emailService;
 
-    public AuthService(IRepositoryManager repo, IConfiguration config)
+    public AuthService(IRepositoryManager repo, IConfiguration config, IEmailService emailService)
     {
         _repo = repo;
         _config = config;
+        _emailService = emailService;
     }
 
     // LOGIN 
@@ -76,9 +80,73 @@ public class AuthService : IAuthService
         if (token == null) return;
 
         token.IsRevoked = true;
+        token.ExpiresAt = DateTime.UtcNow;
         await _repo.RefreshToken.UpdateAsync(token);
         await _repo.SaveAsync();
     }
+
+    // SET PASSWORD
+    public async Task SetPasswordAsync(SetPasswordDto dto)
+    {
+        var staff =
+            await _repo.Staff.GetByResetTokenAsync(dto.Token);
+
+        if (staff == null)
+            throw new Exception("Invalid token");
+
+        if (staff.PasswordResetTokenExpire < DateTime.UtcNow)
+            throw new Exception("Token expired");
+
+        staff.Password = dto.NewPassword;
+
+        staff.PasswordResetToken = null;
+        staff.PasswordResetTokenExpire = null;
+
+        await _repo.SaveAsync();
+    }
+
+    // FORGOT PASSWORD
+    public async Task ForgotPasswordAsync(ForgotPasswordDto dto)
+    {
+        var staff = await _repo.Staff.GetByEmailAsync(dto.Email);
+        if (staff == null) return;
+
+        var token = Convert.ToBase64String(
+            RandomNumberGenerator.GetBytes(64));
+
+        staff.PasswordResetToken = token;
+        staff.PasswordResetTokenExpire = DateTime.UtcNow.AddHours(1);
+
+        await _repo.SaveAsync();
+
+        var link =
+          $"http://localhost:5173/forget-password?token={token}";
+
+        await _emailService.SendAsync(
+            staff.Email,
+            "Reset password",
+            $"Click link to reset password:\n{link}"
+        );
+    }
+
+    // CHANGE PASSWORD
+    public async Task ChangePasswordAsync(
+    int staffId,
+    ChangePasswordDto dto)
+    {
+        var staff = await _repo.Staff.GetStaffByIdAsync(staffId, true);
+
+        if (staff == null)
+            throw new Exception("Staff not found");
+
+        if (staff.Password != dto.CurrentPassword)
+            throw new Exception("Current password incorrect");
+
+        staff.Password = dto.NewPassword;
+
+        await _repo.SaveAsync();
+    }
+
 
     // JWT 
     private string GenerateJwt(Staff staff)

@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Service.Contracts.DTOs;
+using Service.Contracts.DTOs.Auth;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,5 +13,10 @@ namespace Service.Contracts.IService
         Task<(string accessToken, string refreshToken)> LoginAsync(string email, string password);
         Task<(string accessToken, string refreshToken)> RefreshAsync(string refreshToken);
         Task LogoutAsync(string refreshToken);
+        Task SetPasswordAsync(SetPasswordDto dto);
+        Task ForgotPasswordAsync(ForgotPasswordDto dto);
+        Task ChangePasswordAsync(int staffId, ChangePasswordDto dto);
+
+
     }
 }

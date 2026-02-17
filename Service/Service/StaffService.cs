@@ -6,6 +6,7 @@ using FluentValidation;
 using Service.Contracts.DTOs.Staff;
 using Service.Contracts.IService;
 using Shared.RequestFeatures.Parameters;
+using System.Security.Cryptography;
 
 namespace Service.Service
 {
@@ -16,13 +17,15 @@ namespace Service.Service
         private readonly IFileService _fileService;
         private readonly IValidator<CreateStaffDto> _createValidator;
         private readonly IValidator<UpdateStaffDto> _updateValidator;
+        private readonly IEmailService _emailService;
 
         public StaffService(
             IRepositoryManager repo,
             IFileService fileService,
             IMapper mapper,
             IValidator<CreateStaffDto> createValidator,
-            IValidator<UpdateStaffDto> updateValidator
+            IValidator<UpdateStaffDto> updateValidator,
+            IEmailService emailService
         )
         {
             _repo = repo;
@@ -30,6 +33,7 @@ namespace Service.Service
             _mapper = mapper;
             _createValidator = createValidator;
             _updateValidator = updateValidator;
+            _emailService = emailService;
         }
 
         // GET ALL
@@ -107,11 +111,17 @@ namespace Service.Service
         {
             await _createValidator.ValidateAndThrowAsync(staffDto);
 
+            var token = Convert.ToBase64String(RandomNumberGenerator.GetBytes(64));
+
             // แปลงข้อมูลจาก Dto เป็น Entity
             var newStaff = _mapper.Map<Staff>(staffDto);
 
             // เอา Path จาก Dto ใส่ Entity
             newStaff.Avatar = staffDto.Avatar;
+            newStaff.Password = null;
+            newStaff.PasswordResetToken = token;
+            newStaff.PasswordResetTokenExpire =
+                DateTime.UtcNow.AddHours(24);
 
             // จัดการ Role
             if (staffDto.StaffRoles != null) // ถ้ามีการกำหนด RoleIds มา
@@ -124,11 +134,30 @@ namespace Service.Service
 
             _repo.Staff.CreateStaff(newStaff);
             await _repo.SaveAsync();
+
+            var link =
+                $"http://localhost:5173/set-password?token={token}";
+            await _emailService.SendAsync(
+                newStaff.Email,
+                "Set your password",
+                $"""
+                Hello {newStaff.FullName}
+
+                Your account has been created.
+
+                Please click the link below to set your password:
+                {link}
+
+                This link will expire in 24 hours.
+                """
+            );
+
+
             var staff = await GetStaffByIdAsync(newStaff.StaffId); // ดึงข้อมูลใหม่ที่ถูกสร้างขึ้นมา
 
             return staff!;
         }
-
+            
         // UPDATE
         public async Task UpdateStaffAsync(int id, UpdateStaffDto staffDto)
         {

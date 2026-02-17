@@ -15,8 +15,14 @@ using Service.Service;
 using Service.Validators.Company;
 using Service.Validators.Event;
 using System.Globalization;
+using System.Net;
 using System.Text;
 using System.Text.Json.Serialization;
+using FluentEmail.Core;
+using FluentEmail.Smtp;
+using FluentEmail.Razor;
+using System.Net.Mail;
+
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -28,6 +34,14 @@ builder.Services.AddSwaggerGen(c =>
 {
     c.CustomSchemaIds(type => type.FullName);
 });
+
+// Email Service
+builder.Services.AddScoped<IEmailService, EmailService>();
+builder.Services
+    .AddFluentEmail("pantamit.muangnan@gmail.com")
+    .AddSmtpSender("smtp.gmail.com", 587,
+        "pantamit.muangnan@gmail.com",
+        "spys ydyt tghp wwos");
 
 // Auth Service
 builder.Services.AddScoped<IAuthService, AuthService>();

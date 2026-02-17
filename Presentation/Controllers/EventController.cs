@@ -25,7 +25,6 @@ namespace Presentation.Controllers
         }
 
         [HttpGet]
-        [Authorize]
         public async Task<IActionResult> GetEvents([FromQuery] EventParameter eventParameter)
         {
             var eventsList = await _service.Event.GetEventsAsync(eventParameter);

@@ -105,6 +105,23 @@ namespace Repositories.Repository
                 .FirstOrDefaultAsync();
         }
 
+        public async Task<Staff?> GetByResetTokenAsync(string token)
+        {
+            return await FindByCondition(
+                s => s.PasswordResetToken == token,
+                trackChanges: true
+            ).FirstOrDefaultAsync();
+        }
+
+        public async Task<Staff?> GetByEmailAsync(string email)
+        {
+            return await FindByCondition(
+                s => s.Email == email,
+                trackChanges: true
+            ).FirstOrDefaultAsync();
+        }
+
+
         public void CreateStaff(Staff staff)
         {
             Create(staff);

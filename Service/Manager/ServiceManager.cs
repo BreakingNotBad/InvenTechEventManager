@@ -25,12 +25,14 @@ namespace Service.Manager
         private readonly Lazy<IRoleService> _roleService;
         private readonly Lazy<ICategoryService> _categoryService;
         private readonly Lazy<IFileService> _fileService;
+        private readonly Lazy<IEmailService> _emailService;
 
         public ServiceManager(
             IRepositoryManager repo,
             IFileService fileService,
             IMapper mapper,
-            IServiceProvider serviceProvider
+            IServiceProvider serviceProvider,
+            IEmailService emailService
         )
         {
             _eventService = new Lazy<IEventService>(() =>
@@ -72,7 +74,8 @@ namespace Service.Manager
                     fileService,
                     mapper,
                     createValidator,
-                    updateValidator
+                    updateValidator,
+                    emailService
                 );
             });
             _outsourceService = new Lazy<IOutsourceService>(() =>
