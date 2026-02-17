@@ -72,10 +72,27 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("logout")]
-    public async Task<IActionResult> Logout(RefreshTokenDto dto)
+    public async Task<IActionResult> Logout()
     {
-        await _auth.LogoutAsync(dto.RefreshToken);
-        return Ok();
+        // 1. ดึง Refresh Token จากคุกกี้
+        var refreshToken = Request.Cookies["refreshToken"];
+
+        if (!string.IsNullOrEmpty(refreshToken))
+        {
+            // 2. สั่ง Service ให้ไปแก้ IsRevoked = true ใน DB
+            await _auth.LogoutAsync(refreshToken);
+        }
+
+        // 3. สั่ง Browser ให้ลบคุกกี้ทิ้ง (Overwrite ด้วยค่าว่างและตั้งให้หมดอายุในอดีต)
+        Response.Cookies.Append("refreshToken", "", new CookieOptions
+        {
+            HttpOnly = true,
+            Secure = true,
+            SameSite = SameSiteMode.None,
+            Expires = DateTime.UtcNow.AddDays(-1)
+        });
+
+        return NoContent();
     }
 
     [HttpPost("set-password")]
