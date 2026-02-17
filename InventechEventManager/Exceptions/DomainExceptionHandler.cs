@@ -44,6 +44,23 @@ namespace InventechEventManager.Exceptions
                 return true;
             }
 
+            // จัดการ 401 Unauthorized
+            if (exception is UnauthorizedException unauthorizedException)
+            {
+                var problemDetails = new ProblemDetails
+                {
+                    Status = StatusCodes.Status401Unauthorized,
+                    Title = "Unauthorized",
+                    Detail = unauthorizedException.Message,
+                    Type = "https://tools.ietf.org/html/rfc7235#section-3.1"
+                };
+
+                httpContext.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                await httpContext.Response.WriteAsJsonAsync(problemDetails, cancellationToken);
+
+                return true;
+            }
+
             return false; // ถ้าไม่ใช่ทั้งคู่ ส่งไปให้ GlobalExceptionHandler จัดการต่อ (500)
         }
     }

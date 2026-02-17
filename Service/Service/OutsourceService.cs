@@ -35,10 +35,10 @@ namespace Service.Service
 
             var outsourceResponse = _mapper.Map<IEnumerable<OutsourceDto>>(outsourcesList);
 
-            // ถ้ามีการส่ง Date/Period มา → ต้องคำนวณ Status
-            if (outsourceParameter.Date.HasValue && outsourceParameter.Period.HasValue)
+            // ถ้ามีการส่ง Date มา → ต้องคำนวณ Status
+            if (outsourceParameter.Date.HasValue)
             {
-                var checkPeriod = outsourceParameter.Period.Value;
+                var checkPeriod = outsourceParameter.Period.HasValue;
 
                 foreach (var outsource in outsourceResponse)
                 {
@@ -51,10 +51,10 @@ namespace Service.Service
                     bool isUnavailable = false;
                     bool hasJobToday = workingEvents.Count > 0;
 
-                    if (hasJobToday)
+                    if (hasJobToday && checkPeriod)
                     {
                         isUnavailable =
-                            workingEvents.Any(e => e.Period == checkPeriod);
+                            workingEvents.Any(e => e.Period == outsourceParameter.Period!.Value);
                     }
 
                     if (isUnavailable)
@@ -103,7 +103,7 @@ namespace Service.Service
         public async Task<OutsourceDto> UpdateOutsourceAsync(int id, UpdateOutsourceDto OutsourceDto)
         {
             await _updateValidator.ValidateAndThrowAsync(OutsourceDto);
-            var exinstingOutsource = await _repo.Outsource.GetOutsourceByIdAsync(id,true); 
+            var exinstingOutsource = await _repo.Outsource.GetOutsourceByIdAsync(id,true);
 
             if (exinstingOutsource == null)
             {
