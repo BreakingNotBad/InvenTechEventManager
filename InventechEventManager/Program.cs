@@ -15,15 +15,8 @@ using Service.Service;
 using Service.Validators.Company;
 using Service.Validators.Event;
 using System.Globalization;
-using System.Net;
 using System.Text;
 using System.Text.Json.Serialization;
-using FluentEmail.Core;
-using FluentEmail.Smtp;
-using FluentEmail.Razor;
-using System.Net.Mail;
-
-
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -55,6 +48,7 @@ builder.Services
         ValidateAudience = true,
         ValidateLifetime = true,
         ValidateIssuerSigningKey = true,
+        ClockSkew = TimeSpan.Zero,
 
         ValidIssuer = builder.Configuration["JwtSettings:Issuer"],
         ValidAudience = builder.Configuration["JwtSettings:Audience"],
@@ -141,7 +135,10 @@ builder.Services.AddCors(options =>
         "AllowFrontend",
         policy =>
         {
-            policy.WithOrigins("http://localhost:5173").AllowAnyHeader().AllowAnyMethod();
+            policy.WithOrigins("http://localhost:5173")
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials();
         }
     );
 });

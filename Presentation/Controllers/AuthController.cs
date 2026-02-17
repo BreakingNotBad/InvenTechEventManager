@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Service.Contracts.DTOs;
 using Service.Contracts.DTOs.Auth;
@@ -20,23 +21,54 @@ public class AuthController : ControllerBase
     {
         var result = await _auth.LoginAsync(dto.Email, dto.Password);
 
-        return Ok(new
+        // 1. ตั้งค่า Cookie Options
+        var cookieOptions = new CookieOptions
         {
-            accessToken = result.accessToken,
-            refreshToken = result.refreshToken
-        });
+            HttpOnly = true, // ป้องกัน JavaScript เข้าถึง (กัน XSS)
+            Secure = true, // ส่งผ่าน HTTPS เท่านั้น
+            SameSite = SameSiteMode.None, // ป้องกัน CSRF
+            Expires = DateTime.UtcNow.AddDays(7) // อายุของ Refresh Token
+        };
+
+        // 2. ยัด Refresh Token ลงใน Cookie
+        Response.Cookies.Append("refreshToken", result.refreshToken, cookieOptions);
+
+        // 3. ส่งเฉพาะ Access Token กลับไปใน JSON Body (เพื่อเก็บไว้ใน Memory ของ React)
+        return Ok(new { result.accessToken });
     }
 
     [HttpPost("refresh")]
-    public async Task<IActionResult> Refresh(RefreshTokenDto dto)
+    public async Task<IActionResult> Refresh()
     {
-        var result = await _auth.RefreshAsync(dto.RefreshToken);
+        // 1. ดึง Refresh Token จาก Cookie ชื่อ "refreshToken"
+        var oldRefreshToken = Request.Cookies["refreshToken"];
 
-        return Ok(new
+        if (string.IsNullOrEmpty(oldRefreshToken))
+            return Unauthorized();
+
+        try
         {
-            accessToken = result.accessToken,
-            refreshToken = result.refreshToken
-        });
+            // 2. เรียก Service ตามปกติ
+            var result = await _auth.RefreshAsync(oldRefreshToken);
+
+            // 3. ตั้งค่า Cookie ตัวใหม่กลับไปให้ Browser (Token Rotation)
+            var cookieOptions = new CookieOptions
+            {
+                HttpOnly = true, // ป้องกัน JavaScript เข้าถึง (กัน XSS)
+                Secure = true, // ส่งผ่าน HTTPS เท่านั้น
+                SameSite = SameSiteMode.None, // ป้องกัน CSRF
+                Expires = DateTime.UtcNow.AddDays(7) // อายุของ Refresh Token
+            };
+
+            Response.Cookies.Append("refreshToken", result.refreshToken, cookieOptions);
+
+            // 4. ส่งกลับเฉพาะ Access Token ใน Body (เพราะมันเก็บใน Memory ของ React)
+            return Ok(new { result.accessToken });
+        }
+        catch (UnauthorizedAccessException)
+        {
+            return Unauthorized();
+        }
     }
 
     [HttpPost("logout")]

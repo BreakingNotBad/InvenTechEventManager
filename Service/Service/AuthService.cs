@@ -1,4 +1,5 @@
 ﻿using Contracts.IRepository.BaseManager;
+using Entities.Exceptions;
 using Entities.Models;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -23,14 +24,14 @@ public class AuthService : IAuthService
         _emailService = emailService;
     }
 
-    // LOGIN 
+    // LOGIN
     public async Task<(string accessToken, string refreshToken)>
         LoginAsync(string email, string password)
     {
         var staff = await _repo.Staff.GetStaffForLoginAsync(email);
 
         if (staff == null || staff.Password != password)
-            throw new UnauthorizedAccessException("Invalid credentials");
+            throw new UnauthorizedException("Invalid credentials");
 
         var accessToken = GenerateJwt(staff);
 
@@ -48,32 +49,37 @@ public class AuthService : IAuthService
     }
 
     // REFRESH
-    public async Task<(string accessToken, string refreshToken)>
-        RefreshAsync(string refreshToken)
+    public async Task<(string accessToken, string refreshToken)> RefreshAsync(string refreshToken)
     {
-        var old = await _repo.RefreshToken.GetByTokenAsync(refreshToken);
+        // ค้นหา RefreshToken และ Include ข้อมูล Staff มาด้วยเพื่อใช้ปั๊ม JWT
+        var oldRefresh = await _repo.RefreshToken.GetByTokenAsync(refreshToken);
 
-        if (old == null)
-            throw new UnauthorizedAccessException("Invalid refresh token");
+        // เช็คว่า RefreshToken มีจริงไหม / หมดอายุหรือยัง / ถูกยกเลิกไปหรือยัง
+        if (oldRefresh?.IsRevoked != false || oldRefresh.ExpiresAt < DateTime.UtcNow)
+            throw new UnauthorizedException("Invalid or expired refresh token");
 
-        old.IsRevoked = true;
-        await _repo.RefreshToken.UpdateAsync(old);
-        await _repo.SaveAsync();
+        // ทำลาย RefreshToken ตัวเก่าทิ้ง (เพื่อความปลอดภัย)
+        oldRefresh.IsRevoked = true;
+        await _repo.RefreshToken.UpdateAsync(oldRefresh);
+
+        // สร้าง RefreshToken ตัวใหม่
         var newRefresh = new RefreshToken
         {
-            StaffId = old.StaffId,
+            StaffId = oldRefresh.StaffId,
             Token = GenerateRefreshToken(),
             ExpiresAt = DateTime.UtcNow.AddDays(7)
         };
 
         await _repo.RefreshToken.CreateAsync(newRefresh);
         await _repo.SaveAsync();
-        var accessToken = GenerateJwt(old.Staff);
+
+        // สร้าง Access Token ใหม่โดยใช้ข้อมูล Staff
+        var accessToken = GenerateJwt(oldRefresh.Staff);
 
         return (accessToken, newRefresh.Token);
     }
 
-    // LOGOUT 
+    // LOGOUT
     public async Task LogoutAsync(string refreshToken)
     {
         var token = await _repo.RefreshToken.GetByTokenAsync(refreshToken);
@@ -147,8 +153,7 @@ public class AuthService : IAuthService
         await _repo.SaveAsync();
     }
 
-
-    // JWT 
+    // JWT
     private string GenerateJwt(Staff staff)
     {
         var claims = new List<Claim>
