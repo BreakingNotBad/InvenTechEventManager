@@ -117,7 +117,7 @@ public class AuthController : ControllerBase
             int.Parse(User.FindFirst("staffId")!.Value);
 
         await _auth.ChangePasswordAsync(staffId, dto);
-        return Ok();
+        return Ok(new { success = true, message = "Password changed successfully" });
     }
 
 
