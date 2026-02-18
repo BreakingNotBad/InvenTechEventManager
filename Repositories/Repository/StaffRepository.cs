@@ -120,6 +120,13 @@ namespace Repositories.Repository
                 trackChanges: true
             ).FirstOrDefaultAsync();
         }
+        public async Task<bool> IsEmailExistsAsync(string email)
+        {
+            return await FindByCondition(
+                x => x.Email == email,
+                false
+            ).AnyAsync();
+        }
 
 
         public void CreateStaff(Staff staff)

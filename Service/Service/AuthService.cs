@@ -136,8 +136,9 @@ public class AuthService : IAuthService
 
         await _repo.SaveAsync();
 
+        var safeToken = Uri.EscapeDataString(token);
         var link =
-          $"http://localhost:5173/forget-password?token={token}";
+          $"http://localhost:5173/auth/set-password?token={safeToken}";
 
         await _emailService.SendAsync(
             staff.Email,

@@ -135,8 +135,9 @@ namespace Service.Service
             _repo.Staff.CreateStaff(newStaff);
             await _repo.SaveAsync();
 
+            var safeToken = Uri.EscapeDataString(token);
             var link =
-                $"http://localhost:5173/set-password?token={token}";
+              $"http://localhost:5173/auth/set-password?token={safeToken}";
             await _emailService.SendAsync(
                 newStaff.Email,
                 "Set your password",

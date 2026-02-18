@@ -98,14 +98,14 @@ public class AuthController : ControllerBase
     public async Task<IActionResult> SetPassword(SetPasswordDto dto)
     {
         await _auth.SetPasswordAsync(dto);
-        return Ok();
+        return Ok(new { success = true, message = "Set you Password successfully" });
     }
 
     [HttpPost("forgot-password")]
     public async Task<IActionResult> ForgotPassword(ForgotPasswordDto dto)
     {
         await _auth.ForgotPasswordAsync(dto);
-        return Ok();
+        return Ok(new { success = true, message = "Send link to your Email" });
     }
 
     [HttpPost("change-password")]
