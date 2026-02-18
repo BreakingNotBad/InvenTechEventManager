@@ -1,5 +1,4 @@
-﻿using Service.Contracts.DTOs;
-using Service.Contracts.DTOs.Auth;
+﻿using Service.Contracts.DTOs.Auth;
 using System;
 using System.Collections.Generic;
 using System.Linq;

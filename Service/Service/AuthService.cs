@@ -1,9 +1,9 @@
 ﻿using Contracts.IRepository.BaseManager;
 using Entities.Exceptions;
 using Entities.Models;
+using FluentValidation;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
-using Service.Contracts.DTOs;
 using Service.Contracts.DTOs.Auth;
 using Service.Contracts.IService;
 using System.IdentityModel.Tokens.Jwt;
@@ -16,12 +16,21 @@ public class AuthService : IAuthService
     private readonly IRepositoryManager _repo;
     private readonly IConfiguration _config;
     private readonly IEmailService _emailService;
+    private readonly IValidator<SetPasswordDto> _setPasswordValidator;
+    private readonly IValidator<ChangePasswordDto> _changePasswordValidator;
 
-    public AuthService(IRepositoryManager repo, IConfiguration config, IEmailService emailService)
+    public AuthService(
+        IRepositoryManager repo, 
+        IConfiguration config,
+        IEmailService emailService,
+        IValidator<SetPasswordDto> setPasswordValidator,
+        IValidator<ChangePasswordDto> changePasswordValidator)
     {
         _repo = repo;
         _config = config;
         _emailService = emailService;
+        _setPasswordValidator = setPasswordValidator;
+        _changePasswordValidator = changePasswordValidator;
     }
 
     // LOGIN
@@ -33,6 +42,7 @@ public class AuthService : IAuthService
         if (staff == null || staff.Password != password)
             throw new UnauthorizedException("Invalid credentials");
 
+        await _repo.RefreshToken.RevokeByStaffIdAsync(staff.StaffId);
         var accessToken = GenerateJwt(staff);
 
         var refresh = new RefreshToken
@@ -94,6 +104,7 @@ public class AuthService : IAuthService
     // SET PASSWORD
     public async Task SetPasswordAsync(SetPasswordDto dto)
     {
+        await _setPasswordValidator.ValidateAndThrowAsync(dto);
         var staff =
             await _repo.Staff.GetByResetTokenAsync(dto.Token);
 
@@ -136,17 +147,17 @@ public class AuthService : IAuthService
     }
 
     // CHANGE PASSWORD
-    public async Task ChangePasswordAsync(
-    int staffId,
-    ChangePasswordDto dto)
+    public async Task ChangePasswordAsync(int staffId,ChangePasswordDto dto)
     {
+        await _changePasswordValidator.ValidateAndThrowAsync(dto);
+
         var staff = await _repo.Staff.GetStaffByIdAsync(staffId, true);
 
         if (staff == null)
-            throw new Exception("Staff not found");
+            throw new UnauthorizedException("Staff not found");
 
         if (staff.Password != dto.CurrentPassword)
-            throw new Exception("Current password incorrect");
+            throw new UnauthorizedException("Current password incorrect");
 
         staff.Password = dto.NewPassword;
 

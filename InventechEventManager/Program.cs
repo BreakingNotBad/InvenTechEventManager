@@ -60,6 +60,13 @@ builder.Services
             )
     };
 });
+// Authorization Policy
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("admin", policy =>
+        policy.RequireClaim("permission", "admin"));
+});
+
 // DI
 builder.Services.AddScoped<IRepositoryManager, RepositoryManager>();
 builder.Services.AddScoped<IServiceManager, ServiceManager>();

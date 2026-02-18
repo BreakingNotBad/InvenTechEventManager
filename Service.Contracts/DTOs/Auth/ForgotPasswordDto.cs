@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Service.Contracts.DTOs
+namespace Service.Contracts.DTOs.Auth
 {
     public class ForgotPasswordDto
     {

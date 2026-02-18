@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Service.Contracts.DTOs;
 using Service.Contracts.DTOs.Auth;
 using Service.Contracts.IService;
 
@@ -115,7 +114,7 @@ public class AuthController : ControllerBase
     ChangePasswordDto dto)
     {
         var staffId =
-            int.Parse(User.FindFirst("StaffId")!.Value);
+            int.Parse(User.FindFirst("staffId")!.Value);
 
         await _auth.ChangePasswordAsync(staffId, dto);
         return Ok();

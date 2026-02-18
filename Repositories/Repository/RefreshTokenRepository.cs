@@ -36,6 +36,21 @@ namespace Repositories.Repository
                         .ThenInclude(sp => sp.Permission)
                 .SingleOrDefaultAsync();
         }
+        // REVOKE BY STAFF ID
+        public async Task RevokeByStaffIdAsync(int staffId)
+        {
+            var tokens = await FindByCondition(
+                x => x.StaffId == staffId && x.IsRevoked == false,
+                true
+            ).ToListAsync();
+
+            foreach (var token in tokens)
+            {
+                token.IsRevoked = true;
+                token.ExpiresAt = DateTime.UtcNow;
+            }
+        }
+
 
         // UPDATE (REVOKE)
         public async Task UpdateAsync(RefreshToken token)
