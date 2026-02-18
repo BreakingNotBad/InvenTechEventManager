@@ -11,6 +11,7 @@ namespace Service.Contracts.DTOs.Staff
         public string? Avatar { get; set; }
         public string? Status { get; set; } // "Available", "WorkingToday", "Unavailable"
         public bool IsDeleted { get; set; }
+        public bool IsPending { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
         public ICollection<RoleDto>? StaffRoles { get; set; }

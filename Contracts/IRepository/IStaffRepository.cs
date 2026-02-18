@@ -13,7 +13,6 @@ namespace Contracts.IRepository
         Task<Staff?> GetStaffForLoginAsync(string email);
         Task<Staff?> GetByResetTokenAsync(string token);
         Task<Staff?> GetByEmailAsync(string email);
-        Task<bool> IsEmailExistsAsync(string email);
 
 
         void CreateStaff(Staff staff);

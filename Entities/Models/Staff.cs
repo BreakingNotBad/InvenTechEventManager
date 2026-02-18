@@ -10,6 +10,7 @@ namespace Entities.Models
         public string? Password { get; set; }
         public string? PhoneNumber { get; set; }
         public string? Avatar { get; set; }
+        public bool IsPending { get; set; } = false;
 
         public string? PasswordResetToken { get; set; }
         public DateTime? PasswordResetTokenExpire { get; set; }

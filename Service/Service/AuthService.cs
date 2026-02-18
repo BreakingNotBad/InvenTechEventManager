@@ -118,6 +118,7 @@ public class AuthService : IAuthService
 
         staff.PasswordResetToken = null;
         staff.PasswordResetTokenExpire = null;
+        staff.IsPending = false;
 
         await _repo.SaveAsync();
     }
@@ -158,7 +159,7 @@ public class AuthService : IAuthService
             throw new UnauthorizedException("Staff not found");
 
         if (staff.Password != dto.CurrentPassword)
-            throw new UnauthorizedException("Current password incorrect");
+            throw new BadRequestException("Current password incorrect");
 
         staff.Password = dto.NewPassword;
 

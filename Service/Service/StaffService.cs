@@ -111,54 +111,63 @@ namespace Service.Service
         {
             await _createValidator.ValidateAndThrowAsync(staffDto);
 
-            var token = Convert.ToBase64String(RandomNumberGenerator.GetBytes(64));
+            var existingStaff =
+                await _repo.Staff.GetByEmailAsync(staffDto.Email!);
 
-            // แปลงข้อมูลจาก Dto เป็น Entity
+            // กรณีที่มี Staff อยู่แล้ว แต่ยังไม่มีการตั้งรหัสผ่าน 
+            if (existingStaff != null && existingStaff.Password == null)
+            {
+                var token = Convert.ToBase64String(
+                    RandomNumberGenerator.GetBytes(64)
+                );
+
+                existingStaff.PasswordResetToken = token;
+                existingStaff.PasswordResetTokenExpire =
+                    DateTime.UtcNow.AddHours(24);
+                existingStaff.IsPending = true;
+
+                await _repo.SaveAsync();
+
+                await SendSetPasswordEmail(existingStaff.Email, token);
+
+                return _mapper.Map<StaffDto>(existingStaff);
+            }
+
+            // กรณีที่มี Staff อยู่แล้ว และมีการตั้งรหัสผ่านไปแล้ว
+            if (existingStaff != null && existingStaff.Password != null)
+                throw new ValidationException("Email นี้ถูกใช้งานไปแล้ว");
+
+            // กรณีที่ไม่มี Staff นี้อยู่ในระบบเลย
+            var tokenNew = Convert.ToBase64String(
+                RandomNumberGenerator.GetBytes(64)
+            );
+
             var newStaff = _mapper.Map<Staff>(staffDto);
-
-            // เอา Path จาก Dto ใส่ Entity
-            newStaff.Avatar = staffDto.Avatar;
-            newStaff.Password = null;
-            newStaff.PasswordResetToken = token;
-            newStaff.PasswordResetTokenExpire =
-                DateTime.UtcNow.AddHours(24);
-
-            // จัดการ Role
-            if (staffDto.StaffRoles != null) // ถ้ามีการกำหนด RoleIds มา
+            if (staffDto.StaffRoles != null)
             {
                 newStaff.StaffRoles = staffDto
-                    .StaffRoles // รับ RoleIds จาก DTO
-                    .Select(roleId => new StaffRole { RoleId = roleId }) // สร้าง StaffRole ใหม่สำหรับแต่ละ RoleId
+                    .StaffRoles
+                    .Select(roleId => new StaffRole
+                    {
+                        RoleId = roleId
+                    })
                     .ToList();
             }
+            newStaff.Password = null;
+            newStaff.PasswordResetToken = tokenNew;
+            newStaff.PasswordResetTokenExpire =
+                DateTime.UtcNow.AddHours(24);
+            newStaff.IsPending = true;
 
             _repo.Staff.CreateStaff(newStaff);
             await _repo.SaveAsync();
 
-            var safeToken = Uri.EscapeDataString(token);
-            var link =
-              $"http://localhost:5173/auth/set-password?token={safeToken}";
-            await _emailService.SendAsync(
-                newStaff.Email,
-                "Set your password",
-                $"""
-                Hello {newStaff.FullName}
+            await SendSetPasswordEmail(newStaff.Email, tokenNew);
 
-                Your account has been created.
-
-                Please click the link below to set your password:
-                {link}
-
-                This link will expire in 24 hours.
-                """
-            );
-
-
-            var staff = await GetStaffByIdAsync(newStaff.StaffId); // ดึงข้อมูลใหม่ที่ถูกสร้างขึ้นมา
-
-            return staff!;
+            return _mapper.Map<StaffDto>(newStaff);
         }
-            
+
+
         // UPDATE
         public async Task UpdateStaffAsync(int id, UpdateStaffDto staffDto)
         {
@@ -242,5 +251,26 @@ namespace Service.Service
             _repo.Staff.UpdateStaff(existingStaff);
             await _repo.SaveAsync();
         }
+
+        private async Task SendSetPasswordEmail(string email,string token)
+        {
+            var safeToken = Uri.EscapeDataString(token);
+            var link =
+              $"http://localhost:5173/auth/set-password?token={safeToken}";
+
+            await _emailService.SendAsync(
+                email,
+                "Set your password",
+                $"""
+                 Your account has been created.
+
+                 Click link to set password:
+                {link}
+
+                Link expires in 24 hours.
+                """
+            );
+        }
+
     }
 }
