@@ -66,6 +66,12 @@ namespace Repositories.Repository
                     e.EventOutsources.Any(os => (os.Outsource.FullName).ToLower().Contains(name))
                 );
             }
+            // CompanyId
+            if (eventParameter.CompanyId.HasValue)
+            {
+                var companyId = eventParameter.CompanyId.Value;
+                query = query.Where(e => e.CompanyId == companyId);
+            }
 
             return await query
                 .Include(e => e.Company)
@@ -295,7 +301,6 @@ namespace Repositories.Repository
                     e.EventOutsources.Any(os => os.OutsourceId == outsourceId)
                 );
         }
-
 
         public void CreateEvent(Event eventEntity)
         {

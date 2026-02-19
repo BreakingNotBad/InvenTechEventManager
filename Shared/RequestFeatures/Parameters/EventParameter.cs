@@ -8,6 +8,7 @@ namespace Shared.RequestFeatures.Parameters
         public TimePeriod? Period { get; set; }
         public string? Status { get; set; } 
         public string? CompanyName { get; set; }
+        public int? CompanyId { get; set; }
         public string? FullName { get; set; }
     }
 }

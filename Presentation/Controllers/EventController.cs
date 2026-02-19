@@ -48,6 +48,7 @@ namespace Presentation.Controllers
         public async Task<IActionResult> CreateEvent([FromForm] CreateEventRequest eventRequest)
         {
             var attachments = new List<EventAttachmentDto>();
+            var staffId = int.Parse(User.FindFirst("staffId")!.Value);
 
             if (eventRequest.AttachmentFiles != null)
             {
@@ -69,6 +70,7 @@ namespace Presentation.Controllers
 
             var eventDto = _mapper.Map<CreateEventDto>(eventRequest);
             eventDto.Attachments = attachments;
+            eventDto.CreatedByStaffId = staffId;
 
             var createdEvent = await _service.Event.CreateEventAsync(eventDto);
 
