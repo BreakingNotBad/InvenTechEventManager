@@ -185,6 +185,19 @@ namespace Service.Service
             // แปลงข้อมูลจาก Entity เป็น Dto
             _mapper.Map(staffDto, existingStaff);
 
+            if (staffDto.ResendInvite == true &&
+                existingStaff.IsPending == true)
+            {
+                var token = Convert.ToBase64String(
+                    RandomNumberGenerator.GetBytes(64));
+
+                existingStaff.PasswordResetToken = token;
+                existingStaff.PasswordResetTokenExpire =
+                    DateTime.UtcNow.AddHours(24);
+
+                await SendSetPasswordEmail(existingStaff.Email, token);
+            }
+
             // สั่งลบรูป (DeleteAvatar = true)
             if (staffDto.DeleteAvatar == true)
             {
