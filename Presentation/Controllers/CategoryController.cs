@@ -17,6 +17,7 @@ namespace Presentation.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> GetCategory([FromQuery] CategoryParameter categoryParameter)
         {
             var categoryList = await _service.Category.GetCategoryByAsync(categoryParameter);

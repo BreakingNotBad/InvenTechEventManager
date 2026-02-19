@@ -37,6 +37,7 @@ namespace Presentation.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> GetStaffMembers(
             [FromQuery] StaffParameter staffParameter
         )
@@ -48,6 +49,7 @@ namespace Presentation.Controllers
         }
 
         [HttpGet("{id:int}")]
+        [Authorize]
         public async Task<IActionResult> GetStaffById(int id)
         {
             var staff = await _service.Staff.GetStaffByIdAsync(id);
@@ -55,6 +57,7 @@ namespace Presentation.Controllers
         }
 
         [HttpPost]
+        [Authorize(Policy = "admin")]
         public async Task<IActionResult> CreateStaff([FromForm] CreateStaffRequest staffRequest)
         {
             // เรียก Validator (เช็คไฟล์)
@@ -90,6 +93,7 @@ namespace Presentation.Controllers
         }
 
         [HttpPut("{id:int}")]
+        [Authorize(Policy = "admin")]
         public async Task<IActionResult> UpdateStaff(
             int id,
             [FromForm] UpdateStaffRequest staffRequest
@@ -122,6 +126,7 @@ namespace Presentation.Controllers
         }
 
         [HttpPatch("{id:int}")]
+        [Authorize(Policy = "admin")]
         public async Task<IActionResult> SoftDeleteStaff(int id, bool isDeleted)
         {
             await _service.Staff.SoftDeleteStaffAsync(id, isDeleted);
@@ -129,6 +134,7 @@ namespace Presentation.Controllers
         }
 
         [HttpDelete("{id:int}")]
+        [Authorize(Policy = "admin")]
         public async Task<IActionResult> DeleteStaff(int id)
         {
             await _service.Staff.DeleteStaffAsync(id);

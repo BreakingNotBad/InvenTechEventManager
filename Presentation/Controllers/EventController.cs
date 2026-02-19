@@ -44,7 +44,7 @@ namespace Presentation.Controllers
         }
 
         [HttpPost]
-        [Authorize]
+        [Authorize(Policy ="admin")]
         public async Task<IActionResult> CreateEvent([FromForm] CreateEventRequest eventRequest)
         {
             var attachments = new List<EventAttachmentDto>();
@@ -82,7 +82,7 @@ namespace Presentation.Controllers
         }
 
         [HttpPut("{id:int}")]
-        [Authorize]
+        [Authorize(Policy = "admin")]
         public async Task<IActionResult> UpdateEvent(
             int id,
             [FromForm] UpdateEventRequest updateEventRequest
@@ -128,7 +128,7 @@ namespace Presentation.Controllers
         //}
 
         [HttpDelete("{id:int}")]
-        [Authorize]
+        [Authorize(Policy = "admin")]
         public async Task<IActionResult> DeleteEvent(int id)
         {
             await _service.Event.DeleteEvent(id);

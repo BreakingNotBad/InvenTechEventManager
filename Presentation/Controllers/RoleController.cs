@@ -22,6 +22,7 @@ namespace Presentation.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> GetRole([FromQuery]RoleParameter roleParameter)
         {
             var roleList = await _service.Role.GetRoleByAsync(roleParameter);

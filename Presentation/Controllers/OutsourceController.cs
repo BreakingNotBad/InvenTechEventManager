@@ -19,6 +19,7 @@ namespace Presentation.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> GetOutsources([FromQuery ]OutsourceParameter outsourceParameter)
         {
             var items = await _service.Outsource.GetOutsources(outsourceParameter);
@@ -26,6 +27,7 @@ namespace Presentation.Controllers
         }
 
         [HttpGet("{id:int}")]
+        [Authorize]
         public async Task<IActionResult> GetOutsourceById(int id)
         {
             var item = await _service.Outsource.GetOutsourcesByIdAsync(id);
@@ -36,6 +38,7 @@ namespace Presentation.Controllers
         }
 
         [HttpPost]
+        [Authorize(Policy = "admin")]
         public async Task<IActionResult> CreateOutsource([FromBody] CreateOutsourceDto dto)
         {
             var createdOutsource = await _service.Outsource.CreateOutsourceAsync(dto);
@@ -48,6 +51,7 @@ namespace Presentation.Controllers
         }
 
         [HttpPut("{id:int}")]
+        [Authorize(Policy = "admin")]
         public async Task<IActionResult> UpdateOutsource(int id, [FromBody] UpdateOutsourceDto dto)
         {
             await _service.Outsource.UpdateOutsourceAsync(id, dto);
@@ -55,6 +59,7 @@ namespace Presentation.Controllers
         }
 
         [HttpDelete("{id:int}")]
+        [Authorize(Policy = "admin")]
         public async Task<IActionResult> DeleteOutsource(int id)
         {
             await _service.Outsource.DeleteOutsourceAsync(id);

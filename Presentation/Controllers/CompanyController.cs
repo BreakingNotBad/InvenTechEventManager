@@ -18,6 +18,7 @@ namespace Presentation.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> GetCompanies(
             [FromQuery] CompanyParameter parameters
         )
@@ -31,6 +32,7 @@ namespace Presentation.Controllers
         }
 
         [HttpGet("{id:int}")]
+        [Authorize]
         public async Task<IActionResult> GetCompanyById(int id)
         {
             var company = await _service.Company.GetCompanyByIdAsync(id);
@@ -42,6 +44,7 @@ namespace Presentation.Controllers
         }
 
         [HttpPost]
+        [Authorize(Policy = "admin")]
         public async Task<IActionResult> CreateCompany(CreateCompanyDto companyDto)
         {
             var createdCompany = await _service.Company.CreateCompanyAsync(companyDto);
@@ -54,6 +57,7 @@ namespace Presentation.Controllers
         }
 
         [HttpPut("{id:int}")]
+        [Authorize(Policy = "admin")]
         public async Task<IActionResult> UpdateCompany(
             int id,
             [FromBody] UpdateCompanyDto companyDto
@@ -65,6 +69,7 @@ namespace Presentation.Controllers
         }
 
         [HttpDelete("{id:int}")]
+        [Authorize(Policy = "admin")]
         public async Task<IActionResult> DeleteCompany(int id)
         {
             await _service.Company.DeleteCompanyAsync(id);

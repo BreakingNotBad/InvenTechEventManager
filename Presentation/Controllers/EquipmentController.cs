@@ -19,6 +19,7 @@ namespace Presentation.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> GetEquipment(
             [FromQuery] EquipmentParameter equipmentParameter)
         {
@@ -27,6 +28,7 @@ namespace Presentation.Controllers
         }
 
         [HttpGet("{id:int}")]
+        [Authorize]
         public async Task<IActionResult> GetEquipmentById(int id)
         {
             var item = await _service.Equipment.GetEquipmentByIdAsync(id);
@@ -37,7 +39,7 @@ namespace Presentation.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Policy = "admin")]
         public async Task<IActionResult> CreateEquipment(CreateEquipmentDto dto)
         {
             var createEquipment = await _service.Equipment.CreateEquipmentAsync(dto);
@@ -50,7 +52,7 @@ namespace Presentation.Controllers
         }
 
         [HttpPut("{id:int}")]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Policy = "admin")]
         public async Task<IActionResult> UpdateEquipment(int id, UpdateEquipmentDto dto)
         {
             await _service.Equipment.UpdateEquipmentAsync(id, dto);
@@ -58,7 +60,7 @@ namespace Presentation.Controllers
         }
 
         [HttpDelete("{id:int}")]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Policy = "admin")]
         public async Task<IActionResult> DeleteEquipment(int id)
         {
             await _service.Equipment.DeleteEquipment(id);

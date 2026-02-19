@@ -19,6 +19,7 @@ namespace Presentation.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> GetPackages(
             [FromQuery] PackageParameter packageParameter)
         {
@@ -27,6 +28,7 @@ namespace Presentation.Controllers
         }
 
         [HttpGet("{id:int}")]
+        [Authorize]
         public async Task<IActionResult> GetPackageById(int id)
         {
             var item = await _service.Package.GetPackageByIdAsync(id);
@@ -37,6 +39,7 @@ namespace Presentation.Controllers
         }
 
         [HttpPost]
+        [Authorize(Policy = "admin")]
         public async Task<IActionResult> CreatePackage(CreatePackageDto dto)
         {
             var createdPackage = await _service.Package.CreatePackageAsync(dto);
@@ -47,6 +50,7 @@ namespace Presentation.Controllers
         }
 
         [HttpPut("{id:int}")]
+        [Authorize(Policy = "admin")]
         public async Task<IActionResult> UpdatePackage(int id, UpdatePackageDto dto)
         {
             await _service.Package.UpdatePackageAsync(id, dto);
@@ -54,6 +58,7 @@ namespace Presentation.Controllers
         }
 
         [HttpDelete("{id:int}")]
+        [Authorize(Policy = "admin")]
         public async Task<IActionResult> DeletePackage(int id)
         {
             await _service.Package.DeletePackage(id);
