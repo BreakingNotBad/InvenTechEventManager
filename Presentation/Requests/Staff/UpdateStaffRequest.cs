@@ -13,6 +13,7 @@ namespace Presentation.Requests.Staff
 
         [DefaultValue(false)]
         public bool? DeleteAvatar { get; set; }
+        public bool? ResendInvite { get; set; }
 
         // รับเป็น List ของ Int ตาม JSON
         public List<int> StaffRoles { get; set; } = new List<int>();
