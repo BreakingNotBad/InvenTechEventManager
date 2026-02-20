@@ -10,5 +10,6 @@ namespace Shared.RequestFeatures.Parameters
         public string? CompanyName { get; set; }
         public int? CompanyId { get; set; }
         public string? FullName { get; set; }
+        public int? StaffId { get; set; }
     }
 }

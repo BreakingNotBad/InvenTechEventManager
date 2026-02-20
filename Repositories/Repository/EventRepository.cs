@@ -72,6 +72,13 @@ namespace Repositories.Repository
                 var companyId = eventParameter.CompanyId.Value;
                 query = query.Where(e => e.CompanyId == companyId);
             }
+            // StaffId
+            if (eventParameter.StaffId.HasValue)
+            {
+                var staffId = eventParameter.StaffId.Value;
+                query = query.Where(e =>
+                    e.EventStaff.Any(es => es.StaffId == staffId));
+            }
 
             return await query
                 .Include(e => e.Company)
@@ -151,6 +158,7 @@ namespace Repositories.Repository
                             .ThenInclude(c => c.Category)
                     .FirstOrDefaultAsync();
         }
+
 
         // เช็คว่าพนักงานว่างหรือไม่ (สร้างงานใหม่)
         //public async Task<bool> IsStaffAvailableAsync(
