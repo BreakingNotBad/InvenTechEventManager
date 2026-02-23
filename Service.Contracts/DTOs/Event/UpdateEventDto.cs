@@ -16,6 +16,7 @@ public class UpdateEventDto
     public decimal? Longitude { get; set; }
     public string? Address { get; set; }
     public string? Note { get; set; }
+    public bool? IsDeleted { get; set; }
 
     public int? CompanyId { get; set; }
     public int? PackageId { get; set; }

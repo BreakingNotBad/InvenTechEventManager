@@ -196,6 +196,11 @@ namespace Service.Service
                     DateTime.UtcNow.AddHours(24);
 
                 await SendSetPasswordEmail(existingStaff.Email, token);
+
+            }else if (staffDto.ResendInvite == true &&
+                existingStaff.IsPending == false)
+            {
+                throw new BadRequestException("ไม่สามารถส่งคำเชิญได้ เนื่องจาก มีการตั้งรหัสผ่านไปแล้ว");
             }
 
             // สั่งลบรูป (DeleteAvatar = true)

@@ -4,6 +4,7 @@ using Entities.Exceptions;
 using Entities.Models;
 using FluentValidation;
 using Service.Contracts.DTOs.Event;
+using Service.Contracts.DTOs.Staff;
 using Service.Contracts.IService;
 using Shared.RequestFeatures.Parameters;
 namespace Service.Service
@@ -411,6 +412,12 @@ namespace Service.Service
                 foreach (var item in toRemove)
                     existingEvent.EventExtraEquipments.Remove(item);
             }
+            // Update IsDeleted
+            if (eventDto.IsDeleted.HasValue)
+            {
+                existingEvent.IsDeleted = eventDto.IsDeleted.Value; // อัปเดตสถานะลบ
+            }
+
             // คำนวณสถานะใหม่
             existingEvent.EventStatus =
                 CalculateEventStatus(
@@ -418,7 +425,7 @@ namespace Service.Service
                     existingEvent.EventStaff.ToList(),
                     existingEvent.EventOutsources.ToList());
 
-            // update + save รอบเดียว
+            // update + save
             _repo.Event.UpdateEvent(existingEvent);
             await _repo.SaveAsync();
 
