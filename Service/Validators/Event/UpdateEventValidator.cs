@@ -33,21 +33,27 @@ namespace Service.Validators.Event
 
             RuleFor(x => x.StaffAppointmentTime)
                 .NotEmpty()
-                .WithMessage("Staff appointment time is required");
+                .WithMessage("Staff appointment time is required")
+                .Must((x, staffTime) => x.RegistrationTime != default)
+                .WithMessage("Please select registration time first")
+                .Must((x, staffTime) => staffTime < x.RegistrationTime)
+                .WithMessage("Staff appointment time must be before registration time")
+                .Must((x, staffTime) => x.StartTime == default || staffTime < x.StartTime)
+                .WithMessage("Staff appointment time must be before start time");
 
             RuleFor(x => x.OutsourceAppointmentTime)
                 .NotEmpty()
-                .WithMessage("Outsource appointment time is required");
+                .WithMessage("Outsource appointment time is required")
+                .Must((x, outsourceTime) => x.RegistrationTime != default)
+                .WithMessage("Please select registration time first")
+                .Must((x, outsourceTime) => outsourceTime < x.RegistrationTime)
+                .WithMessage("Outsource appointment time must be before registration time")
+                .Must((x, outsourceTime) => x.StartTime == default || outsourceTime < x.StartTime)
+                .WithMessage("Outsource appointment time must be before start time");
 
             RuleFor(x => x.RegistrationTime)
                 .NotEmpty()
-                .WithMessage("Registration time is required")
-                .Must((x, registrationTime) => x.StaffAppointmentTime != default)
-                .Must((x, registrationTime) => x.OutsourceAppointmentTime != default)
-                .WithMessage("Please select staff and Outsource appointment time first")
-                .Must((x, registrationTime) => registrationTime > x.StaffAppointmentTime)
-                .Must((x, registrationTime) => registrationTime > x.OutsourceAppointmentTime)
-                .WithMessage("Registration time must be after staff and outsource appointment time");
+                .WithMessage("Registration time is required");
 
             RuleFor(x => x.StartTime)
                 .NotEmpty()
