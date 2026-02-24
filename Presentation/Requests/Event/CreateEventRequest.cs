@@ -8,6 +8,8 @@ namespace Presentation.Requests.Event
         public string? EventName { get; set; }
         public int? EventType { get; set; } // Map จาก Enum ในรูปแบบ int
         public DateOnly? MeetingDate { get; set; }
+        public TimeOnly? StaffAppointmentTime { get; set; }
+        public TimeOnly? OutsourceAppointmentTime { get; set; }
         public TimeOnly? RegistrationTime { get; set; }
         public TimeOnly? StartTime { get; set; }
         public TimeOnly? EndTime { get; set; }

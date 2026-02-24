@@ -14,6 +14,8 @@ namespace Service.Contracts.DTOs.Event
         public string EventType { get; set; } = null!;
         public string Period { get; set; } = null!;
         public DateOnly MeetingDate { get; set; }
+        public TimeOnly StaffAppointmentTime { get; set; }
+        public TimeOnly OutsourceAppointmentTime { get; set; }
         public TimeOnly RegistrationTime { get; set; }
         public TimeOnly StartTime { get; set; }
         public TimeOnly EndTime { get; set; }

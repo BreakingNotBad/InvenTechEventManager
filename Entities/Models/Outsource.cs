@@ -8,6 +8,7 @@ namespace Entities.Models
         public required string FullName { get; set; }
         public string? Email { get; set; }
         public string? PhoneNumber { get; set; }
+        public string? Remark { get; set; }
 
         // Navigation Property
         public ICollection<EventOutsource>? EventOutsources { get; set; } = [];

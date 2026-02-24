@@ -16,5 +16,6 @@ namespace Entities.Models
         public Equipment Equipment { get; set; } = null!;
 
         public int Quantity { get; set; } = 1;
+        public string? Remark { get; set; }
     }
 }

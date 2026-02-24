@@ -31,9 +31,23 @@ namespace Service.Validators.Event
                 .GreaterThanOrEqualTo(DateOnly.FromDateTime(DateTime.Today))
                 .WithMessage("Meeting date must not be in the past");
 
+            RuleFor(x => x.StaffAppointmentTime)
+                .NotEmpty()
+                .WithMessage("Staff appointment time is required");
+
+            RuleFor(x => x.OutsourceAppointmentTime)
+                .NotEmpty()
+                .WithMessage("Outsource appointment time is required");
+
             RuleFor(x => x.RegistrationTime)
                 .NotEmpty()
-                .WithMessage("Registration time is required");
+                .WithMessage("Registration time is required")
+                .Must((x, registrationTime) => x.StaffAppointmentTime != default)
+                .Must((x, registrationTime) => x.OutsourceAppointmentTime != default)
+                .WithMessage("Please select staff and Outsource appointment time first")
+                .Must((x, registrationTime) => registrationTime > x.StaffAppointmentTime)
+                .Must((x, registrationTime) => registrationTime > x.OutsourceAppointmentTime)
+                .WithMessage("Registration time must be after staff and outsource appointment time");
 
             RuleFor(x => x.StartTime)
                 .NotEmpty()

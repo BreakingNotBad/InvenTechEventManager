@@ -7,6 +7,8 @@ public class UpdateEventDto
     public string? EventName { get; set; }
     public EventType? EventType { get; set; }
     public DateOnly? MeetingDate { get; set; }
+    public TimeOnly? StaffAppointmentTime { get; set; }
+    public TimeOnly? OutsourceAppointmentTime { get; set; }
     public TimeOnly? RegistrationTime { get; set; }
     public TimeOnly? StartTime { get; set; }
     public TimeOnly? EndTime { get; set; }

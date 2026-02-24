@@ -10,5 +10,6 @@ namespace Presentation.Requests.Event
     {
         public int EquipmentId { get; set; }
         public int Quantity { get; set; }
+        public string? Remark { get; set; }
     }
 }
