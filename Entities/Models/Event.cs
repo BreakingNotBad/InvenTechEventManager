@@ -16,7 +16,7 @@ namespace Entities.Models
         public required string EventName { get; set; }
         public required EventType EventType { get; set; }
         public required TimeOnly StaffAppointmentTime { get; set; }
-        public required TimeOnly OutsourceAppointmentTime { get; set; }
+        public TimeOnly? OutsourceAppointmentTime { get; set; }
         public required DateOnly MeetingDate { get; set; }
         public required TimeOnly RegistrationTime { get; set; }
         public required TimeOnly StartTime { get; set; }

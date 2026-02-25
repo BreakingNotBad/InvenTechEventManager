@@ -43,14 +43,14 @@ namespace Service.Validators.Event
                 .WithMessage("Staff appointment time must be before start time");
 
             RuleFor(x => x.OutsourceAppointmentTime)
-                .NotEmpty()
-                .WithMessage("Outsource appointment time is required")
                 .Must((x, outsourceTime) => x.RegistrationTime != default)
                 .WithMessage("Please select registration time first")
                 .Must((x, outsourceTime) => outsourceTime < x.RegistrationTime)
                 .WithMessage("Outsource appointment time must be before registration time")
                 .Must((x, outsourceTime) => x.StartTime == default || outsourceTime < x.StartTime)
-                .WithMessage("Outsource appointment time must be before start time");
+                .WithMessage("Outsource appointment time must be before start time")
+                .When(x => x.OutsourceAppointmentTime.HasValue);
+
 
             RuleFor(x => x.RegistrationTime)
                 .NotEmpty()
