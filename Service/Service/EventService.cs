@@ -144,7 +144,8 @@ namespace Service.Service
                     .Select(x => new EventExtraEquipment
                     {
                         EquipmentId = x.EquipmentId,
-                        Quantity = x.Quantity
+                        Quantity = x.Quantity,
+                        Remark = x.Remark
                     })
                     .ToList();
             }
@@ -393,13 +394,15 @@ namespace Service.Service
                     if (existing != null)
                     {
                         existing.Quantity = dto.Quantity;
+                        existing.Remark = dto.Remark;
                     }
                     else
                     {
                         existingEvent.EventExtraEquipments.Add(new EventExtraEquipment
                         {
                             EquipmentId = dto.EquipmentId,
-                            Quantity = dto.Quantity
+                            Quantity = dto.Quantity,
+                            Remark = dto.Remark
                         });
                     }
                 }
